@@ -7,18 +7,18 @@ plt.rc('text', usetex=True)
 
 def getplots():
     fig, axs = plt.subplots(3)
-    fig.suptitle(r'Surge velocity (1) and control input (2), through time')
+    fig.suptitle(r"Surge velocity (1) and control input (2), through time")
     axs[0].plot(tspan, vetx)
     axs[0].ylabel(r"u [m/s]")
 
-    axs[1].plot(tspan, vetnp)
+    axs[1].plot(tspan, vetu)
     axs[1].ylabel(r"\tau_1 [kN]")
 	
     axs[2].plot(tspan, vetu)
     axs[2].ylabel(r"n_p [Hz]")
     axs[2].xlabel(r"t [s]")
 
-    plt.savefig('results/pydyna_surge_control.png')
+    plt.savefig("results/pydyna_surge_control.png")
 
 # converts trust force to rotation
 def getnp(tau: float, x:float) -> int:
@@ -47,6 +47,7 @@ def main():
 
         vetx = np.zeros((steps))
         vetu = np.zeros((steps))
+        vetnp = np.zeros((steps))
 
         for i in range(0, steps):
             print(f'Step: {i}')
@@ -66,6 +67,7 @@ def main():
             # save history
             vetx[i] = x
             vetu[i] = u
+            vetnp[i] = np
 
             # next step
             sim.step()
