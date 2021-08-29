@@ -3,15 +3,22 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
+plt.rc('text', usetex=True)
+
 def getplots():
-    fig, axs = plt.subplots(2)
-    fig.suptitle('Surge velocity (1) and control input (2), through time')
+    fig, axs = plt.subplots(3)
+    fig.suptitle(r'Surge velocity (1) and control input (2), through time')
     axs[0].plot(tspan, vetx)
-    axs[0].ylabel ("u [m/s]")
+    axs[0].ylabel(r"u [m/s]")
+
+    axs[1].plot(tspan, vetnp)
+    axs[1].ylabel(r"\tau_1 [kN]")
 	
-    axs[1].plot(tspan, vetu)
-    axs[1].ylabel ("n_p [Hz]")
-    axs[1].xlabel ("t [s]")
+    axs[2].plot(tspan, vetu)
+    axs[2].ylabel(r"n_p [Hz]")
+    axs[2].xlabel(r"t [s]")
+
+    plt.savefig('results/pydyna_surge_control.png')
 
 # converts trust force to rotation
 def getnp(tau: float, x:float) -> int:
@@ -25,7 +32,7 @@ def main():
 
     try:
         xd = 5 # desired surge velocity
-        sim = pydyna.create_simulation('./TankerL186B32_T085.p3d')
+        sim = pydyna.create_simulation('config/TankerL186B32_T085.p3d')
         ship = sim.vessels['0']
         propeller = ship.thrusters['0']
 
