@@ -21,3 +21,7 @@ Integrating a high fidelity ship maneuvering simulator with <i>ROS<i>: a path-fo
 ## Project details, equations, results and discussions
 
 ...
+
+## Authors
+
+...
