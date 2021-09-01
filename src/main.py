@@ -1,14 +1,15 @@
 from modules.simulation import simulation
-import modules.controllers.SurgeController as SurgeController
+from modules.controllers.SurgeController.utils.plots import getPlots as surge_plots
+from modules.controllers.SurgeController.utils.metrics import getMetrics as surge_metrics
 
 def main():
     # simulation results
     vets = simulation()
     # plot results
-    SurgeController.surge_plots(*vets)
+    surge_plots(*vets)
     # get metrics from results
-    SurgeController.surge_metrics(*vets)
-    print(surge_metrics)
+    sm = surge_metrics(*vets)
+    print(sm)
 
 if __name__ == "__main__":
     main()
