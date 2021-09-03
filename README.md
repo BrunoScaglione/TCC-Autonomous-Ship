@@ -1,5 +1,5 @@
 <h1 align="center">
-Integrating a high fidelity ship maneuvering simulator with <i>ROS<i>: a path-following case study
+Integrating a high fidelity ship maneuvering simulator with <i>ROS<i> : a path-following case study
 </h1>
 
 <p align="center">
