@@ -28,6 +28,7 @@ def getPlots(
     axs[3].plot(tspan, vetnp)
     axs[3].set_ylabel(r"$n_p [Hz]$")
     axs[3].set_xlabel(r"$t [s]$")
-
+    
+    plt.savefig("modules/controllers/SurgeController/results/simulation_raw_controller.png")
     #plt.show()
-    plt.savefig("modules/controllers/SurgeController/results/simulation.png")
+    
