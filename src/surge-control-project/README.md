@@ -3,7 +3,7 @@ Integrating a high fidelity ship maneuvering simulator with <i>ROS<i>: a path-fo
 </h1>
 
 <p align="center">
-    Undergraduate Thesis for the Mechatronics Engineering degree in the University of São Paulo (USP)
+    Undergraduate Thesis for the Mechatronics Engineering degree from the University of São Paulo (USP)
 </p>
 
 ## Features

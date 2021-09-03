@@ -13,7 +13,7 @@ def simulation():
 
         #simulation parameters
         dt = 0.1 # p3d file
-        t_end = 3000
+        t_end = 1000
         steps = int(t_end/dt)
 
         # initialize 
