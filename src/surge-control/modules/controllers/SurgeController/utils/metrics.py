@@ -16,19 +16,29 @@ def getMetrics(
     vettau: np.array,
     vetnp: np.array) -> dict:
 
-    idx_ts = np.where(vetx>0.02*(x0-(xd-phi))+(xd-phi))[0][0] 
-    ts = tspan[idx_ts];
-    idx_tr = np.where(vets> -phi)[0][0];
-    tr = tspan[idx_tr];
+    try:
+        idx_ts = np.where(vetx>0.02*(x0-(xd-phi))+(xd-phi))[0][0] 
+        ts = tspan[idx_ts];
+        idx_tr = np.where(vets> -phi)[0][0];
+        tr = tspan[idx_tr];
+    except:
+        ts = None
+        tr = None
 
-    overshoot = max(vetx) - xd
+    if max(vetx) > xd:
+        overshoot = max(vetx) - xd
+    else:
+        overshoot = None
 
     e = vetx[-1]-xd;
 
-    x_slipstart = vetx[idx_tr];
-    x_tau = x_slipstart + 0.6321*(xd-x_slipstart);
-    idx_tau = np.where(vetx>x_tau)[0];
-    tau = tspan[idx_tau] - tspan[idx_tr];
+    try:
+        x_slipstart = vetx[idx_tr];
+        x_tau = x_slipstart + 0.6321*(xd-x_slipstart);
+        idx_tau = np.where(vetx>x_tau)[0];
+        tau = tspan[idx_tau] - tspan[idx_tr];
+    except:
+        tau = None
 
     tau_max = max(vettau)
     np_max = max(vetnp)
