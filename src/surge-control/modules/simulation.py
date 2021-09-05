@@ -13,7 +13,7 @@ def simulation():
 
         #simulation parameters
         dt = 0.1 # p3d file
-        t_end = 3000
+        t_end = 1000
         steps = int(t_end/dt)
 
         # initialize 
@@ -35,6 +35,11 @@ def simulation():
             vets[i] = s
             vettau[i] = tau
             vetnp[i] = Np
+
+            # if Np > 1.7:
+            #     print(f"x = {x}")
+            #     print(f"tau = {tau}")
+            #     print(f"Np = {Np}")
 
             # next step
             sim.step()

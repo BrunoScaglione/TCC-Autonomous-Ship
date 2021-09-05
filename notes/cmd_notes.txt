@@ -7,6 +7,10 @@ conda activate pydynaenv
 or just:
 call setup.bat
 
+# pra rodar
+cd src\surge-control
+python main.py
+
 ## dar source no ros2 pra setar variaveis de ambiente sempre
 call C:\dev\ros2_galactic\local_setup.bat
 

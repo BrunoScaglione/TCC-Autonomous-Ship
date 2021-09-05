@@ -15,7 +15,11 @@ def getNp(tau: float, x:float) -> float:
     c1 = 0.036
     c2 = 3.53
     c3 = 0.06696
-    Np = c1*(math.sqrt(c2*(x**2) + tau)) - c3*x
+    #print(tau)
+    if tau > 0:
+        Np = c1*(math.sqrt(c2*(x**2) + tau)) + c3*x
+    else:
+        Np = -(c1*(math.sqrt(c2*(x**2) - tau)) + c3*x)
     return Np
 
 def controller(x: float) -> float:
@@ -29,8 +33,5 @@ def controller(x: float) -> float:
     tau = u*(m - X_added_mass)
     # control allocation
     Np = getNp(tau, x)
-    #print(f"******* Np = {Np} ************")
-    #saturation
-    if Np > 1.75: Np = 1.75
 
     return [s, tau, Np] 
