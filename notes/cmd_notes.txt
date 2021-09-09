@@ -21,7 +21,7 @@ call C:\dev\ros2_galactic\local_setup.bat
 C:\Users\bruno\Desktop\Poli\Disciplinas\2021\1 semester\Non-Linear Control\evaluation\trabalho\TCC-Autonomous-Ship\src\surge-control-project\config\pydyna-7.2.3-py3-none-any
 
 ##para instalar:
-c:\python38\python.exe -m pip install "C:\Users\bruno\Desktop\Poli\Disciplinas\2021\1 semester\Non-Linear Control\evaluation\trabalho\TCC-Autonomous-Ship\src\surge-control-project\config\pydyna-7.2.3-py3-none-any.whl"
+python -m pip install "C:\Users\bruno\Desktop\Poli\Disciplinas\2021\1 semester\Non-Linear Control\evaluation\trabalho\TCC-Autonomous-Ship\src\surge-control\config\pydyna-7.2.3-py3-none-any.whl"
 
 c:\python38\python.exe -m pip install -U catkin_pkg cryptography empy ifcfg importlib-metadata lark-parser lxml matplotlib netifaces numpy opencv-python PyQt5 pip pillow psutil pycairo pydot pyparsing pyyaml rosdistro setuptools
 
