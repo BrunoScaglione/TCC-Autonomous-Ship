@@ -63,3 +63,52 @@ Type: geometry_msgs/msg/Twist
 Publisher count: 1
 Subscription count: 2
 
+------------------
+
+geometry_msgs/msg/Twist
+This means that in the package geometry_msgs there is a msg called Twist.
+
+ros2 interface show geometry_msgs/msg/Twist
+For the message type from above it yields:
+
+This expresses velocity in free space broken into its linear and angular parts.
+
+    Vector3  linear
+            float64 x
+            float64 y
+            float64 z
+    Vector3  angular
+            float64 x
+            float64 y
+            float64 z
+
+
+-------------
+
+Now that you have the message structure, you can publish data 
+onto a topic directly from the command line using:
+
+ros2 topic pub <topic_name> <msg_type> '<args>'
+The '<args>' argument is the actual data you’ll pass to the 
+topic, in the structure you just discovered in the previous section.
+
+It’s important to note that this argument needs to be input in 
+YAML syntax. Input the full command like so:
+
+ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist 
+"{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0
+
+--once is an optional argument meaning “publish one message then exit”.
+
+ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/msg/Twist 
+"{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}"
+The difference here is the removal of the --once option and the addition 
+of the --rate 1 option, which tells ros2 topic pub to publish the command 
+in a steady stream at 1 Hz.
+
+--------------
+
+For one last introspection on this process, you can view the rate at which data is published using:
+
+ros2 topic hz /turtle1/pose
+
