@@ -1,0 +1,10 @@
+[0.000000] (-) TimerEvent: {}
+[0.000000] (turtlesim) JobQueued: {'identifier': 'turtlesim', 'dependencies': OrderedDict()}
+[0.000000] (turtlesim) JobStarted: {'identifier': 'turtlesim'}
+[0.063000] (-) TimerEvent: {}
+[0.188000] (-) TimerEvent: {}
+[0.266000] (turtlesim) JobProgress: {'identifier': 'turtlesim', 'progress': 'cmake'}
+[0.266000] (turtlesim) StderrLine: {'line': b'Traceback (most recent call last):\n  File "C:\\Python36\\Lib\\site-packages\\colcon_core\\executor\\__init__.py", line 91, in __call__\n    rc = await self.task(*args, **kwargs)\n  File "C:\\Python36\\Lib\\site-packages\\colcon_core\\task\\__init__.py", line 93, in __call__\n    return await task_method(*args, **kwargs)\n  File "C:\\Python36\\Lib\\site-packages\\colcon_ros\\task\\ament_cmake\\build.py", line 61, in build\n    environment_callback=add_app_to_cpp)\n  File "C:\\Python36\\Lib\\site-packages\\colcon_cmake\\task\\cmake\\build.py", line 87, in build\n    rc = await self._reconfigure(args, env)\n  File "C:\\Python36\\Lib\\site-packages\\colcon_cmake\\task\\cmake\\build.py", line 154, in _reconfigure\n    \'VisualStudioVersion is not set, \'\nRuntimeError: VisualStudioVersion is not set, please run within a Visual Studio Command Prompt.\n'}
+[0.360000] (-) TimerEvent: {}
+[0.375000] (turtlesim) JobEnded: {'identifier': 'turtlesim', 'rc': 1}
+[0.375000] (-) EventReactorShutdown: {}

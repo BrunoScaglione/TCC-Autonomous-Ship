@@ -1,0 +1,10 @@
+-- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.19042.
+-- The C compiler identification is MSVC 19.29.30133.0
+-- The CXX compiler identification is MSVC 19.29.30133.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - failed
+-- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/cl.exe
+-- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/cl.exe - broken
+-- Configuring incomplete, errors occurred!
+See also "C:/Users/bruno/Desktop/Poli/Disciplinas/2021/1 semester/Non-Linear Control/evaluation/trabalho/TCC-Autonomous-Ship/src/experiments/dev_ws/build/turtlesim/CMakeFiles/CMakeOutput.log".
+See also "C:/Users/bruno/Desktop/Poli/Disciplinas/2021/1 semester/Non-Linear Control/evaluation/trabalho/TCC-Autonomous-Ship/src/experiments/dev_ws/build/turtlesim/CMakeFiles/CMakeError.log".

@@ -1,0 +1,39 @@
+CMake Error at C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeDetermineCompilerABI.cmake:49 (try_compile):
+  Failed to open
+
+    C:/Users/bruno/Desktop/Poli/Disciplinas/2021/1 semester/Non-Linear Control/evaluation/trabalho/TCC-Autonomous-Ship/src/experiments/dev_ws/build/turtlesim/CMakeFiles/CMakeTmp/CMakeLists.txt
+
+  Permission denied
+Call Stack (most recent call first):
+  C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)
+  CMakeLists.txt:2 (project)
+
+
+CMake Error at C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeTestCCompiler.cmake:56 (try_compile):
+  Failed to open
+
+    C:/Users/bruno/Desktop/Poli/Disciplinas/2021/1 semester/Non-Linear Control/evaluation/trabalho/TCC-Autonomous-Ship/src/experiments/dev_ws/build/turtlesim/CMakeFiles/CMakeTmp/CMakeLists.txt
+
+  Permission denied
+Call Stack (most recent call first):
+  CMakeLists.txt:2 (project)
+
+
+CMake Error at C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeTestCCompiler.cmake:69 (message):
+  The C compiler
+
+    "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/cl.exe"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    
+
+  
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:2 (project)
+
+

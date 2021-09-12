@@ -112,3 +112,243 @@ For one last introspection on this process, you can view the rate at which data 
 
 ros2 topic hz /turtle1/pose
 
+-------------
+
+ros2 service type <service_name>
+
+To see the types of all the active services at the same time, you can append the 
+--show-types option, abbreviated as -t, to the list command:
+
+ros2 service list -t
+
+ros2 service find <type_name>
+
+ros2 interface show std_srvs/srv/Empty
+Which will return:
+
+---
+
+The --- separates the request structure (above) from the response structure (below). 
+But, as you learned earlier, the Empty type doesn’t send or receive any data
+
+ros2 service call <service_name> <service_type> <arguments>
+
+ros2 service call /spawn turtlesim/srv/Spawn "{x: 2, y: 2, theta: 0.2, name: ''}"
+
+requester: making request: turtlesim.srv.Spawn_Request(x=2.0, y=2.0, theta=0.2, name='')
+
+response:
+turtlesim.srv.Spawn_Response(name='turtle2')
+
+----------------
+
+ros2 param list
+
+To display the type and current value of a parameter, use the command:
+ros2 param get <node_name> <parameter_name>
+
+To change a parameter’s value at runtime, use the command:
+ros2 param set <node_name> <parameter_name> <value>
+
+Setting parameters with the set command will only change them in your current session, not permanently.
+
+You can “dump” all of a node’s current parameter values into a file to save them for later by using the command:
+ros2 param dump <node_name>
+
+To save your current configuration of /turtlesim’s parameters, enter the command:
+ros2 param dump /turtlesim
+
+You can load parameters from a file to a currently running node using the command:
+ros2 param load <node_name> <parameter_file>
+
+To load the ./turtlesim.yaml file generated with ros2 param dump into /turtlesim node’s parameters, enter the command:
+ros2 param load /turtlesim ./turtlesim.yaml
+
+To start the same node using your saved parameter values, use:
+ros2 run <package_name> <executable_name> --ros-args --params-file <file_name>
+
+--------------------
+
+To see the /turtlesim node’s actions, open a new terminal and run the command:
+ros2 node info /turtlesim
+
+To identify all the actions in the ROS graph, run the command:
+ros2 action list -t
+
+You can further introspect the /turtle1/rotate_absolute action with the command:
+ros2 action info /turtle1/rotate_absolute
+
+Which will return:
+
+The desired heading in radians
+float32 theta
+---
+The angular displacement in radians to the starting position
+float32 delta
+---
+The remaining rotation in radians
+float32 remaining
+
+The first section of this message, above the ---, is the structure (data type and name) of the goal 
+request. The next section is the structure of the result. 
+The last section is the structure of the feedback.
+
+Now let’s send an action goal from the command line with the following syntax:
+
+ros2 action send_goal <action_name> <action_type> <values>
+<values> need to be in YAML format.
+
+ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute "{theta: 1.57}" --feedback
+
+You will continue to receive feedback, the remaining radians, until the goal is complete.
+
+---------------------
+
+rqt_console is a GUI tool used to introspect log messages in ROS 2
+
+The first section of the console is where log messages from your system will display.
+
+In the middle you have the option to filter messages by excluding severity levels. 
+You can also add more exclusion filters using the plus-sign button to the right.
+
+The bottom section is for highlighting messages that include a string you input. 
+You can add more filters to this section as well.
+
+
+---------------
+
+There is no exact standard for what each level indicates, but it’s safe to assume that:
+
+Fatal messages indicate the system is going to terminate to try to protect itself 
+from detriment.
+
+Error messages indicate significant issues that won’t necessarily damage the system, 
+but are preventing it from functioning properly.
+
+Warn messages indicate unexpected activity or non-ideal results that might represent 
+a deeper issue, but don’t harm functionality outright.
+
+Info messages indicate event and status updates that serve as a visual verification 
+that the system is running as expected.
+
+Debug messages detail the entire step-by-step process of the system execution.
+
+The default level is Info
+
+You can set the default logger level when you first run the /turtlesim node using remapping. 
+Enter the following command in your terminal:
+
+ros2 run turtlesim turtlesim_node --ros-args --log-level WARN
+
+
+-------------------------
+
+# launch/turtlesim_mimic_launch.py
+
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='turtlesim',
+            namespace='turtlesim1',
+            executable='turtlesim_node',
+            name='sim'
+        ),
+        Node(
+            package='turtlesim',
+            namespace='turtlesim2',
+            executable='turtlesim_node',
+            name='sim'
+        ),
+        Node(
+            package='turtlesim',
+            executable='mimic',
+            name='mimic',
+            remappings=[
+                ('/input/pose', '/turtlesim1/turtle1/pose'),
+                ('/output/cmd_vel', '/turtlesim2/turtle1/cmd_vel'),
+            ]
+        )
+    ])
+
+Note the only difference between the two nodes is their namespace values. 
+Unique namespaces allow the system to start two simulators without node name 
+nor topic name conflicts.
+
+Both turtles in this system receive commands over the same topic and publish 
+their pose over the same topic. Without unique namespaces, there would be no 
+way to distinguish between 
+messages meant for one turtle or the other.
+
+cd launch
+ros2 launch turtlesim_mimic_launch.py
+
+It is possible to launch a launch file directly (as we do above), or provided by a package. 
+When it is provided by a package, the syntax is:
+
+ros2 launch <package_name> <launch_file_name>
+
+-----------------------
+
+mkdir bag_files
+cd bag_files
+
+ros2 bag record <topic_name>
+
+make sure you are in /bag_files then:
+
+ros2 bag record /turtle1/cmd_vel
+
+ros2 bag record -o subset /turtle1/cmd_vel /turtle1/pose
+The -o option allows you to choose a unique name for your bag file. The following string, 
+in this case subset, is the file name.
+
+ros2 bag info subset
+Files:             subset.db3
+Bag size:          228.5 KiB
+Storage id:        sqlite3
+Duration:          48.47s
+Start:             Oct 11 2019 06:09:09.12 (1570799349.12)
+End                Oct 11 2019 06:09:57.60 (1570799397.60)
+Messages:          3013
+Topic information: Topic: /turtle1/cmd_vel | Type: geometry_msgs/msg/Twist | Count: 9 | Serialization Format: cdr
+                 Topic: /turtle1/pose | Type: turtlesim/msg/Pose | Count: 3004 | Serialization Format: cdr
+
+ros2 bag play subset
+
+[INFO] [rosbag2_storage]: Opened database 'subset'.
+
+--------------------
+
+Your main ROS 2 installation will be your underlay for this tutorial. 
+(Keep in mind that an underlay does not necessarily have to be the main ROS 2 installation.)
+
+5 Build the workspace with colcon
+
+from \dev_ws and in vs studio cmd prompt as admin
+colcon build --merge-install
+
+Other useful arguments for colcon build:
+
+--packages-up-to builds the package you want, plus all its dependencies, but not the whole workspace (saves time)
+
+--symlink-install saves you from having to rebuild every time you tweak python scripts
+
+--event-handlers console_direct+ shows console output while building (can otherwise be found in the log directory)
+
+-----
+
+6 Source the overlay
+Before sourcing the overlay, it is very important that you open a new terminal, 
+separate from the one where you built the workspace. Sourcing an overlay in the 
+same terminal where you built, or likewise building where an overlay is sourced, may create complex issues.
+
+In the new terminal, source your main ROS 2 environment as the “underlay”, so you can build the overlay “on top of” it:
+
+underlay:
+call ros2dev.bat
+
+overlay:
+call install/setup.bat
