@@ -1,0 +1,43 @@
+## se for usar conda env
+conda create -n pydynaenv python=3.6
+
+# setup environment
+unset PYTHONPATH
+conda activate pydynaenv
+or just:
+call setup.bat
+
+# pra rodar
+cd src\surge-control
+python main.py
+
+## dar source no ros2 pra setar variaveis de ambiente sempre
+call C:\dev\ros2_galactic\local_setup.bat
+
+##python da raiz 3.8:
+#!c:\python38\python.exe
+
+##caminho do whl do pydyna:
+C:\Users\bruno\Desktop\Poli\Disciplinas\2021\1 semester\Non-Linear Control\evaluation\trabalho\TCC-Autonomous-Ship\src\surge-control-project\config\pydyna-7.2.3-py3-none-any
+
+##para instalar:
+python -m pip install "C:\Users\bruno\Desktop\Poli\Disciplinas\2021\1 semester\Non-Linear Control\evaluation\trabalho\TCC-Autonomous-Ship\src\surge-control\config\pydyna-7.2.3-py3-none-any.whl"
+
+c:\python38\python.exe -m pip install -U catkin_pkg cryptography empy ifcfg importlib-metadata lark-parser lxml matplotlib netifaces numpy opencv-python PyQt5 pip pillow psutil pycairo pydot pyparsing pyyaml rosdistro setuptools
+
+# requirements path
+python -m pip install -r "C:\Users\bruno\Desktop\Poli\Disciplinas\2021\1 semester\Non-Linear Control\evaluation\trabalho\TCC-Autonomous-Ship\src\surge-control-project\config\requirements.txt"
+
+## venv
+# criar o environment
+python -m venv pydynaenv_venv
+# para ativar o environment
+call <path/to/venv>/Scripts/activate.bat
+call pydynaenv_venv/Scripts/activate.bat
+# para desativar
+deactivate
+
+## probelmas com pip
+c:\python38\python.exe -m pip uninstall pip
+c:\python38\python.exe -m ensurepip
+c:\python38\python.exe -m pip install -U pip
