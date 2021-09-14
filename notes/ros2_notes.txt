@@ -648,6 +648,33 @@ entry_points={
 
 ----------------------------
 
+# Custom Interfaces:
+
+
+1 example of .msg file in ./msg directory of the pkg:
+
+uint8 x 42
+int16 y -2000
+string full_name "John Doe"
+int32[] samples [-200, -100, 0, 100, 200]
+
+2 example of .srv file in ./srv directory of the pkg:
+
+#request constants
+int8 FOO=1
+int8 BAR=2
+#request fields
+int8 foobar
+another_pkg/AnotherMessage msg
+---
+#response constants
+uint32 SECRET=123456
+#response fields
+another_pkg/YetAnotherMessage val
+CustomMessageDefinedInThisPackage value
+uint32 an_integer
+
+
 ros2 pkg create --build-type ament_cmake tutorial_interfaces
 
 tutorial_interfaces is the name of the new package. 

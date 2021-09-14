@@ -1,0 +1,77 @@
+1. Publisher
+
+#!/usr/bin/env python
+
+import rospy
+from geometry_msgs.msg import Twist
+
+class RemoteController:
+    def __init__(self):
+        # to large queue size -> delayed commands & highuse of memory
+        self.cmd_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
+
+    def control(self, linear_vel, angular_vel):
+        msg = Twist()
+        msg.linear.x = linear_vel
+        msg.angular.z = angular_vel
+
+        self.cmd_pub.publish(msg)
+
+
+if __name__ == '__main__':
+    rospy.init_node("robot_controller")
+    controller = RemoteController()
+
+    vel = -2 # -2m/s
+    rate = rospy.Rate(10) # 10 hz
+    counter = 0
+    try:
+        while not rospy.is_shutdown():
+            if counter == 20:
+                vel = -vel
+                counter = 0
+
+            controller.control(vel, 0)
+            rate.sleep()
+            counter += 1
+    except rospy.ROSInterruptException:
+        # loginfo better than print because it gets stores and caught by rosbags
+        rospy.loginfo("Got interrupt request") 
+
+    rospy.loginfo("Closing remote controller")
+
+------------------------
+
+2. Double Subscriber
+
+#!/usr/bin/env python
+
+import rospy
+from std_msgs.msg import Float32
+
+class FastSubscriber:
+    def __init__(self, topic_name):
+        self.sub = rospy.Subscriber(topic_name, Float32, callback=self.fastCallback)
+
+    def fastCallback(self, ros_data):
+        rospy.loginfo("FastCallback " + str(ros_data.data))
+
+class SlowSubscriber:
+    def __init__(self, topic_name):
+         self.sub = rospy.Subscriber(topic_name, Float32, callback=self.slowCallback, queue_size=1)
+
+    def slowCallback(self, ros_data):
+        rate = rospy.Rate(1)
+        for i in range(0, 5):
+            rate.sleep()
+        rospy.loginfo("SlowCallback: " + str(ros_data.data))
+
+
+if __name__ == "__main__":
+    rospy.init_node("double_subscriber")
+
+    subscriber_fast = FastSubscriber("topic_1")
+    subscriber_slow = SlowSubscriber("topic_2")
+
+    rospy.spin()
+
