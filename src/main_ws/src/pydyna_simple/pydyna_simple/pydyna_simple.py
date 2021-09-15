@@ -18,7 +18,7 @@ class PydynaSimpleNode(Node):
         self.num_simul = 0
         self.end_simul = 0
 
-        self.server = self.create_service(StartSimul, 'start_simul', self.callback_start_simul)
+        self.server = self.create_service(StartSimul, 'start_simul', self.callback_start_end_simul)
 
         self.subscription_propeller = self.create_subscription(
             Float32,
@@ -36,31 +36,36 @@ class PydynaSimpleNode(Node):
 
         self.publisher_state = self.create_publisher(State, 'state', 1)
 
-    def callback_start_simul(self, req, res):
+    def callback_start_end_simul(self, req, res):
 
-        if self.num_simul != 0:
-            pydyna.destroy_report(self.rpt)
-        self.rpt = pydyna.create_text_report(f'../../../../logs/pydynalogs/pydyna_log_{self.num_simul}')
+        if req.end_simul:
+            self.end_simul = req.end_simul
+            res.reporting = 'Ending simulation'
+            return res
+        else:
+            if self.num_simul != 0:
+                pydyna.destroy_report(self.rpt)
+            self.rpt = pydyna.create_text_report(f'../../../../logs/pydynalogs/pydyna_log_{self.num_simul}')
 
-        self.sim = pydyna.create_simulation('./config/TankerL186B32_T085.p3d')
-        self.ship = sim.vessels['104']
+            self.sim = pydyna.create_simulation('./config/TankerL186B32_T085.p3d')
+            self.ship = sim.vessels['104']
 
-        self.end_simul = req.end_simul
-        # DONT KNOW IF THIS WILL REALLY ALTER WHAT PYDYNA IS USING INTERNALLY
-        self.ship.linear_position = [req.initial_state.position.x, req.initial_state.position.y, 0]
-        self.ship.angular_position = [0, 0, req.initial_state.position.psi]
-        self.ship.linear_velocity = [req.initial_state.velocity.u, req.initial_state.velocity.v, 0]
-        self.ship.angular_velocity = [0, 0, req.initial_state.velocity.r]
-        self.proppeler_counter = 0
-        self.rudder_counter = 0
+            
+            # DONT KNOW IF THIS WILL REALLY ALTER WHAT PYDYNA IS USING INTERNALLY
+            self.ship.linear_position = [req.initial_state.position.x, req.initial_state.position.y, 0]
+            self.ship.angular_position = [0, 0, req.initial_state.position.psi]
+            self.ship.linear_velocity = [req.initial_state.velocity.u, req.initial_state.velocity.v, 0]
+            self.ship.angular_velocity = [0, 0, req.initial_state.velocity.r]
+            self.proppeler_counter = 0
+            self.rudder_counter = 0
 
-        self.num_simul += 1
+            self.num_simul += 1
 
-        self.state = req.initial_state
-        self.log_state(self.state, 'server')
+            self.state = req.initial_state
+            self.log_state(self.state, 'server')
 
-        res.aknowledged = 1
-        return res
+            res.reporting = 'Starting simulation'
+            return res
     
     def callback_propeller(self, msg):
         self.get_logger().info('listened propeller rotation: %f' % msg.data)
