@@ -1,3 +1,5 @@
+from os import path
+
 import pydyna
 
 import rclpy
@@ -13,7 +15,8 @@ class PydynaSimpleNode(Node):
 
     def __init__(self):
         super().__init__('pydyna_simple_node')
-        self.new_simul = False
+        self.num_simul = 0
+        self.end_simul = 0
 
         self.server = self.create_service(StartSimul, 'start_simul', self.callback_start_simul)
 
@@ -34,17 +37,24 @@ class PydynaSimpleNode(Node):
         self.publisher_state = self.create_publisher(State, 'state', 1)
 
     def callback_start_simul(self, req, res):
-        self.new_simul = True
+
+        if self.num_simul != 0:
+            pydyna.destroy_report(self.rpt)
+        self.rpt = pydyna.create_text_report(f'../../../../logs/pydynalogs/pydyna_log_{self.num_simul}')
+
         self.sim = pydyna.create_simulation('./config/TankerL186B32_T085.p3d')
         self.ship = sim.vessels['104']
-        # DONT KNOW IF THIS WILL RELY ALTER WHAT PYDYNA IS USING INTERNALLY
-        self.ship.linear_position = [req.position.x, req.position.y, 0]
-        self.ship.angular_position = [0, 0, req.position.psi]
-        self.ship.linear_velocity = [req.velocity.u, req.velocity.v, 0]
-        self.ship.angular_velocity = [0, 0, req.velocity.r]
-        # typical initial state -> {position: {x:0, y:0, psi:0}, velocity: {u:0, v:0, r:0}}
+
+        self.end_simul = req.end_simul
+        # DONT KNOW IF THIS WILL REALLY ALTER WHAT PYDYNA IS USING INTERNALLY
+        self.ship.linear_position = [req.initial_state.position.x, req.initial_state.position.y, 0]
+        self.ship.angular_position = [0, 0, req.initial_state.position.psi]
+        self.ship.linear_velocity = [req.initial_state.velocity.u, req.initial_state.velocity.v, 0]
+        self.ship.angular_velocity = [0, 0, req.initial_state.velocity.r]
         self.proppeler_counter = 0
         self.rudder_counter = 0
+
+        self.num_simul += 1
 
         self.state = req.initial_state
         self.log_state(self.state, 'server')
@@ -68,7 +78,7 @@ class PydynaSimpleNode(Node):
         propeller = ship.thrusters['0']
         propeller.dem_rotation = self.propeller_rotation
         rudder = ship.rudders['0']
-        rudder.dem_angle = ship.rudders['0']
+        rudder.dem_angle = self.rudder_angle
 
         sim.step()
 
@@ -85,6 +95,23 @@ class PydynaSimpleNode(Node):
         self.publisher_state.publish(self.state)
         self.log_state(self.state, 'publisher')
 
+    def log_state(self, communicator):
+        log_str = 'responded request for inital' if communicator == 'server' else 'publisher'
+        self.get_logger().info(
+            '%s state: { \
+            position: {x: %f, y: %f, psi: %f}, \
+            velocity:{u: %f ,v: %f, r: %f} \
+            }' % (
+                log_str,
+                self.state.position.x, 
+                self.state.position.y, 
+                self.state.position.psi, # yaw angle
+                self.state.velocity.u, 
+                self.state.velocity.v, 
+                self.state.velocity.r 
+                )
+        )
+    
     @staticmethod
     def format_state(ship_lin_pos, ship_ang_pos, ship_lin_vel, ship_ang_vel):
         threedof_pos = ship_lin_pos[0:2] + ship_ang_pos[3]
@@ -97,24 +124,6 @@ class PydynaSimpleNode(Node):
         }
         return {position, velocity}
 
-    @staticmethod
-    def log_state(state, communicator):
-        log_str = 'responded request for inital' if communicator == 'server' else 'publisher'
-        self.get_logger().info(
-            '%s state: { \
-            position: {x: %f, y: %f, psi: %f}, \
-            velocity:{u: %f ,v: %f, r: %f} \
-            }' % (
-                log_str,
-                state.position.x, 
-                state.position.y, 
-                state.position.psi, # yaw angle
-                state.velocity.u, 
-                state.velocity.v, 
-                state.velocity.r 
-                )
-        )
-
 def main(args=None):
     rclpy.init(args=args)
     my_pydyna_node = PydynaSimpleNode()
@@ -122,6 +131,8 @@ def main(args=None):
 
     while rclpy.ok():
         rclpy.spin_once(my_pydyna_node)
+        if my_pydyna_node.end_simul == 1:
+            break
         prop_count = my_pydyna_node.proppeler_counter
         rudd_count = my_pydyna_node.rudder_counter
         if prop_count  != rudd_count:
