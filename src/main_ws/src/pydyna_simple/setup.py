@@ -3,13 +3,14 @@ from setuptools import setup
 package_name = 'pydyna_simple'
 
 setup(
-    name=pydyna_simple,
+    name=package_name,
     version='0.0.0',
     packages=[pydyna_simple],
     data_files=[
         ('share/ament_index/resource_index/packages',
-            ['resource/' + pydyna_simple]),
-        ('share/' + pydyna_simple, ['package.xml']),
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+        ('lib/' + package_name, ['config'])
     ],
     install_requires=['setuptools'],
     zip_safe=True,

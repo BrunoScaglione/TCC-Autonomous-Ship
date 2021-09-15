@@ -12,8 +12,11 @@ class PydynaSimpleNode(Node):
         super().__init__('pydyna_simple_node')
         self.msg = State()
 
+        self.state = {position: {x:0, y:0, psi:0}, velocity: {u:0, }}
+
         self.proppeler_counter = 0
         self.rudder_counter = 0
+
 
         self.subscription_propeller = self.create_subscription(
             Float32,
@@ -99,7 +102,7 @@ def main(args=None):
         rudd_count = my_pydyna_node.rudder_counter
         if prop_count  != rudd_count:
             subscriptions_not_synced = True
-        elif (prop_count > 0 and rudd_count > 0) and subscriptions_not_synced:
+        elif subscriptions_not_synced:
             subscriptions_not_synced = False
             my_pydyna_node.set_state()
             my_pydyna_node.publish_state()

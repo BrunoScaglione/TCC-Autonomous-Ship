@@ -723,7 +723,7 @@ you need to declare a dependency on it. Add the following lines to package.xml
 Now that all the parts of your custom interfaces package are in place, you can build the package. In the root of your workspace (~/dev_ws), run the following command:
 
 Windows
-colcon build --merge-install --symlink-install --packages-select tutorial_interfaces
+colcon build --merge-install --packages-select tutorial_interfaces
 
 7.1 Testing Num.msg with pub/sub
 
