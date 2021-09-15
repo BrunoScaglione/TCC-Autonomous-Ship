@@ -327,7 +327,7 @@ Your main ROS 2 installation will be your underlay for this tutorial.
 
 5 Build the workspace with colcon
 
-from \dev_ws and in vs studio cmd prompt as admin
+from \dev_ws (root of the workspace) and in vs studio cmd prompt as admin
 colcon build --merge-install --symlink-install
 !!!! TIVE PROBLEMA DE PERMISSON DENIED (AINDA NAO RESOLVIDO) AQUI
 
@@ -364,6 +364,8 @@ ros2 pkg create --build-type ament_python <package_name>
 2 build specific packages
 
 colcon build --symlink-install --packages-select my_package 
+
+open !!OTHER!! terminal and:
 
 3 Source the setup file
 3.1 source main ros2 intallation
