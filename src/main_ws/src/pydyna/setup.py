@@ -1,15 +1,15 @@
 from setuptools import setup
 
-package_name = 'pydyna'
+package_name = 'pydyna_simple'
 
 setup(
-    name=package_name,
+    name=pydyna_simple,
     version='0.0.0',
-    packages=[package_name],
+    packages=[pydyna_simple],
     data_files=[
         ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml']),
+            ['resource/' + pydyna_simple]),
+        ('share/' + pydyna_simple, ['package.xml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'simul = pydyna_simple.pydyna_simple:main',
         ],
     },
 )
