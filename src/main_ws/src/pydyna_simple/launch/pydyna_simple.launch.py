@@ -4,16 +4,21 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
+# obs: not exaclty shure where generate_launch_description is invoked
+# however absolute paths should do, with get_package_share_directory
+
 def generate_launch_description():
+    pkg_share_dir = get_package_share_directory('pydyna_simple')
+    logs_dir = os.path.join(pkg_share_dir, 'logs')
+
+    os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
     # Set LOG format
     os.environ['RCUTILS_CONSOLE_OUTPUT_FORMAT'] = '[{severity} {time}] [{name}]: {message} ({function_name}() at {file_name}:{line_number})'
-
-    pkg_share_dir = get_package_share_directory('pydyna_simple')
 
     ld = LaunchDescription()
 
     cd_2_logs = launch.actions.ExecuteProcess(
-            cmd=['cd',  pkg_share_dir + '\logs'],
+            cmd=['cd', logs_dir],
             output='screen'
     ) 
 
