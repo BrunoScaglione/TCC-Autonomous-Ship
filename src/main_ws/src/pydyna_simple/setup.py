@@ -1,5 +1,6 @@
-from setuptools import setup
+import os
 from glob import glob
+from setuptools import setup
 
 package_name = 'pydyna_simple'
 
@@ -8,11 +9,11 @@ setup(
     version='0.0.0',
     packages=[pydyna_simple],
     data_files=[
-        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name, glob('config/*')),
-        ('share/' + package_name, glob('logs/*')),
-        ('share/' + package_name, glob('launch/*.launch.py'))
+        ('share/ament_index/resource_index/packages', [os.path.join('resource', package_name)]),
+        (os.path.join('share', package_name), ['package.xml']),
+        (os.path.join('share', package_name), glob('config/*')),
+        (os.path.join('share', package_name), glob('logs/*')),
+        (os.path.join('share', package_name), glob('launch/*.launch.py'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
