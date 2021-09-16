@@ -17,10 +17,10 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='TODO: Maintainer',
-    maintainer_email='TODO: Maintainer email',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer='Bruno',
+    maintainer_email='bruno.c.scaglione@gmail.com',
+    description='High Fidelity Ship Maneuvering Simulator',
+    license='Apache License 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
