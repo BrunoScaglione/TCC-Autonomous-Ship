@@ -55,10 +55,10 @@ class PydynaSimpleNode(Node):
 
             
             # DONT KNOW IF THIS WILL REALLY ALTER WHAT PYDYNA IS USING INTERNALLY
-            self.ship.linear_position = [req.initial_state.position.x, req.initial_state.position.y, 0]
-            self.ship.angular_position = [0, 0, req.initial_state.position.psi]
-            self.ship.linear_velocity = [req.initial_state.velocity.u, req.initial_state.velocity.v, 0]
-            self.ship.angular_velocity = [0, 0, req.initial_state.velocity.r]
+            self.ship._set_linear_position = [req.initial_state.position.x, req.initial_state.position.y, 0]
+            self.ship._set_angular_position = [0, 0, req.initial_state.position.psi]
+            self.ship._set_linear_velocity = [req.initial_state.velocity.u, req.initial_state.velocity.v, 0]
+            self.ship._set_angular_velocity = [0, 0, req.initial_state.velocity.r]
             self.proppeler_counter = 0
             self.rudder_counter = 0
 
