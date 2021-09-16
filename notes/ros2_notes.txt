@@ -1047,3 +1047,15 @@ Using colcon to build packages
 If you do not want to build a specific package place an empty file named 
 COLCON_IGNORE in the directory and it will not be indexed.
 
+
+
+
+--------------------
+
+OBS: the tutorial puts the custom interface package as 
+execute dependency (<exec_depend>path_following_interfaces</exec_depend>) 
+because it built it first, im putting as 
+general dependency (<depend>path_following_interfaces</depend>) to build all
+packages together. Here: https://docs.ros.org/en/rolling/Contributing/Migration-Guide.html#package-manifests
+this other tutorial says do put as <depend> cutom packages
+to back me up
