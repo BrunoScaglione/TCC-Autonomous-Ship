@@ -1,0 +1,3 @@
+source;share\pydyna_simple\hook\pythonpath.ps1
+source;share\pydyna_simple\hook\pythonpath.bat
+source;share\pydyna_simple\hook\pythonpath.dsv

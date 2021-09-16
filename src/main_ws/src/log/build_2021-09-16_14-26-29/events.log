@@ -1,0 +1,4 @@
+[0.000000] (-) TimerEvent: {}
+[0.000000] (-) JobUnselected: {'identifier': 'path_following_interfaces'}
+[0.000000] (-) JobUnselected: {'identifier': 'pydyna'}
+[0.000000] (-) EventReactorShutdown: {}
