@@ -10,7 +10,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('lib/' + package_name, ['config']),
+        ('share/' + package_name, ['config']),
+        ('share/' + package_name, ['logs']),
         ('share/' + package_name, glob('launch/*.launch.py'))
     ],
     install_requires=['setuptools'],

@@ -1,6 +1,7 @@
 #https://design.ros2.org/articles/node_lifecycle.html
 #https://github.com/ros2/launch_ros/blob/master/launch_ros/examples/lifecycle_pub_sub_launch.py
 #https://github.com/ros2/launch/blob/foxy/launch/doc/source/architecture.rst#id1
+#https://answers.ros.org/question/304370/ros2-launch-how-to-correctly-create-a-lifecycle-launch-file/
   
 """Launch a lifecycle talker and a lifecycle listener."""
 
