@@ -17,7 +17,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Position.msg"
   "msg/Velocity.msg"
   "msg/State.msg"
-  "srv/StartSimul.srv"
+  "srv/StartEndSimul.srv"
 )
 
 if(BUILD_TESTING)
