@@ -86,7 +86,7 @@ This expresses velocity in free space broken into its linear and angular parts.
 -------------
 
 Now that you have the message structure, you can publish data 
-onto a topic directly from the command line using:
+onto a topic directly from the command line using: 
 
 ros2 topic pub <topic_name> <msg_type> '<args>'
 The '<args>' argument is the actual data you’ll pass to the 

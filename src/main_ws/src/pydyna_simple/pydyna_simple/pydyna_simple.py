@@ -106,10 +106,8 @@ class PydynaSimpleNode(Node):
     def log_state(self, communicator):
         log_str = 'responded request for inital' if communicator == 'server' else 'published'
         self.get_logger().info(
-            '%s state: { \
-            position: {x: %f, y: %f, psi: %f}, \
-            velocity:{u: %f ,v: %f, r: %f} \
-            }' % (
+            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f , v: %f, r: %f}}' 
+            % (
                 log_str,
                 self.state.position.x, 
                 self.state.position.y, 
@@ -117,7 +115,7 @@ class PydynaSimpleNode(Node):
                 self.state.velocity.u, 
                 self.state.velocity.v, 
                 self.state.velocity.r 
-                )
+            )
         )
 
 def main(args=None):
