@@ -20,6 +20,8 @@ class PydynaSimpleNode(Node):
         #self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
         #self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
 
+        self.t = 0
+
         self.num_simul = 0
         self.end_simul = 0
 
@@ -99,14 +101,17 @@ class PydynaSimpleNode(Node):
         self.state.velocity.v = self.ship.linear_velocity[1]
         self.state.velocity.r = self.ship.angular_velocity[2]
 
+        self.t += 1
+
     def publish_state(self):
         self.publisher_state.publish(self.state)
+        self.rpt.write(0.1*self.t, self.ship)
         self.log_state('publisher')
 
     def log_state(self, communicator):
         log_str = 'responded request for inital' if communicator == 'server' else 'published'
         self.get_logger().info(
-            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f , v: %f, r: %f}}' 
+            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}}' 
             % (
                 log_str,
                 self.state.position.x, 
