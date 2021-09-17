@@ -14,14 +14,13 @@ def generate_launch_description():
     pkg_dir =  os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
 
-    # TODO: dont know why this line isnt changing the log dir
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
     # Set LOG format
     os.environ['RCUTILS_CONSOLE_OUTPUT_FORMAT'] = '[{severity} {time}] [{name}]: {message} ({function_name}() at {file_name}:{line_number})'
 
     ld = LaunchDescription()
 
-    # TODO: subprocess giving error, i think its some bug in ExecuteProcess code
+    # <TODO: subprocess giving error, i think its some bug in ExecuteProcess code>
     # cd_2_logs = ExecuteProcess(
     #         cmd=['cd', logs_dir],
     #         output='screen'
@@ -31,6 +30,7 @@ def generate_launch_description():
     #         cmd=['ros2', 'bag', 'record', '-o', 'i_am_rosbag_dir', '-a'],
     #         output='screen'
     # )
+    # <TODO: subprocess giving error, i think its some bug in ExecuteProcess code/>
 
     pydyna_simple_node = Node(
         package='pydyna_simple',

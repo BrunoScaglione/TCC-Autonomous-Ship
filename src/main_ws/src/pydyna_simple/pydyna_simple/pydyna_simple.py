@@ -137,8 +137,10 @@ def main(args=None):
     rclpy.init(args=args)
     my_pydyna_node = PydynaSimpleNode()
     subscriptions_not_synced = False
+    my_pydyna_node.get_logger().info('started main')
 
     while rclpy.ok():
+        my_pydyna_node.get_logger().info('entered rclpy.ok loop')
         rclpy.spin_once(my_pydyna_node)
         if my_pydyna_node.end_simul == 1:
             break
@@ -151,7 +153,8 @@ def main(args=None):
             my_pydyna_node.extrapolate_state()
             my_pydyna_node.publish_state()
 
-    minimal_subscriber.destroy_node()
+    my_pydyna_node.get_logger().info('broke rclpy.ok loop')
+    my_pydyna_node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
