@@ -32,7 +32,7 @@ def generate_launch_description():
     pydyna_simple_node = Node(
         package='pydyna_simple',
         executable='pydyna_simple',
-        name='pydyna_simple_node',
+        name='/pydyna_simple_node',
         output='screen',
         emulate_tty=True,
         parameters=[

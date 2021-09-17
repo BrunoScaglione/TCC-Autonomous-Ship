@@ -9,12 +9,12 @@ from std_msgs.msg import Float32
 # custom interface
 from path_following_interfaces.msg import State
 #custom service
-from path_following_interfaces.srv import StartSimul
+from path_following_interfaces.srv import StartEndSimul
 
 class PydynaSimpleNode(Node):
 
     def __init__(self):
-        super().__init__('pydyna_simple_node')
+        super().__init__('/pydyna_simple_node')
 
         self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
         self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
@@ -22,18 +22,18 @@ class PydynaSimpleNode(Node):
         self.num_simul = 0
         self.end_simul = 0
 
-        self.server = self.create_service(StartSimul, 'start_simul', self.callback_start_end_simul)
+        self.server = self.create_service(StartEndSimul, '/start_end_simul', self.callback_start_end_simul)
 
         self.subscription_propeller = self.create_subscription(
             Float32,
-            'propeller_rotation',
+            '/propeller_rotation',
             self.callback_propeller,
             10)
         self.subscription_propeller  # prevent unused variable warning
 
         self.subscription_rudder = self.create_subscription(
             Float32,
-            'rudder_angle',
+            '/rudder_angle',
             self.callback_rudder,
             1)
         self.subscription_rudder  # prevent unused variable warning
