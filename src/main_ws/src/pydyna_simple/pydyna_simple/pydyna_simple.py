@@ -20,8 +20,6 @@ class PydynaSimpleNode(Node):
         #self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
         #self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
 
-        self.t = 0
-
         self.num_simul = 0
         self.end_simul = 0
 
@@ -50,6 +48,10 @@ class PydynaSimpleNode(Node):
             res.reporting = 'Ending simulation'
             return res
         else:
+            self.propeller_rotation = 0
+            self.rudder_angle = 0
+            self.subscriptions_synced = False
+
             if self.num_simul != 0:
                 pydyna.destroy_report(self.rpt)
             #self.rpt = pydyna.create_text_report(f'{self.pkg_share_dir}/logs/pydynalogs/pydyna_log_{self.num_simul}')
@@ -101,17 +103,17 @@ class PydynaSimpleNode(Node):
         self.state.velocity.v = self.ship.linear_velocity[1]
         self.state.velocity.r = self.ship.angular_velocity[2]
 
-        self.t += 1
+        self.state.time += 0.1
 
     def publish_state(self):
         self.publisher_state.publish(self.state)
-        self.rpt.write(0.1*self.t, self.ship)
+        self.rpt.write(self.state.time, self.ship)
         self.log_state('publisher')
 
     def log_state(self, communicator):
-        log_str = 'responded request for inital' if communicator == 'server' else 'published'
+        log_str = 'responded request with inital' if communicator == 'server' else 'published'
         self.get_logger().info(
-            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}}' 
+            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 log_str,
                 self.state.position.x, 
@@ -119,14 +121,15 @@ class PydynaSimpleNode(Node):
                 self.state.position.psi, # yaw angle
                 self.state.velocity.u, 
                 self.state.velocity.v, 
-                self.state.velocity.r 
+                self.state.velocity.r,
+                self.state.time 
             )
         )
 
 def main(args=None):
     rclpy.init(args=args)
     my_pydyna_node = PydynaSimpleNode()
-    subscriptions_not_synced = False
+    
     my_pydyna_node.get_logger().info('started main')
 
     while rclpy.ok():
@@ -134,15 +137,14 @@ def main(args=None):
         rclpy.spin_once(my_pydyna_node)
         if my_pydyna_node.end_simul == 1:
             break
-        prop_count = my_pydyna_node.proppeler_counter
-        rudd_count = my_pydyna_node.rudder_counter
-        if prop_count  != rudd_count:
-            subscriptions_not_synced = True
-        elif subscriptions_not_synced:
-            subscriptions_not_synced = False
-            my_pydyna_node.extrapolate_state()
-            my_pydyna_node.publish_state()
-
+        if my_pydyna_node.proppeler_counter == my_pydyna_node.rudder_counter:
+            if not my_pydyna_node.subscriptions_synced:
+                my_pydyna_node.extrapolate_state()
+                my_pydyna_node.publish_state()
+                my_pydyna_node.subscriptions_synced = True
+        else:
+            my_pydyna_node.subscriptions_synced = False
+            
     my_pydyna_node.get_logger().info('broke rclpy.ok loop')
     my_pydyna_node.destroy_node()
     rclpy.shutdown()
