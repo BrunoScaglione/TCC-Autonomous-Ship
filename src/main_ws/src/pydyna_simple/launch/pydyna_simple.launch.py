@@ -1,3 +1,5 @@
+# TODO: DONT KNOW WHY PROCESS DIES WHEN LAUNCHING THROUGH THIS FILE
+
 import os
 
 from ament_index_python.packages import get_package_share_directory, get_package_prefix
@@ -32,12 +34,11 @@ def generate_launch_description():
     # )
     # <TODO: subprocess giving error, i think its some bug in ExecuteProcess code/>
 
-    pydyna_simple_node = Node(
+    start_pydyna_simple_node = Node(
         package='pydyna_simple',
         executable='simul',
         name='pydyna_simple_node',
         output='screen',
-        emulate_tty=True,
         parameters=[
                 {'pkg_share_dir': pkg_share_dir},
                 {'pkg_dir': pkg_dir}
@@ -47,5 +48,5 @@ def generate_launch_description():
     # start pydyna_simple_node
     #ld.add_action(cd_2_logs)
     #ld.add_action(rosbag_record_all)
-    ld.add_action(pydyna_simple_node)
+    ld.add_action(start_pydyna_simple_node)
     return ld

@@ -1,6 +1,6 @@
 #request (with default values)
-State inital_state 
+State initial_state 
 bool end_simul 0
 ---
 #response 
-string[] reporting
+string reporting

@@ -1,4 +1,5 @@
 from os import path
+import numpy as np
 
 import pydyna
 
@@ -16,8 +17,8 @@ class PydynaSimpleNode(Node):
     def __init__(self):
         super().__init__('pydyna_simple_node')
 
-        self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
-        self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
+        #self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
+        #self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
 
         self.num_simul = 0
         self.end_simul = 0
@@ -28,7 +29,7 @@ class PydynaSimpleNode(Node):
             Float32,
             '/propeller_rotation',
             self.callback_propeller,
-            10)
+            1)
         self.subscription_propeller  # prevent unused variable warning
 
         self.subscription_rudder = self.create_subscription(
@@ -49,13 +50,13 @@ class PydynaSimpleNode(Node):
         else:
             if self.num_simul != 0:
                 pydyna.destroy_report(self.rpt)
-            self.rpt = pydyna.create_text_report(f'{self.pkg_share_dir}/logs/pydynalogs/pydyna_log_{self.num_simul}')
+            #self.rpt = pydyna.create_text_report(f'{self.pkg_share_dir}/logs/pydynalogs/pydyna_log_{self.num_simul}')
+            self.rpt = pydyna.create_text_report(f'C:/Users/bruno/Desktop/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/logs/pydynalogs/pydyna_log_{self.num_simul}')
 
-            self.sim = pydyna.create_simulation(f'{self.pkg_dir}/config/TankerL186B32_T085.p3d')
-            self.ship = sim.vessels['104']
+            #self.sim = pydyna.create_simulation(f'{self.pkg_dir}/config/TankerL186B32_T085.p3d')
+            self.sim = pydyna.create_simulation(f'C:/Users/bruno/Desktop/tcc-autonomous-ship/src/main_ws/install/lib/pydyna_simple/config/TankerL186B32_T085.p3d')
+            self.ship = self.sim.vessels['104']
 
-            
-            # DONT KNOW IF THIS WILL REALLY ALTER WHAT PYDYNA IS USING INTERNALLY
             self.ship._set_linear_position = [req.initial_state.position.x, req.initial_state.position.y, 0]
             self.ship._set_angular_position = [0, 0, req.initial_state.position.psi]
             self.ship._set_linear_velocity = [req.initial_state.velocity.u, req.initial_state.velocity.v, 0]
@@ -66,9 +67,9 @@ class PydynaSimpleNode(Node):
             self.num_simul += 1
 
             self.state = req.initial_state
-            self.log_state(self.state, 'server')
+            self.log_state('server')
 
-            res.reporting = 'Starting simulation'
+            res.reporting = 'Initialized simulation'
             return res
     
     def callback_propeller(self, msg):
@@ -84,28 +85,26 @@ class PydynaSimpleNode(Node):
         self.rudder_counter += 1
     
     def extrapolate_state(self):
-        propeller = ship.thrusters['0']
+        propeller = self.ship.thrusters['0']
         propeller.dem_rotation = self.propeller_rotation
-        rudder = ship.rudders['0']
+        rudder = self.ship.rudders['0']
         rudder.dem_angle = self.rudder_angle
 
-        sim.step()
+        self.sim.step()
 
-        # FILLER [0,0,0],[1,1,1],[2,2,2],[3,3,3]
-        #self.state = self.format_state([0,0,0],[1,1,1],[2,2,2],[3,3,3])
-        self.state = self.format_state(
-            ship.linear_position, 
-            ship.angular_position,
-            ship.linear_velocity,
-            ship.angular_velocity 
-        )
+        self.state.position.x = self.ship.linear_position[0]
+        self.state.position.y = self.ship.linear_position[1]
+        self.state.position.psi = self.ship.angular_position[2]
+        self.state.velocity.u = self.ship.linear_velocity[0]
+        self.state.velocity.v = self.ship.linear_velocity[1]
+        self.state.velocity.r = self.ship.angular_velocity[2]
 
     def publish_state(self):
         self.publisher_state.publish(self.state)
-        self.log_state(self.state, 'publisher')
+        self.log_state('publisher')
 
     def log_state(self, communicator):
-        log_str = 'responded request for inital' if communicator == 'server' else 'publisher'
+        log_str = 'responded request for inital' if communicator == 'server' else 'published'
         self.get_logger().info(
             '%s state: { \
             position: {x: %f, y: %f, psi: %f}, \
@@ -120,18 +119,6 @@ class PydynaSimpleNode(Node):
                 self.state.velocity.r 
                 )
         )
-    
-    @staticmethod
-    def format_state(ship_lin_pos, ship_ang_pos, ship_lin_vel, ship_ang_vel):
-        threedof_pos = ship_lin_pos[0:2] + ship_ang_pos[3]
-        threedof_vel = ship_lin_vel[0:2] + ship_ang_vel[3]
-        position = {
-            key: value for key, value in list(zip([u,v,r], threedof_pos))
-        }
-        velocity = {
-            key: value for key, value in list(zip([x,y,psi], threedof_vel)) 
-        }
-        return {position, velocity}
 
 def main(args=None):
     rclpy.init(args=args)

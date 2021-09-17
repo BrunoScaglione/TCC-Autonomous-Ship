@@ -10,6 +10,7 @@
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>pydyna</exec_depend>
   <exec_depend>os</exec_depend>
+  <exec_depend>numpy</exec_depend>
 
   <depend>path_following_interfaces</depend>
   <depend>rclpy</depend>
