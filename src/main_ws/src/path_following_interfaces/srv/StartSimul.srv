@@ -1,5 +1,5 @@
 #request (with default values)
-State inital_state {position: {x:0, y:0, psi:0}, velocity: {u:0, v:0, r:0}}
+State inital_state 
 bool end_simul 0
 ---
 #response 

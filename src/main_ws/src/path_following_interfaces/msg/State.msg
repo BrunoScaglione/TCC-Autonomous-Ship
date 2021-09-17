@@ -1,3 +1,3 @@
 # 3DOF state of the craft
-Position position
+Position position 
 Velocity velocity

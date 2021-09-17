@@ -1,4 +1,4 @@
 # positions (earth-fixed reference frame)
-float32 x 
-float32 y
-float32 psi # yaw angle
+float32 x 0
+float32 y 0
+float32 psi 0 # yaw angle
