@@ -1,7 +1,8 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory, get_package_prefix
-from launch import LaunchDescription
+from launch import LaunchDescription  
+from launch.actions import ExecuteProcess
 from launch_ros.actions import Node
 
 # obs: not exaclty shure where generate_launch_description is invoked
@@ -13,26 +14,28 @@ def generate_launch_description():
     pkg_dir =  os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
 
+    # TODO: dont know why this line isnt changing the log dir
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
     # Set LOG format
     os.environ['RCUTILS_CONSOLE_OUTPUT_FORMAT'] = '[{severity} {time}] [{name}]: {message} ({function_name}() at {file_name}:{line_number})'
 
     ld = LaunchDescription()
 
-    cd_2_logs = launch.actions.ExecuteProcess(
-            cmd=['cd', logs_dir],
-            output='screen'
-    ) 
+    # TODO: subprocess giving error, i think its some bug in ExecuteProcess code
+    # cd_2_logs = ExecuteProcess(
+    #         cmd=['cd', logs_dir],
+    #         output='screen'
+    # ) 
 
-    rosbag_record_all = launch.actions.ExecuteProcess(
-            cmd=['ros2', 'bag', 'record', '-o', 'rosbags\subset' , '-a'],
-            output='screen'
-    )
+    # rosbag_record_all = ExecuteProcess(
+    #         cmd=['ros2', 'bag', 'record', '-o', 'i_am_rosbag_dir', '-a'],
+    #         output='screen'
+    # )
 
     pydyna_simple_node = Node(
         package='pydyna_simple',
-        executable='pydyna_simple',
-        name='/pydyna_simple_node',
+        executable='simul',
+        name='pydyna_simple_node',
         output='screen',
         emulate_tty=True,
         parameters=[
@@ -42,7 +45,7 @@ def generate_launch_description():
     )                   
 
     # start pydyna_simple_node
-    ld.add_action(cd_2_logs)
-    ld.add_action(rosbag_record_all)
+    #ld.add_action(cd_2_logs)
+    #ld.add_action(rosbag_record_all)
     ld.add_action(pydyna_simple_node)
     return ld

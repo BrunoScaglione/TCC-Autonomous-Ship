@@ -14,7 +14,7 @@ from path_following_interfaces.srv import StartEndSimul
 class PydynaSimpleNode(Node):
 
     def __init__(self):
-        super().__init__('/pydyna_simple_node')
+        super().__init__('pydyna_simple_node')
 
         self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
         self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
