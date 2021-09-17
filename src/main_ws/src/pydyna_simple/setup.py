@@ -12,7 +12,10 @@ setup(
         ('share/ament_index/resource_index/packages', [os.path.join('resource', package_name)]),
         (os.path.join('share', package_name), ['package.xml']),
         (os.path.join('share', package_name, 'config'), glob('config/*')),
-        (os.path.join('share', package_name, 'logs'), glob('logs/*')),
+        (os.path.join('share', package_name, 'logs', 'mylogs'), []),
+        (os.path.join('share', package_name, 'logs', 'pydynalogs'), []),
+        (os.path.join('share', package_name, 'logs', 'rosbags'), []),
+        (os.path.join('share', package_name, 'logs', 'roslogs'), []),
         (os.path.join('share', package_name), glob('launch/*.launch.py'))
     ],
     install_requires=['setuptools'],
