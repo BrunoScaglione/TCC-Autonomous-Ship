@@ -16,6 +16,9 @@ class PydynaSimpleNode(Node):
     def __init__(self):
         super().__init__('pydyna_simple_node')
 
+        self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
+        self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
+
         self.num_simul = 0
         self.end_simul = 0
 
@@ -44,13 +47,11 @@ class PydynaSimpleNode(Node):
             res.reporting = 'Ending simulation'
             return res
         else:
-            pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
-
             if self.num_simul != 0:
                 pydyna.destroy_report(self.rpt)
-            self.rpt = pydyna.create_text_report(f'{pkg_share_dir}/logs/pydynalogs/pydyna_log_{self.num_simul}')
+            self.rpt = pydyna.create_text_report(f'{self.pkg_share_dir}/logs/pydynalogs/pydyna_log_{self.num_simul}')
 
-            self.sim = pydyna.create_simulation(f'{pkg_share_dir}/config/TankerL186B32_T085.p3d')
+            self.sim = pydyna.create_simulation(f'{self.pkg_dir}/config/TankerL186B32_T085.p3d')
             self.ship = sim.vessels['104']
 
             
