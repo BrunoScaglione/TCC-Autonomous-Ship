@@ -1,4 +1,5 @@
-# TODO: DONT KNOW WHY PROCESS DIES WHEN LAUNCHING THROUGH THIS FILE
+# launch from main_ws/src
+import subprocess
 
 import os
 
@@ -13,7 +14,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     pkg_share_dir = get_package_share_directory('pydyna_simple')
     pkg_install_dir = get_package_prefix('pydyna_simple')
-    pkg_dir =  os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
+    pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
 
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
@@ -22,17 +23,10 @@ def generate_launch_description():
 
     ld = LaunchDescription()
 
-    # <TODO: subprocess giving error, i think its some bug in ExecuteProcess code>
-    # cd_2_logs = ExecuteProcess(
-    #         cmd=['cd', logs_dir],
-    #         output='screen'
-    # ) 
-
-    # rosbag_record_all = ExecuteProcess(
-    #         cmd=['ros2', 'bag', 'record', '-o', 'i_am_rosbag_dir', '-a'],
-    #         output='screen'
-    # )
-    # <TODO: subprocess giving error, i think its some bug in ExecuteProcess code/>
+    rosbag_record_all = ExecuteProcess(
+        cmd=['ros2', 'bag', 'record', '-a'], # '-o', 'rosbags'
+        output='screen'
+    )
 
     start_pydyna_simple_node = Node(
         package='pydyna_simple',
@@ -46,7 +40,6 @@ def generate_launch_description():
     )                   
 
     # start pydyna_simple_node
-    #ld.add_action(cd_2_logs)
-    #ld.add_action(rosbag_record_all)
+    ld.add_action(rosbag_record_all)
     ld.add_action(start_pydyna_simple_node)
     return ld
