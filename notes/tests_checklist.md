@@ -5,7 +5,7 @@ obs: windows uses \ instead of / for dirs
 1. build packages in VS terminal as admin
 2. run pydyna_simple launch file (already start rosbag)
     1. Open new terminal and source setup.bat of the overlay
-    2. run launch file: >> ros2 launch pydyna_simple pydyna_simple.launch.py. Launch file not working, using >> ros2 run pydyna_simple simul
+    2. run launch file: >> ros2 launch pydyna_simple pydyna_simple.launch.py . Launch file is working now! but cant see it process running, using >> ros2 run pydyna_simple simul
 3. inspect topics and servi
     1. list topics: >> ros2 topic list -t
     2. rosqt_graph: >> rqt_graph         

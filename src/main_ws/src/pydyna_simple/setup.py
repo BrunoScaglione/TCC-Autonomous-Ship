@@ -14,8 +14,8 @@ setup(
         (os.path.join('lib', package_name, 'config'), glob('config/*')),
         (os.path.join('share', package_name, 'logs', 'mylogs'), []),
         (os.path.join('share', package_name, 'logs', 'pydynalogs'), []),
-        (os.path.join('share', package_name, 'logs', 'rosbags'), []),
         (os.path.join('share', package_name, 'logs', 'roslogs'), []),
+        (os.path.join('share', package_name, 'db'), []),
         (os.path.join('share', package_name), glob('launch/*.launch.py'))
     ],
     install_requires=['setuptools'],
