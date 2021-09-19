@@ -86,7 +86,7 @@ This expresses velocity in free space broken into its linear and angular parts.
 -------------
 
 Now that you have the message structure, you can publish data 
-onto a topic directly from the command line using:
+onto a topic directly from the command line using: 
 
 ros2 topic pub <topic_name> <msg_type> '<args>'
 The '<args>' argument is the actual data you’ll pass to the 
@@ -126,7 +126,7 @@ ros2 service find <type_name>
 ros2 interface show std_srvs/srv/Empty
 Which will return:
 
----
+--- 
 
 The --- separates the request structure (above) from the response structure (below). 
 But, as you learned earlier, the Empty type doesn’t send or receive any data
