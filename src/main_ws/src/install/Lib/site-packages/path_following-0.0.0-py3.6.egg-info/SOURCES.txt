@@ -9,6 +9,7 @@ setup.py
 ../build/path_following/path_following.egg-info/top_level.txt
 ../build/path_following/path_following.egg-info/zip-safe
 path_following/__init__.py
+path_following/surgecontrol.py
 path_following/yawcontrol.py
 resource/path_following
 test/test_copyright.py

@@ -24,10 +24,11 @@ class YawControl(Node):
 
 
 def main(args=None):
-    rclpy.init(args=args)
-    yaw_node = YawControl()
 
     K = 1
+
+    rclpy.init(args=args)
+    yaw_node = YawControl()
     
     yaw_node.get_logger().info('send yaw')
 

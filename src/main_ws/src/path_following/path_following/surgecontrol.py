@@ -13,13 +13,13 @@ from path_following_interfaces.msg import State
 #custom service
 from path_following_interfaces.srv import StartEndSimul
 
-class YawControl(Node):
+class SurgeControl(Node):
     def __init__(self):
-        super().__init__('yawcontrol_node')
+        super().__init__('surgecontrol_node')
 
-        self.publisher_rudder = self.create_publisher(
+        self.publisher_propeller = self.create_publisher(
             Float32,
-            '/rudder_angle',
+            '/propeller_rotation',
             1)
 
 
@@ -28,13 +28,13 @@ def main(args=None):
     K = 1
 
     rclpy.init(args=args)
-    yaw_node = YawControl()
+    surge_node = SurgeControl()
     
-    yaw_node.get_logger().info('send yaw')
+    surge_node.get_logger().info('send yaw')
 
-    rclpy.spin(yaw_node)
+    rclpy.spin(surge_node)
 
-    yaw_node.destroy_node()
+    surge_node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
