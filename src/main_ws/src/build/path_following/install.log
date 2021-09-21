@@ -13,5 +13,7 @@ C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following-
 C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following-0.0.0-py3.6.egg-info\SOURCES.txt
 C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following-0.0.0-py3.6.egg-info\top_level.txt
 C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following-0.0.0-py3.6.egg-info\zip-safe
-C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following\yawcontroller = path_following.yawcontrol:mainsurgecontroller-script.py
-C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following\yawcontroller = path_following.yawcontrol:mainsurgecontroller.exe
+C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following\surgecontroller-script.py
+C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following\surgecontroller.exe
+C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following\yawcontroller-script.py
+C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following\yawcontroller.exe

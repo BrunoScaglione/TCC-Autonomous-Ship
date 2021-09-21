@@ -1,3 +1,4 @@
 [console_scripts]
-yawcontroller = path_following.yawcontrol:mainsurgecontroller = path_following.surgecontrol:main
+surgecontroller = path_following.surgecontrol:main
+yawcontroller = path_following.yawcontrol:main
 

@@ -21,8 +21,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'yawcontroller = path_following.yawcontrol:main'
-            'surgecontroller = path_following.surgecontrol:main'
+            'yawcontroller = path_following.yawcontrol:main',
+            'surgecontroller = path_following.surgecontrol:main',
         ],
     },
 )
