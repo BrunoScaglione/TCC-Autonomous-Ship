@@ -1,0 +1,267 @@
+[1.440s] [34mcolcon[0m [1;30mDEBUG[0m [32mCommand line arguments: ['C:\\Users\\phmar\\AppData\\Local\\Programs\\Python\\Python36\\Scripts\\colcon', 'build', '--merge-install'][0m
+[1.440s] [34mcolcon[0m [1;30mDEBUG[0m [32mParsed command line arguments: Namespace(ament_cmake_args=None, base_paths=['.'], build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=None, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x000002A58FF3BA20>>, merge_install=True, metas=['./colcon.meta'], packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, parallel_workers=12, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x000002A58FF3BA20>, verb_name='build', verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x000002A58FFB32E8>)[0m
+[1.475s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) check parameters
+[1.475s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) check parameters
+[1.475s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) check parameters
+[1.475s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) check parameters
+[1.475s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) discover
+[1.475s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) discover
+[1.475s] [34mcolcon.colcon_core.package_discovery[0m [1;30mINFO[0m Crawling recursively for packages in 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments'
+[1.475s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ignore', 'ignore_ament_install']
+[1.475s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore'
+[1.475s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore_ament_install'
+[1.475s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_pkg']
+[1.475s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_pkg'
+[1.475s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_meta']
+[1.475s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_meta'
+[1.475s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ros']
+[1.475s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ros'
+[1.491s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['cmake', 'python']
+[1.491s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'cmake'
+[1.491s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python'
+[1.491s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['python_setup_py']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python_setup_py'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extensions ['ignore', 'ignore_ament_install']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extension 'ignore'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) ignored
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extensions ['ignore', 'ignore_ament_install']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extension 'ignore'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) ignored
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extensions ['ignore', 'ignore_ament_install']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extension 'ignore'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) ignored
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(py_pubsub) by extensions ['ignore', 'ignore_ament_install']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(py_pubsub) by extension 'ignore'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(py_pubsub) by extension 'ignore_ament_install'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(py_pubsub) by extensions ['colcon_pkg']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(py_pubsub) by extension 'colcon_pkg'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(py_pubsub) by extensions ['colcon_meta']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(py_pubsub) by extension 'colcon_meta'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(py_pubsub) by extensions ['ros']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(py_pubsub) by extension 'ros'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'py_pubsub' with type 'ros.ament_python' and name 'py_pubsub'[0m
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extensions ['ignore', 'ignore_ament_install']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extension 'ignore'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extension 'ignore_ament_install'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extensions ['colcon_pkg']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extension 'colcon_pkg'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extensions ['colcon_meta']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extension 'colcon_meta'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extensions ['ros']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extension 'ros'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extensions ['cmake', 'python']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extension 'cmake'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extension 'python'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extensions ['python_setup_py']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control) by extension 'python_setup_py'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extensions ['ignore', 'ignore_ament_install']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extension 'ignore'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extension 'ignore_ament_install'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extensions ['colcon_pkg']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extension 'colcon_pkg'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extensions ['colcon_meta']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extension 'colcon_meta'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extensions ['ros']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extension 'ros'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extensions ['cmake', 'python']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extension 'cmake'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extension 'python'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extensions ['python_setup_py']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\config) by extension 'python_setup_py'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extensions ['ignore', 'ignore_ament_install']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extension 'ignore'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extension 'ignore_ament_install'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extensions ['colcon_pkg']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extension 'colcon_pkg'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extensions ['colcon_meta']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extension 'colcon_meta'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extensions ['ros']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extension 'ros'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extensions ['cmake', 'python']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extension 'cmake'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extension 'python'
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extensions ['python_setup_py']
+[1.506s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extension 'ignore'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extension 'ignore_ament_install'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extensions ['colcon_pkg']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extension 'colcon_pkg'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extensions ['colcon_meta']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extension 'colcon_meta'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extensions ['ros']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extension 'ros'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extensions ['cmake', 'python']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extension 'cmake'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extension 'python'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extensions ['python_setup_py']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\__pycache__) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extensions ['ignore', 'ignore_ament_install']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extension 'ignore'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extension 'ignore_ament_install'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extensions ['colcon_pkg']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extension 'colcon_pkg'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extensions ['colcon_meta']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extension 'colcon_meta'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extensions ['ros']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extension 'ros'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extensions ['cmake', 'python']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extension 'cmake'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extension 'python'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extensions ['python_setup_py']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extensions ['ignore', 'ignore_ament_install']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extension 'ignore'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extension 'ignore_ament_install'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extensions ['colcon_pkg']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extension 'colcon_pkg'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extensions ['colcon_meta']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extension 'colcon_meta'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extensions ['ros']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extension 'ros'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extensions ['cmake', 'python']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extension 'cmake'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extension 'python'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extensions ['python_setup_py']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extension 'ignore'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extension 'ignore_ament_install'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extensions ['colcon_pkg']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extension 'colcon_pkg'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extensions ['colcon_meta']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extension 'colcon_meta'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extensions ['ros']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extension 'ros'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extensions ['cmake', 'python']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extension 'cmake'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extension 'python'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extensions ['python_setup_py']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\__pycache__) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extensions ['ignore', 'ignore_ament_install']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extension 'ignore'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extension 'ignore_ament_install'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extensions ['colcon_pkg']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extension 'colcon_pkg'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extensions ['colcon_meta']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extension 'colcon_meta'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extensions ['ros']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extension 'ros'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extensions ['cmake', 'python']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extension 'cmake'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extension 'python'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extensions ['python_setup_py']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\results) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extensions ['ignore', 'ignore_ament_install']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extension 'ignore'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extension 'ignore_ament_install'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extensions ['colcon_pkg']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extension 'colcon_pkg'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extensions ['colcon_meta']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extension 'colcon_meta'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extensions ['ros']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extension 'ros'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extensions ['cmake', 'python']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extension 'cmake'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extension 'python'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extensions ['python_setup_py']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extension 'ignore'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extension 'ignore_ament_install'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extensions ['colcon_pkg']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extension 'colcon_pkg'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extensions ['colcon_meta']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extension 'colcon_meta'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extensions ['ros']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extension 'ros'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extensions ['cmake', 'python']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extension 'cmake'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extension 'python'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extensions ['python_setup_py']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\SurgeController\utils\__pycache__) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extension 'ignore'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extension 'ignore_ament_install'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extensions ['colcon_pkg']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extension 'colcon_pkg'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extensions ['colcon_meta']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extension 'colcon_meta'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extensions ['ros']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extension 'ros'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extensions ['cmake', 'python']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extension 'cmake'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extension 'python'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extensions ['python_setup_py']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\modules\controllers\__pycache__) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extensions ['ignore', 'ignore_ament_install']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extension 'ignore'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extension 'ignore_ament_install'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extensions ['colcon_pkg']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extension 'colcon_pkg'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extensions ['colcon_meta']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extension 'colcon_meta'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extensions ['ros']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extension 'ros'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extensions ['cmake', 'python']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extension 'cmake'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extension 'python'
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extensions ['python_setup_py']
+[1.522s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(surge-control\simplified_model) by extension 'python_setup_py'
+[1.522s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) using defaults
+[1.522s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) discover
+[1.522s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) using defaults
+[1.522s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) discover
+[1.522s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) using defaults
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'py_pubsub' build argument 'cmake_args' from command line to 'None'
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'py_pubsub' build argument 'cmake_target' from command line to 'None'
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'py_pubsub' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'py_pubsub' build argument 'cmake_clean_cache' from command line to 'False'
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'py_pubsub' build argument 'cmake_clean_first' from command line to 'False'
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'py_pubsub' build argument 'cmake_force_configure' from command line to 'False'
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'py_pubsub' build argument 'ament_cmake_args' from command line to 'None'
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'py_pubsub' build argument 'catkin_cmake_args' from command line to 'None'
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'py_pubsub' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.600s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'py_pubsub' with the following arguments: {'ament_cmake_args': None, 'build_base': 'C:\\Users\\phmar\\Desktop\\TCC-Autonomous-Ship\\src\\experiments\\build\\py_pubsub', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': 'C:\\Users\\phmar\\Desktop\\TCC-Autonomous-Ship\\src\\experiments\\install', 'merge_install': True, 'path': 'C:\\Users\\phmar\\Desktop\\TCC-Autonomous-Ship\\src\\experiments\\py_pubsub', 'symlink_install': False, 'test_result_base': None}[0m
+[1.600s] [34mcolcon.colcon_core.executor[0m [1;30mINFO[0m Executing jobs using 'parallel' executor
+[1.630s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mrun_until_complete[0m
+[1.631s] [34mcolcon.colcon_ros.task.ament_python.build[0m [1;30mINFO[0m Building ROS package in 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\py_pubsub' with build type 'ament_python'
+[1.631s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('py_pubsub', 'ament_prefix_path')
+[1.633s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_core.shell.sh': Not used on Windows systems
+[1.633s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub\hook\ament_prefix_path.ps1'
+[1.649s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub\hook\ament_prefix_path.bat'
+[1.663s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub\hook\ament_prefix_path.dsv'
+[1.675s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.110s] [34mcolcon.colcon_core.task.python.build[0m [1;30mINFO[0m Building Python package in 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\py_pubsub'
+[2.126s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.174s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\py_pubsub': PYTHONPATH=C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages;%PYTHONPATH% c:\users\phmar\appdata\local\programs\python\python36\python.exe setup.py egg_info --egg-base ..\build\py_pubsub build --build-base C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build install --prefix C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install --record C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\install.log --single-version-externally-managed[0m
+[2.708s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\py_pubsub' returned '0': PYTHONPATH=C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages;%PYTHONPATH% c:\users\phmar\appdata\local\programs\python\python36\python.exe setup.py egg_info --egg-base ..\build\py_pubsub build --build-base C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build install --prefix C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install --record C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\install.log --single-version-externally-managed[0m
+[2.724s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install' for CMake module files
+[2.724s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install' for CMake config files
+[2.724s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\bin'
+[2.724s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\bin'
+[2.724s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Scripts'
+[2.724s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\lib\pkgconfig\py_pubsub.pc'
+[2.724s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages'
+[2.724s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('py_pubsub', 'pythonpath')
+[2.740s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub\hook\pythonpath.ps1'
+[2.744s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub\hook\pythonpath.bat'
+[2.744s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub\hook\pythonpath.dsv'
+[2.745s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(py_pubsub)
+[2.753s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub\package.ps1'
+[2.760s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub\package.bat'
+[2.766s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub\package.dsv'
+[2.769s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\colcon-core\packages\py_pubsub)
+[2.770s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mrun_until_complete finished with '0'[0m
+[2.770s] [34mcolcon.colcon_core.event_reactor[0m [1;30mDEBUG[0m [32mjoining thread[0m
+[2.783s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_notification.desktop_notification.notify2': 'notify2' not found
+[2.783s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_notification.desktop_notification.notify_send': Not used on non-Linux systems
+[2.783s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[2.783s] [34mcolcon.colcon_notification.desktop_notification[0m [1;30mINFO[0m Sending desktop notification using 'win32'
+[7.837s] [34mcolcon.colcon_core.event_reactor[0m [1;30mDEBUG[0m [32mjoined thread[0m
+[7.844s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\local_setup.ps1'
+[7.856s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix util module 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\_local_setup_util_ps1.py'
+[7.863s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\setup.ps1'
+[7.878s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\local_setup.bat'
+[7.888s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix util module 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\_local_setup_util_bat.py'
+[7.889s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\setup.bat'

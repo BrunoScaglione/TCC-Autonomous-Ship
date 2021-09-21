@@ -20,7 +20,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Bruno',
+    maintainer='bruno',
     maintainer_email='bruno.c.scaglione@gmail.com',
     description='High Fidelity Ship Maneuvering Simulator',
     license='Apache License 2.0',

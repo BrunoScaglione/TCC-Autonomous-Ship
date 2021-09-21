@@ -1,0 +1,43 @@
+[0.547s] Invoking command in 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\py_pubsub': PYTHONPATH=C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages;%PYTHONPATH% c:\users\phmar\appdata\local\programs\python\python36\python.exe setup.py egg_info --egg-base ..\build\py_pubsub build --build-base C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build install --prefix C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install --record C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\install.log --single-version-externally-managed
+[0.922s] running egg_info
+[0.937s] creating ..\build\py_pubsub\py_pubsub.egg-info
+[0.937s] writing ..\build\py_pubsub\py_pubsub.egg-info\PKG-INFO
+[0.937s] writing dependency_links to ..\build\py_pubsub\py_pubsub.egg-info\dependency_links.txt
+[0.937s] writing entry points to ..\build\py_pubsub\py_pubsub.egg-info\entry_points.txt
+[0.937s] writing requirements to ..\build\py_pubsub\py_pubsub.egg-info\requires.txt
+[0.937s] writing top-level names to ..\build\py_pubsub\py_pubsub.egg-info\top_level.txt
+[0.937s] writing manifest file '..\build\py_pubsub\py_pubsub.egg-info\SOURCES.txt'
+[0.937s] reading manifest file '..\build\py_pubsub\py_pubsub.egg-info\SOURCES.txt'
+[0.953s] writing manifest file '..\build\py_pubsub\py_pubsub.egg-info\SOURCES.txt'
+[0.953s] running build
+[0.953s] running build_py
+[0.953s] creating C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build
+[0.953s] creating C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build\lib
+[0.953s] creating C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build\lib\py_pubsub
+[0.953s] copying py_pubsub\publisher_member_function.py -> C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build\lib\py_pubsub
+[0.953s] copying py_pubsub\subscriber_member_function.py -> C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build\lib\py_pubsub
+[0.969s] copying py_pubsub\__init__.py -> C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build\lib\py_pubsub
+[0.969s] running install
+[0.969s] running install_lib
+[1.000s] creating C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages\py_pubsub
+[1.000s] copying C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build\lib\py_pubsub\publisher_member_function.py -> C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages\py_pubsub
+[1.000s] copying C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build\lib\py_pubsub\subscriber_member_function.py -> C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages\py_pubsub
+[1.000s] copying C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build\lib\py_pubsub\__init__.py -> C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages\py_pubsub
+[1.000s] byte-compiling C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages\py_pubsub\publisher_member_function.py to publisher_member_function.cpython-36.pyc
+[1.000s] byte-compiling C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages\py_pubsub\subscriber_member_function.py to subscriber_member_function.cpython-36.pyc
+[1.000s] byte-compiling C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages\py_pubsub\__init__.py to __init__.cpython-36.pyc
+[1.000s] running install_data
+[1.000s] creating C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\ament_index
+[1.000s] creating C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\ament_index\resource_index
+[1.000s] creating C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\ament_index\resource_index\packages
+[1.000s] copying resource\py_pubsub -> C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\ament_index\resource_index\packages
+[1.000s] copying package.xml -> C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\share\py_pubsub
+[1.000s] running install_egg_info
+[1.016s] Copying ..\build\py_pubsub\py_pubsub.egg-info to C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages\py_pubsub-0.0.0-py3.6.egg-info
+[1.031s] running install_scripts
+[1.062s] Installing listener-script.py script to C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\lib\py_pubsub
+[1.062s] Installing listener.exe script to C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\lib\py_pubsub
+[1.062s] Installing talker-script.py script to C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\lib\py_pubsub
+[1.062s] Installing talker.exe script to C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\lib\py_pubsub
+[1.062s] writing list of installed files to 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\install.log'
+[1.078s] Invoked command in 'C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\py_pubsub' returned '0': PYTHONPATH=C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install\Lib\site-packages;%PYTHONPATH% c:\users\phmar\appdata\local\programs\python\python36\python.exe setup.py egg_info --egg-base ..\build\py_pubsub build --build-base C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\build install --prefix C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\install --record C:\Users\phmar\Desktop\TCC-Autonomous-Ship\src\experiments\build\py_pubsub\install.log --single-version-externally-managed
