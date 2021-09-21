@@ -1,0 +1,29 @@
+running egg_info
+writing ..\build\path_following\path_following.egg-info\PKG-INFO
+writing dependency_links to ..\build\path_following\path_following.egg-info\dependency_links.txt
+writing entry points to ..\build\path_following\path_following.egg-info\entry_points.txt
+writing requirements to ..\build\path_following\path_following.egg-info\requires.txt
+writing top-level names to ..\build\path_following\path_following.egg-info\top_level.txt
+reading manifest file '..\build\path_following\path_following.egg-info\SOURCES.txt'
+writing manifest file '..\build\path_following\path_following.egg-info\SOURCES.txt'
+running build
+running build_py
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+copying path_following\yawcontrol.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+copying path_following\__init__.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+running install
+running install_lib
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\yawcontrol.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\__init__.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yawcontrol.py to yawcontrol.cpython-36.pyc
+byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\__init__.py to __init__.cpython-36.pyc
+running install_data
+copying resource\path_following -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\ament_index\resource_index\packages
+copying package.xml -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\path_following
+running install_egg_info
+Copying ..\build\path_following\path_following.egg-info to C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following-0.0.0-py3.6.egg-info
+running install_scripts
+writing list of installed files to 'C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\install.log'

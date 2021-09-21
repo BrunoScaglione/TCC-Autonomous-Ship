@@ -1,0 +1,3 @@
+source;share/path_following_interfaces/environment/ament_prefix_path.bat
+source;share/path_following_interfaces/environment/path.bat
+source;share/path_following_interfaces/environment/pythonpath.bat

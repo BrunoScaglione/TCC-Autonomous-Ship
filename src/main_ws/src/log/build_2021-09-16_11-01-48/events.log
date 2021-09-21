@@ -1,8 +1,0 @@
-[0.000000] (-) TimerEvent: {}
-[0.000000] (path_following_interfaces) JobQueued: {'identifier': 'path_following_interfaces', 'dependencies': OrderedDict()}
-[0.000000] (path_following_interfaces) JobStarted: {'identifier': 'path_following_interfaces'}
-[0.046000] (path_following_interfaces) JobProgress: {'identifier': 'path_following_interfaces', 'progress': 'cmake'}
-[0.078000] (path_following_interfaces) StderrLine: {'line': b'Traceback (most recent call last):\n  File "c:\\users\\phmar\\appdata\\local\\programs\\python\\python36\\lib\\site-packages\\colcon_core\\executor\\__init__.py", line 91, in __call__\n    rc = await self.task(*args, **kwargs)\n  File "c:\\users\\phmar\\appdata\\local\\programs\\python\\python36\\lib\\site-packages\\colcon_core\\task\\__init__.py", line 93, in __call__\n    return await task_method(*args, **kwargs)\n  File "c:\\users\\phmar\\appdata\\local\\programs\\python\\python36\\lib\\site-packages\\colcon_ros\\task\\ament_cmake\\build.py", line 61, in build\n    environment_callback=add_app_to_cpp)\n  File "c:\\users\\phmar\\appdata\\local\\programs\\python\\python36\\lib\\site-packages\\colcon_cmake\\task\\cmake\\build.py", line 87, in build\n    rc = await self._reconfigure(args, env)\n  File "c:\\users\\phmar\\appdata\\local\\programs\\python\\python36\\lib\\site-packages\\colcon_cmake\\task\\cmake\\build.py", line 154, in _reconfigure\n    \'VisualStudioVersion is not set, \'\nRuntimeError: VisualStudioVersion is not set, please run within a Visual Studio Command Prompt.\n'}
-[0.078000] (path_following_interfaces) JobEnded: {'identifier': 'path_following_interfaces', 'rc': 1}
-[0.093000] (-) TimerEvent: {}
-[0.093000] (-) EventReactorShutdown: {}

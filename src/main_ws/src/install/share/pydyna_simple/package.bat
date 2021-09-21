@@ -5,7 +5,11 @@
 :: the prefix is two levels up from the package specific share directory
 for %%p in ("%~dp0..\..") do set "COLCON_CURRENT_PREFIX=%%~fp"
 
+call:call_file "%%COLCON_CURRENT_PREFIX%%\share\pydyna_simple\hook\cmake_prefix_path.bat"
+call:call_file "%%COLCON_CURRENT_PREFIX%%\share\pydyna_simple\hook\path_dll.bat"
+call:call_file "%%COLCON_CURRENT_PREFIX%%\share\pydyna_simple\hook\path.bat"
 call:call_file "%%COLCON_CURRENT_PREFIX%%\share\pydyna_simple\hook\pythonpath.bat"
+call:call_file "%%COLCON_CURRENT_PREFIX%%\share\pydyna_simple\hook\ament_prefix_path.bat"
 
 set COLCON_CURRENT_PREFIX=
 

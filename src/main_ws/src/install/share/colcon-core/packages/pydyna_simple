@@ -1,1 +1,1 @@
-setuptools
+ament_index_python;math;numpy;os;path_following_interfaces;pydyna;rclpy;std_msgs

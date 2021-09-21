@@ -1,11 +1,11 @@
 Metadata-Version: 2.1
 Name: pydyna-simple
 Version: 0.0.0
-Summary: TODO: Package description
+Summary: High Fidelity Ship Maneuvering Simulator
 Home-page: UNKNOWN
-Maintainer: TODO: Maintainer
-Maintainer-email: TODO: Maintainer email
-License: TODO: License declaration
+Maintainer: Bruno
+Maintainer-email: bruno.c.scaglione@gmail.com
+License: Apache License 2.0
 Platform: UNKNOWN
 
 UNKNOWN

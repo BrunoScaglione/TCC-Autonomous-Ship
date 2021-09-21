@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\CMakeFiles\24c929268daca410f1bfa61c776ba5d9\path_following_interfaces.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\TCC-Autonomous-Ship\src\main_ws\src\path_following_interfaces\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\TCC-Autonomous-Ship\src\main_ws\src\path_following_interfaces\msg\Position.msg" />
+    <None Include="C:\TCC-Autonomous-Ship\src\main_ws\src\path_following_interfaces\msg\Velocity.msg" />
+    <None Include="C:\TCC-Autonomous-Ship\src\main_ws\src\path_following_interfaces\msg\State.msg" />
+    <None Include="C:\TCC-Autonomous-Ship\src\main_ws\src\path_following_interfaces\srv\StartEndSimul.srv" />
+    <None Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_cmake\srv\StartEndSimul_Request.msg" />
+    <None Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_cmake\srv\StartEndSimul_Response.msg" />
+    <None Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\CMakeFiles\path_following_interfaces" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{1FD477B5-E867-361B-B142-244A19A07523}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -9,6 +9,7 @@ setup.py
 ../build/pydyna_simple/pydyna_simple.egg-info/top_level.txt
 ../build/pydyna_simple/pydyna_simple.egg-info/zip-safe
 config/TankerL186B32_T085.p3d
+config/changes.txt
 config/exemplo.p3d
 config/pydyna-7.2.3-py3-none-any.whl
 config/requirements.txt

@@ -1,0 +1,7 @@
+% number of rudders: 1
+% number of propellers: 1
+% time_stamp x y z xx yy zz vx vy vz vxx vyy vzz rudder_effective_orientation_0 rudder_demanded_orientation_0 propeller_effective_0 propeller_demanded_0 propeller_effective_direction_0 propeller_demanded_direction_0 propeller_effective_rpm_0 propeller_demanded_rpm_0
+    0.10       0.00      -0.00      10.50       0.00      -0.00      -0.01       0.00      -0.00      -0.00       0.00      -0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00
+    0.20       0.00      -0.00      10.50       0.00      -0.00      -0.01       0.00      -0.00      -0.00       0.00      -0.00       0.00       0.00       0.00       0.04     787.53       0.00       0.00       0.54      60.00
+    0.30       0.00      -0.00      10.50       0.00      -0.00      -0.01       0.00      -0.00      -0.00       0.00      -0.00       0.00       0.00       0.00       0.15     787.53       0.00       0.00       1.08      60.00
+    0.40       0.00      -0.00      10.50       0.00      -0.00      -0.01       0.00      -0.00      -0.00       0.00      -0.00       0.00       0.00       0.00       0.34     787.53       0.00       0.00       1.61      60.00
