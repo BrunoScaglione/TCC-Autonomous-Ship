@@ -45,6 +45,8 @@ class SurgeController(Node):
 def main(args=None):
     rclpy.init(args=args)
     surge_controller_node = SurgeController()
+
+    surge_controller_node.get_logger().info('send yaw')
     
     rclpy.spin(surge_controller_node)
 

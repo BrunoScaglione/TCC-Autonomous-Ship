@@ -22,11 +22,25 @@ class YawControl(Node):
             '/rudder_angle',
             1)
 
+        """self.subscription_filtered_state = self.create_subscription(
+            Float32,
+            '/filtered_state',
+            self.callback_filtered_state,
+            1)"""
+
+        self.yaw_timer = self.create_timer(
+            3.0,
+            self.yaw_publisher
+        )
+
+    def yaw_publisher(self):
+        rudder_angle = 0.0
+        msg = Float32()
+        msg.data = rudder_angle
+        self.publisher_rudder.publish(msg)
+
 
 def main(args=None):
-
-    K = 1
-
     rclpy.init(args=args)
     yaw_node = YawControl()
     
