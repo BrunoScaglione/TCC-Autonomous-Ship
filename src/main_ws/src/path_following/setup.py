@@ -14,15 +14,15 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='phmar',
-    maintainer_email='phmarzagao@usp.br',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer='bruno',
+    maintainer_email='bruno.c.scaglione@gmail.com',
+    description='Path-Following Ship',
+    license='Apache License 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'yawcontroller = path_following.yawcontrol:main',
-            'surgecontroller = path_following.surgecontrol:main',
+            'yaw_controller = path_following.yawcontrol:main',
+            'surge_controller = path_following.surgecontrol:main',
         ],
     },
 )

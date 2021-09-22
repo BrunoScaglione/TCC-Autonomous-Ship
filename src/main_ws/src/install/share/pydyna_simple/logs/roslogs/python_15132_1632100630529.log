@@ -1,3 +1,0 @@
-[INFO 1632100630.598413500] [pydyna_simple_node]: started main (main() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple\pydyna_simple.py:135)
-[INFO 1632100630.599092300] [pydyna_simple_node]: entered rclpy.ok loop (main() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple\pydyna_simple.py:138)
-[INFO 1632100708.453929200] [pydyna_simple_node]: listened propeller rotation: 1.000000 (callback_propeller() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple\pydyna_simple.py:84)

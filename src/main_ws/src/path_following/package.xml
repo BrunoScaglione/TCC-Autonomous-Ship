@@ -3,8 +3,8 @@
 <package format="3">
   <name>path_following</name>
   <version>0.0.0</version>
-  <description>package with path_following nodes</description>
-  <maintainer email="phmarzagao@usp.br">phmar</maintainer>
+  <description>Path-Following Ship</description>
+  <maintainer email="bruno.c.scaglione@gmail.com">bruno</maintainer>
   <license>Apache License 2.0</license>
 
   <exec_depend>std_msgs</exec_depend>

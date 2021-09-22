@@ -1,4 +1,0 @@
-[console_scripts]
-surgecontroller = path_following.surgecontrol:main
-yawcontroller = path_following.yawcontrol:main
-
