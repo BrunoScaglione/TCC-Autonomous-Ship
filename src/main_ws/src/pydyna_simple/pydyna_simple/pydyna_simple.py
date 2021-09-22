@@ -58,9 +58,7 @@ class PydynaSimpleNode(Node):
             self.subscriptions_synced = False
 
             self.rpt = pydyna.create_text_report(f'{self.pkg_share_dir}/logs/pydynalogs/pydyna_log_{self.num_simul}')
-            #self.rpt = pydyna.create_text_report(f'C:/Users/bruno/Desktop/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/logs/pydynalogs/pydyna_log_{self.num_simul}')
             self.sim = pydyna.create_simulation(f'{self.pkg_dir}/config/TankerL186B32_T085.p3d')
-            #self.sim = pydyna.create_simulation(f'C:/Users/bruno/Desktop/tcc-autonomous-ship/src/main_ws/install/lib/pydyna_simple/config/TankerL186B32_T085.p3d')
             
             self.ship = self.sim.vessels['104']
             x, y, psi = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.psi

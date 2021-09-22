@@ -8,10 +8,7 @@
   <license>Apache License 2.0</license>
 
   <exec_depend>std_msgs</exec_depend>
-  <exec_depend>os</exec_depend>
-  <exec_depend>numpy</exec_depend>
-  <exec_depend>math</exec_depend>
-  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>time</exec_depend>
 
   <depend>path_following_interfaces</depend>
   <depend>rclpy</depend>
