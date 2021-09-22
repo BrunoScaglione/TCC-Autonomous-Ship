@@ -1,6 +1,3 @@
-# launch from main_ws/src
-import subprocess
-
 import os
 
 from ament_index_python.packages import get_package_share_directory, get_package_prefix
@@ -12,9 +9,9 @@ from launch_ros.actions import Node
 # however absolute paths should do, with get_package_share_directory
 
 def generate_launch_description():
-    pkg_share_dir = get_package_share_directory('pydyna_simple')
-    pkg_install_dir = get_package_prefix('pydyna_simple')
-    pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
+    pkg_share_dir = get_package_share_directory('path_following')
+    pydyna_install_dir = get_package_prefix('pydyna_simple')
+    pydyna_dir = os.path.join(pydyna_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
 
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
@@ -35,7 +32,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
                 {'pkg_share_dir': pkg_share_dir},
-                {'pkg_dir': pkg_dir}
+                {'pkg_dir': pydyna_dir}
         ]
     )                   
 

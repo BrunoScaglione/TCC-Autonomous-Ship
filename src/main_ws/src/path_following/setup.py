@@ -11,6 +11,10 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'logs', 'mylogs'), []),
+        (os.path.join('share', package_name, 'logs', 'pydynalogs'), []),
+        (os.path.join('share', package_name, 'logs', 'roslogs'), []),
+        (os.path.join('share', package_name, 'db'), []),
         (os.path.join('share', package_name), glob('launch/*.launch.py'))
     ],
     install_requires=['setuptools'],
@@ -24,6 +28,13 @@ setup(
         'console_scripts': [
             'yaw_controller = path_following.yawcontrol:main',
             'surge_controller = path_following.surgecontrol:main',
+            'backend = path_following.backend:main',
+            'control_allocation = path_following.control_allocation:main',
+            'gps_imu_simul = path_following.gps_imu_simul:main',
+            'venus = path_following.venus:main',
+            'wave_filter = path_following.wave_filter:main',
+            'los_guidance = path_following.los_guidance:main',
+            'kalman_filter = path_following.kalman_filter:main',
         ],
     },
 )
