@@ -30,8 +30,9 @@ class SurgeController(Node):
         
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered surge velocity: %f' % msg.velocity.u)
-        thrust_msg = surge_control(msg.velocity.u)
+        thrust_msg = self.surge_control(msg.velocity.u)
         self.publisher_propeller_thrust.publish(thrust_msg)
+        self.get_logger().info('published thrust force: %f' % thrust_msg.data)
     
     def callback_desired_surge_velocity(self, msg):
         self.get_logger().info('listened desired surge velocity: %f' % msg.data)

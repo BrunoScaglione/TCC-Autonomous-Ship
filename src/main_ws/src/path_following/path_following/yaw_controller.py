@@ -30,8 +30,9 @@ class YawController(Node):
         
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered yaw angle: %f' % msg.position.psi)
-        rudder_msg = yaw_control(msg.position.psi)
-        self.publisher_rudder_angle.publish(thrust_msg)
+        rudder_msg = self.yaw_control(msg.position.psi)
+        self.publisher_rudder_angle.publish(rudder_msg)
+        self.get_logger().info('published rudder angle: %f' % rudder_msg.data)
     
     def callback_desired_yaw_angle(self, msg):
         self.get_logger().info('listened desired yaw angle: %f' % msg.data)

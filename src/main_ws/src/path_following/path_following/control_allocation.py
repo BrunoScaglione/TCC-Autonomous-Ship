@@ -22,7 +22,7 @@ class ControlAllocation(Node):
         
     def callback_propeller_thrust(self, msg):
         self.get_logger().info('listened propeller thrust: %f' % msg.data)
-        propeller_rotation = control_allocation(msg.data)
+        propeller_rotation = self.control_allocation(msg.data)
         self.publisher_propeller_rotation.publish(propeller_rotation)
     
     def control_allocation(self, propeller_thrust):

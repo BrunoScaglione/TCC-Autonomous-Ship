@@ -18,32 +18,38 @@ class WaveFilter(Node):
             State,
             '/filtered_state',
             1)
-        
-    def callback_estimated_state(self, msg):
+
+    def log_state(self, msg, communicator):
+        log_str = 'listened estimated' if communicator == 'subscriber' else 'published filtered'
         self.get_logger().info(
-            'listened estimated state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
-                msg.position.x, 
-                msg.position.y, 
-                msg.position.psi, # yaw angle
-                msg.velocity.u, 
-                msg.velocity.v, 
-                msg.velocity.r,
-                msg.time 
+                log_str,
+                msg.state.position.x, 
+                msg.state.position.y, 
+                msg.state.position.psi, # yaw angle
+                msg.state.velocity.u, 
+                msg.state.velocity.v, 
+                msg.state.velocity.r,
+                msg.state.time 
             )
         )
-        filtered_state = state_filter(msg)
-        self.publisher_filtered_state.publish(filtered_state)
+        
+    def callback_estimated_state(self, msg):
+        log_state(self, msg, 'subscriber')
+        filtered_state_msg = self.state_filter(msg)
+        self.publisher_filtered_state.publish(filtered_state_msg)
+        log_state(self, msg, 'publisher')
     
     def state_filter(state_estimate):
-        filtered_state = State()
-        filtered_state.position.x = 1 # FILLER
-        filtered_state.position.y = 1 # FILLER
-        filtered_state.position.psi = 1 # FILLER
-        filtered_state.velocity.u = 1 # FILLER
-        filtered_state.velocity.v = 1 # FILLER
-        filtered_state.velocity.r = 1 # FILLER
-        return filtered_state # 
+        filtered_state_msg = State()
+        filtered_state_msg.position.x = 1 # FILLER
+        filtered_state_msg.position.y = 1 # FILLER
+        filtered_state_msg.position.psi = 1 # FILLER
+        filtered_state_msg.velocity.u = 1 # FILLER
+        filtered_state_msg.velocity.v = 1 # FILLER
+        filtered_state_msg.velocity.r = 1 # FILLER
+        return filtered_state_msg # 
 
 def main(args=None):
     rclpy.init(args=args)

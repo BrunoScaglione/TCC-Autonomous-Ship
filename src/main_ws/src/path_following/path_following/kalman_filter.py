@@ -18,32 +18,39 @@ class KalmanFilter(Node):
             State,
             '/estimated_state',
             1)
-        
-    def callback_simulated_state(self, msg):
+
+    def log_state(self, msg, communicator):
+        log_str = 'listened simulated' if communicator == 'subscriber' else 'published estimated'
         self.get_logger().info(
-            'listened simulated state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
-                msg.position.x, 
-                msg.position.y, 
-                msg.position.psi, # yaw angle
-                msg.velocity.u, 
-                msg.velocity.v, 
-                msg.velocity.r,
-                msg.time 
+                log_str,
+                msg.state.position.x, 
+                msg.state.position.y, 
+                msg.state.position.psi, # yaw angle
+                msg.state.velocity.u, 
+                msg.state.velocity.v, 
+                msg.state.velocity.r,
+                msg.state.time 
             )
         )
-        estimated_state = state_estimate(msg)
-        self.publisher_estimated_state.publish(estimated_state)
+        
+    def callback_simulated_state(self, msg):
+        log_state(self, msg, 'subscriber')
+        estimated_state_msg = self.state_estimate(msg)
+        self.publisher_estimated_state.publish(estimated_state_msg)
+        log_state(self, estimated_state_msg, 'publisher')
+
     
     def state_estimate(state_simul):
-        estimated_state = State()
-        estimated_state.position.x = 1 # FILLER
-        estimated_state.position.y = 1 # FILLER
-        estimated_state.position.psi = 1 # FILLER
-        estimated_state.velocity.u = 1 # FILLER
-        estimated_state.velocity.v = 1 # FILLER
-        estimated_state.velocity.r = 1 # FILLER
-        return estimated_state # 
+        estimated_state_msg = State()
+        estimated_state_msg.position.x = 1 # FILLER
+        estimated_state_msg.position.y = 1 # FILLER
+        estimated_state_msg.position.psi = 1 # FILLER
+        estimated_state_msg.velocity.u = 1 # FILLER
+        estimated_state_msg.velocity.v = 1 # FILLER
+        estimated_state_msg.velocity.r = 1 # FILLER
+        return estimated_state_msg # 
 
 def main(args=None):
     rclpy.init(args=args)

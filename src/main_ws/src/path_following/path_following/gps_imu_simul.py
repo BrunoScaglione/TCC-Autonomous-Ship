@@ -18,32 +18,38 @@ class GpsImuSimulator(Node):
             State,
             '/simulated_state',
             1)
-        
-    def callback_state(self, msg):
+
+    def log_state(self, msg, communicator):
+        log_str = 'listened' if communicator == 'subscriber' else 'published simulated'
         self.get_logger().info(
-            'listened state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
-                msg.position.x, 
-                msg.position.y, 
-                msg.position.psi, # yaw angle
-                msg.velocity.u, 
-                msg.velocity.v, 
-                msg.velocity.r,
-                msg.time 
+                log_str,
+                msg.state.position.x, 
+                msg.state.position.y, 
+                msg.state.position.psi, # yaw angle
+                msg.state.velocity.u, 
+                msg.state.velocity.v, 
+                msg.state.velocity.r,
+                msg.state.time 
             )
         )
-        simulated_state = state_simul(msg)
-        self.publisher_simulated_state.publish(simulated_state)
+        
+    def callback_state(self, msg):
+        log_state(self, msg, 'subscriber')
+        simulated_state_msg = state_simul(msg)
+        self.publisher_simulated_state.publish(simulated_state_msg)
+        log_state(self, msg, 'publisher')
     
     def state_simul(state):
-        simulated_state = State()
-        simulated_state.position.x = 1 # FILLER
-        simulated_state.position.y = 1 # FILLER
-        simulated_state.position.psi = 1 # FILLER
-        simulated_state.velocity.u = 1 # FILLER
-        simulated_state.velocity.v = 1 # FILLER
-        simulated_state.velocity.r = 1 # FILLER
-        return simulated_state # 
+        simulated_state_msg = State()
+        simulated_state_msg.position.x = 1 # FILLER
+        simulated_state_msg.position.y = 1 # FILLER
+        simulated_state_msg.position.psi = 1 # FILLER
+        simulated_state_msg.velocity.u = 1 # FILLER
+        simulated_state_msg.velocity.v = 1 # FILLER
+        simulated_state_msg.velocity.r = 1 # FILLER
+        return simulated_state_msg # 
 
 def main(args=None):
     rclpy.init(args=args)
