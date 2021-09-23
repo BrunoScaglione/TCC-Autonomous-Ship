@@ -2,6 +2,9 @@ from time import sleep
 
 import pydyna
 import venus.viewer
+from venus.objects import (
+    GeoPos, Rudder, Vessel, Size, KeyValue, Button
+)
 
 import rclpy
 from rclpy.node import Node
@@ -29,15 +32,15 @@ class Venus(Node):
             self.callback_rudder_angle,
             1)
 
-    def venus_init():
+    def venus_init(self):
         # GET MAPQUEST API KEY
         self.viewer = venus.viewer.Venus(mapquest_key = "1bZQGGHqFLQBezmB29WKAHTJKBXM0wDl", logging=True, port=6150)
-        self.initial_position = venus.objects.GeoPos(-23.06255, -44.2772) # angra dos reis
+        initial_position = GeoPos(-23.06255, -44.2772) # angra dos reis
         self.viewer.set_viewport(initial_position, 15)
-        vessel_config = venus.objects.Vessel(
+        vessel_config = Vessel(
             position = initial_position,
             angle = 0,
-            size = venus.objects.Size(32, 186),
+            size = Size(32, 186),
             rudders=[Rudder(angle=0, length=0.1, visual_options={"color": "red"})],
             visual_options={
                 "stroke": True,
