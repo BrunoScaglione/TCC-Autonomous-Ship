@@ -56,7 +56,11 @@ def main(args=None):
     rclpy.init(args=args)
     kalman_filter_node = KalmanFilter()
     
-    rclpy.spin(kalman_filter_node)
+    try:
+        rclpy.spin(kalman_filter_node)
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+        pass
 
     kalman_filter_node.destroy_node()
     rclpy.shutdown()

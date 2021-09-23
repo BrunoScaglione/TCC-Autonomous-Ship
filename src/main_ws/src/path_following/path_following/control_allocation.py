@@ -32,7 +32,11 @@ def main(args=None):
     rclpy.init(args=args)
     control_allocation_node = ControlAllocation()
     
-    rclpy.spin(control_allocation_node)
+    try:
+        rclpy.spin(control_allocation_node)
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+        pass
 
     control_allocation_node.destroy_node()
     rclpy.shutdown()

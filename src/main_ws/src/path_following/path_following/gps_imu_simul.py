@@ -55,7 +55,11 @@ def main(args=None):
     rclpy.init(args=args)
     gps_imu_simulator_node = GpsImuSimulator()
     
-    rclpy.spin(gps_imu_simulator_node)
+    try:
+        rclpy.spin(gps_imu_simulator_node)
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+        pass
 
     gps_imu_simulator_node.destroy_node()
     rclpy.shutdown()

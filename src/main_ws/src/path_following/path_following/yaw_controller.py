@@ -48,7 +48,11 @@ def main(args=None):
     rclpy.init(args=args)
     yaw_controller_node = YawController()
     
-    rclpy.spin(yaw_controller_node)
+    try:
+        rclpy.spin(yaw_controller_node)
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+        pass
 
     yaw_controller_node.destroy_node()
     rclpy.shutdown()

@@ -55,7 +55,11 @@ def main(args=None):
     rclpy.init(args=args)
     wave_filter_node = WaveFilter()
     
-    rclpy.spin(wave_filter_node)
+    try:
+        rclpy.spin(wave_filter_node)
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+        pass
 
     wave_filter_node.destroy_node()
     rclpy.shutdown()

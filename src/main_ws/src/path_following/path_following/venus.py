@@ -44,7 +44,7 @@ class Venus(Node):
             rudders=[Rudder(angle=0, length=0.1, visual_options={"color": "red"})],
             visual_options={
                 "stroke": True,
-                "color": "#3388ff",  # stroke color
+                "color": "green",  # stroke color
                 "weight": 3,  # stroke weight
                 "opacity": 1.0,  # stroke opacity
                 "lineCap": "round",
@@ -52,7 +52,7 @@ class Venus(Node):
                 "dashArray": None,
                 "dashOffset": None,
                 "fill": True,
-                "fillColor": "#3388ff",
+                "fillColor": "red",
                 "fillOpacity": 0.2,
                 "fillRule": "evenodd",
             },
@@ -90,8 +90,12 @@ def main(args=None):
     rclpy.init(args=args)
     venus_node = Venus()
     
-    rclpy.spin(venus_node)
-
+    try:
+        rclpy.spin(venus_node)
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+        pass
+    
     venus_node.viewer.stop()
     venus_node.destroy_node()
     rclpy.shutdown()
