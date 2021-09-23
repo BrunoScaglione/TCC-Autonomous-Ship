@@ -4,6 +4,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 #custom service
 from path_following_interfaces.srv import Waypoints
+from path_following_interfaces.msg import State
 
 class LosGuidance(Node):
     def __init__(self):
