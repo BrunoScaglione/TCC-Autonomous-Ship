@@ -1,0 +1,22 @@
+[1.312s] Invoking command in 'C:\TCC-Autonomous-Ship\src\main_ws\src\pydyna_simple': AMENT_PREFIX_PATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install;%AMENT_PREFIX_PATH% CMAKE_PREFIX_PATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install;%CMAKE_PREFIX_PATH% PYTHONPATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages;C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages;%PYTHONPATH% Path=C:\TCC-Autonomous-Ship\src\main_ws\src\install\bin;%Path% c:\users\phmar\appdata\local\programs\python\python36\python.exe setup.py egg_info --egg-base ..\build\pydyna_simple build --build-base C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\build install --prefix C:\TCC-Autonomous-Ship\src\main_ws\src\install --record C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\install.log --single-version-externally-managed
+[1.781s] running egg_info
+[1.781s] writing ..\build\pydyna_simple\pydyna_simple.egg-info\PKG-INFO
+[1.781s] writing dependency_links to ..\build\pydyna_simple\pydyna_simple.egg-info\dependency_links.txt
+[1.781s] writing entry points to ..\build\pydyna_simple\pydyna_simple.egg-info\entry_points.txt
+[1.781s] writing requirements to ..\build\pydyna_simple\pydyna_simple.egg-info\requires.txt
+[1.781s] writing top-level names to ..\build\pydyna_simple\pydyna_simple.egg-info\top_level.txt
+[1.781s] reading manifest file '..\build\pydyna_simple\pydyna_simple.egg-info\SOURCES.txt'
+[1.781s] writing manifest file '..\build\pydyna_simple\pydyna_simple.egg-info\SOURCES.txt'
+[1.781s] running build
+[1.781s] running build_py
+[1.781s] running install
+[1.781s] running install_lib
+[1.781s] running install_data
+[1.781s] running install_egg_info
+[1.781s] removing 'C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple-0.0.0-py3.6.egg-info' (and everything under it)
+[1.781s] Copying ..\build\pydyna_simple\pydyna_simple.egg-info to C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple-0.0.0-py3.6.egg-info
+[1.781s] running install_scripts
+[1.781s] Installing simul-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple
+[1.781s] Installing simul.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple
+[1.781s] writing list of installed files to 'C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\install.log'
+[1.796s] Invoked command in 'C:\TCC-Autonomous-Ship\src\main_ws\src\pydyna_simple' returned '0': AMENT_PREFIX_PATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install;%AMENT_PREFIX_PATH% CMAKE_PREFIX_PATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install;%CMAKE_PREFIX_PATH% PYTHONPATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages;C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages;%PYTHONPATH% Path=C:\TCC-Autonomous-Ship\src\main_ws\src\install\bin;%Path% c:\users\phmar\appdata\local\programs\python\python36\python.exe setup.py egg_info --egg-base ..\build\pydyna_simple build --build-base C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\build install --prefix C:\TCC-Autonomous-Ship\src\main_ws\src\install --record C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\install.log --single-version-externally-managed

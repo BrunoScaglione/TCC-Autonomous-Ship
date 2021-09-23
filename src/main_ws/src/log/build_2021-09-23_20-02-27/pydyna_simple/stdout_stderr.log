@@ -1,0 +1,47 @@
+running egg_info
+creating ..\build\pydyna_simple\pydyna_simple.egg-info
+writing ..\build\pydyna_simple\pydyna_simple.egg-info\PKG-INFO
+writing dependency_links to ..\build\pydyna_simple\pydyna_simple.egg-info\dependency_links.txt
+writing entry points to ..\build\pydyna_simple\pydyna_simple.egg-info\entry_points.txt
+writing requirements to ..\build\pydyna_simple\pydyna_simple.egg-info\requires.txt
+writing top-level names to ..\build\pydyna_simple\pydyna_simple.egg-info\top_level.txt
+writing manifest file '..\build\pydyna_simple\pydyna_simple.egg-info\SOURCES.txt'
+reading manifest file '..\build\pydyna_simple\pydyna_simple.egg-info\SOURCES.txt'
+writing manifest file '..\build\pydyna_simple\pydyna_simple.egg-info\SOURCES.txt'
+running build
+running build_py
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\build
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\build\lib
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\build\lib\pydyna_simple
+copying pydyna_simple\pydyna_simple.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\build\lib\pydyna_simple
+copying pydyna_simple\__init__.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\build\lib\pydyna_simple
+running install
+running install_lib
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple
+copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\build\lib\pydyna_simple\pydyna_simple.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple
+copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\build\lib\pydyna_simple\__init__.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple
+byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple\pydyna_simple.py to pydyna_simple.cpython-36.pyc
+byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple\__init__.py to __init__.cpython-36.pyc
+running install_data
+copying resource\pydyna_simple -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\ament_index\resource_index\packages
+copying package.xml -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\pydyna_simple
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple\config
+copying config\changes.txt -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple\config
+copying config\exemplo.p3d -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple\config
+copying config\pydyna-7.2.3-py3-none-any.whl -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple\config
+copying config\requirements.txt -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple\config
+copying config\TankerL186B32_T085.p3d -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple\config
+copying config\Venus-0.5.0-py3-none-any.whl -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple\config
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\pydyna_simple\logs
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\pydyna_simple\logs\mylogs
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\pydyna_simple\logs\pydynalogs
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\pydyna_simple\logs\roslogs
+creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\pydyna_simple\db
+copying launch\pydyna_simple.launch.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\pydyna_simple
+running install_egg_info
+Copying ..\build\pydyna_simple\pydyna_simple.egg-info to C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple-0.0.0-py3.6.egg-info
+running install_scripts
+Installing simul-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple
+Installing simul.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\pydyna_simple
+writing list of installed files to 'C:\TCC-Autonomous-Ship\src\main_ws\src\build\pydyna_simple\install.log'

@@ -1,0 +1,21 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from path_following_interfaces/msg/Velocity.msg
+// generated code does not contain a copyright notice
+
+
+module path_following_interfaces {
+  module msg {
+    @verbatim (language="comment", text=
+      " velocities (craft-fixed reference frame)")
+    struct Velocity {
+      @default (value=0.0)
+      float u;
+
+      @default (value=0.0)
+      float v;
+
+      @default (value=0.0)
+      float r;
+    };
+  };
+};
