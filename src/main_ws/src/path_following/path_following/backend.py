@@ -66,7 +66,8 @@ def start_system():
     reporting_start_simul = backend_node.wait_future(backend_node, future_start_simul)
     backend_node.get_logger().info("Received reporting: %s" % reporting_start_simul)
 
-    future_waypoints = backend_node.client_waypoints.call_async(waypoints_srv)
+    future_waypoints = backend_node.client_waypoints. \
+        call_async(backend_node.waypoints_srv)
     reporting_waypoints = backend_node.wait_future(backend_node, future_waypoints)
     backend_node.get_logger().info("Received reporting: %s" % reporting_waypoints)
 
