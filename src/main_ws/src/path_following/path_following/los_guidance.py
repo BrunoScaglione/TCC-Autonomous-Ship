@@ -1,7 +1,3 @@
-#first will receive waypoints from backend within a service
-# then will receive filtered state and publish desired yaw angle and desired velocity 
-# (or we just use fixed velocity)
-
 import rclpy
 from rclpy.node import Node
 
@@ -59,7 +55,7 @@ class LosGuidance(Node):
         self.publisher_desired_surge_velocity.publish(des_velocity_msg)
         self.get_logger().info('published desired velocity: %f' % des_velocity_msg.data)
     
-    def los(self, filtered_state):
+    def los(self, xf):
         # use waypoints stored in self.waypoints
         # these contain desired position x and y, and velocity u
         des_yaw_msg = Float32()

@@ -6,6 +6,7 @@ import venus.viewer
 import rclpy
 from rclpy.node import Node
 
+from std_msgs.msg import Float32
 # custom interface
 from path_following_interfaces.msg import State
 
@@ -21,8 +22,16 @@ class Venus(Node):
             self.callback_state,
             1)
 
+        # obs: this wasnt in the initial schematic
+        self.subscription_state = self.create_subscription(
+            Float32,
+            '/rudder_angle',
+            self.callback_rudder_angle,
+            1)
+
     def venus_init():
-        self.viewer = venus.viewer.Venus(mapquest_key = "API_KEY_HERE", logging=True, port=6150)
+        # GET MAPQUEST API KEY
+        self.viewer = venus.viewer.Venus(mapquest_key = "1bZQGGHqFLQBezmB29WKAHTJKBXM0wDl", logging=True, port=6150)
         self.initial_position = venus.objects.GeoPos(-23.06255, -44.2772) # angra dos reis
         self.viewer.set_viewport(initial_position, 15)
         vessel_config = venus.objects.Vessel(
@@ -68,7 +77,11 @@ class Venus(Node):
         )
         sleep(0.05)
         self.vessel.position = self.initial_position.relative(msg.position.x, msg.position.y)
-        self.vessel.angle = math.degrees(msg.velocity.r)
+        self.vessel.angle = math.degrees(msg.position.psi)
+    
+    def callback_rudder_angle(self, msg):
+        self.get_logger().info('listened rudder angle: %f' % msg.position.psi)
+        self.vessel.rudders[0].angle = math.degrees(msg.data)
 
 def main(args=None):
     rclpy.init(args=args)

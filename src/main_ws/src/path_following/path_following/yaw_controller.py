@@ -38,9 +38,10 @@ class YawController(Node):
         self.get_logger().info('listened desired yaw angle: %f' % msg.data)
         self.desired_yaw_angle = msg.data
     
-    def yaw_control(self, filtered_yaw_velocity):
+    def yaw_control(self, psi):
+        psi_des = self.desired_yaw_angle
         rudder_msg = Float32()
-        rudder_msg.data = 1 # FILLER [kN]
+        rudder_msg.data = 1 
         return rudder_msg # 
 
 def main(args=None):

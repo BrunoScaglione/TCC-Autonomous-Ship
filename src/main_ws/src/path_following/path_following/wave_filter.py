@@ -41,15 +41,15 @@ class WaveFilter(Node):
         self.publisher_filtered_state.publish(filtered_state_msg)
         log_state(self, msg, 'publisher')
     
-    def state_filter(state_estimate):
-        filtered_state_msg = State()
-        filtered_state_msg.position.x = 1 # FILLER
-        filtered_state_msg.position.y = 1 # FILLER
-        filtered_state_msg.position.psi = 1 # FILLER
-        filtered_state_msg.velocity.u = 1 # FILLER
-        filtered_state_msg.velocity.v = 1 # FILLER
-        filtered_state_msg.velocity.r = 1 # FILLER
-        return filtered_state_msg # 
+    def state_filter(x):
+        xf_msg = State()
+        xf_msg.position.x = 1 # FILLER
+        xf_msg.position.y = 1 # FILLER
+        xf_msg.position.psi = 1 # FILLER
+        xf_msg.velocity.u = 1 # FILLER
+        xf_msg.velocity.v = 1 # FILLER
+        xf_msg.velocity.r = 1 # FILLER
+        return xf_msg # 
 
 def main(args=None):
     rclpy.init(args=args)

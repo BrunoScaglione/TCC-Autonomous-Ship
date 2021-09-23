@@ -41,15 +41,15 @@ class GpsImuSimulator(Node):
         self.publisher_simulated_state.publish(simulated_state_msg)
         log_state(self, msg, 'publisher')
     
-    def state_simul(state):
-        simulated_state_msg = State()
-        simulated_state_msg.position.x = 1 # FILLER
-        simulated_state_msg.position.y = 1 # FILLER
-        simulated_state_msg.position.psi = 1 # FILLER
-        simulated_state_msg.velocity.u = 1 # FILLER
-        simulated_state_msg.velocity.v = 1 # FILLER
-        simulated_state_msg.velocity.r = 1 # FILLER
-        return simulated_state_msg # 
+    def state_simul(x):
+        xs_msg = State()
+        xs_msg.position.x = 1 # FILLER
+        xs_msg.position.y = 1 # FILLER
+        xs_msg.position.psi = 1 # FILLER
+        xs_msg.velocity.u = 1 # FILLER
+        xs_msg.velocity.v = 1 # FILLER
+        xs_msg.velocity.r = 1 # FILLER
+        return xs_msg # 
 
 def main(args=None):
     rclpy.init(args=args)

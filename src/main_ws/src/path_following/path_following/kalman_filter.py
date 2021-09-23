@@ -42,15 +42,15 @@ class KalmanFilter(Node):
         log_state(self, estimated_state_msg, 'publisher')
 
     
-    def state_estimate(state_simul):
-        estimated_state_msg = State()
-        estimated_state_msg.position.x = 1 # FILLER
-        estimated_state_msg.position.y = 1 # FILLER
-        estimated_state_msg.position.psi = 1 # FILLER
-        estimated_state_msg.velocity.u = 1 # FILLER
-        estimated_state_msg.velocity.v = 1 # FILLER
-        estimated_state_msg.velocity.r = 1 # FILLER
-        return estimated_state_msg # 
+    def state_estimate(xs):
+        xe_msg = State()
+        xe_msg.position.x = 1 # FILLER
+        xe_msg.position.y = 1 # FILLER
+        xe_msg.position.psi = 1 # FILLER
+        xe_msg.velocity.u = 1 # FILLER
+        xe_msg.velocity.v = 1 # FILLER
+        xe_msg.velocity.r = 1 # FILLER
+        return xe_msg # 
 
 def main(args=None):
     rclpy.init(args=args)

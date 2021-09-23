@@ -2,8 +2,6 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32
-# custom interface
-from path_following_interfaces.msg import State
 
 class ControlAllocation(Node):
     def __init__(self):
@@ -25,9 +23,9 @@ class ControlAllocation(Node):
         propeller_rotation = self.control_allocation(msg.data)
         self.publisher_propeller_rotation.publish(propeller_rotation)
     
-    def control_allocation(self, propeller_thrust):
+    def control_allocation(self, tau):
         rotation_msg = Float32()
-        rotation_msg.data = 1 # FILLER [hZ]
+        rotation_msg.data = 1 
         return rotation_msg # 
 
 def main(args=None):

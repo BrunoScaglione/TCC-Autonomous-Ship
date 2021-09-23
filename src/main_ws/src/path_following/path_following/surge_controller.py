@@ -38,10 +38,11 @@ class SurgeController(Node):
         self.get_logger().info('listened desired surge velocity: %f' % msg.data)
         self.desired_surge_velocity = msg.data
     
-    def surge_control(self, filtered_surge_velocity):
+    def surge_control(self, u): # u is surge velocity
+        u_des = self.desired_surge_velocity
         thrust_msg = Float32()
-        thrust_msg.data = 1 # FILLER [kN]
-        return thrust_msg # 
+        thrust_msg.data = 1 
+        return thrust_msg 
 
 def main(args=None):
     rclpy.init(args=args)

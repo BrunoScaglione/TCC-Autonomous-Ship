@@ -9,9 +9,9 @@ from launch_ros.actions import Node
 # however absolute paths should do, with get_package_share_directory
 
 def generate_launch_description():
-    pkg_share_dir = get_package_share_directory('pydyna_simple')
-    pkg_install_dir = get_package_prefix('pydyna_simple')
-    pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
+    pkg_share_dir = get_package_share_directory('path_following')
+    pkg_install_dir = get_package_prefix('path_following')
+    pkg_dir = os.path.join(pkg_install_dir, 'lib', 'path_following')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
 
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
@@ -110,4 +110,5 @@ def generate_launch_description():
     ld.add_action(start_gps_kalman_filter_node)
     ld.add_action(start_wave_filter_node)
     ld.add_action(start_venus_node)
+    
     return ld
