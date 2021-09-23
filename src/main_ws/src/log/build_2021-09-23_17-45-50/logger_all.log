@@ -1,0 +1,104 @@
+[0.754s] [34mcolcon[0m [1;30mDEBUG[0m [32mCommand line arguments: ['C:\\Users\\phmar\\AppData\\Local\\Programs\\Python\\Python36\\Scripts\\colcon', 'build', '--merge-install'][0m
+[0.755s] [34mcolcon[0m [1;30mDEBUG[0m [32mParsed command line arguments: Namespace(ament_cmake_args=None, base_paths=['.'], build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=None, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x000002730B3239B0>>, merge_install=True, metas=['./colcon.meta'], packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, parallel_workers=12, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x000002730B3239B0>, verb_name='build', verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x000002730B323CC0>)[0m
+[0.790s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) check parameters
+[0.790s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) check parameters
+[0.791s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) check parameters
+[0.791s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) check parameters
+[0.791s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) discover
+[0.791s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) discover
+[0.791s] [34mcolcon.colcon_core.package_discovery[0m [1;30mINFO[0m Crawling recursively for packages in 'C:\TCC-Autonomous-Ship\src\main_ws\src'
+[0.791s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.791s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore'
+[0.791s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore_ament_install'
+[0.791s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_pkg']
+[0.791s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_pkg'
+[0.792s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_meta']
+[0.792s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_meta'
+[0.792s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ros']
+[0.792s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ros'
+[0.808s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['cmake', 'python']
+[0.808s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'cmake'
+[0.808s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python'
+[0.808s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['python_setup_py']
+[0.808s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python_setup_py'
+[0.808s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.808s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extension 'ignore'
+[0.809s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) ignored
+[0.809s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.809s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extension 'ignore'
+[0.809s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) ignored
+[0.809s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.809s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extension 'ignore'
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) ignored
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following) by extensions ['ignore', 'ignore_ament_install']
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following) by extension 'ignore'
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following) by extension 'ignore_ament_install'
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following) by extensions ['colcon_pkg']
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following) by extension 'colcon_pkg'
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following) by extensions ['colcon_meta']
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following) by extension 'colcon_meta'
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following) by extensions ['ros']
+[0.810s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following) by extension 'ros'
+[0.814s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'path_following' with type 'ros.ament_python' and name 'path_following'[0m
+[0.815s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following_interfaces) by extensions ['ignore', 'ignore_ament_install']
+[0.815s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following_interfaces) by extension 'ignore'
+[0.815s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following_interfaces) by extension 'ignore_ament_install'
+[0.815s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following_interfaces) by extensions ['colcon_pkg']
+[0.815s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following_interfaces) by extension 'colcon_pkg'
+[0.815s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following_interfaces) by extensions ['colcon_meta']
+[0.815s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following_interfaces) by extension 'colcon_meta'
+[0.815s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following_interfaces) by extensions ['ros']
+[0.815s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(path_following_interfaces) by extension 'ros'
+[0.816s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'path_following_interfaces' with type 'ros.ament_cmake' and name 'path_following_interfaces'[0m
+[0.816s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(pydyna_simple) by extensions ['ignore', 'ignore_ament_install']
+[0.816s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(pydyna_simple) by extension 'ignore'
+[0.817s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(pydyna_simple) by extension 'ignore_ament_install'
+[0.817s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(pydyna_simple) by extensions ['colcon_pkg']
+[0.817s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(pydyna_simple) by extension 'colcon_pkg'
+[0.817s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(pydyna_simple) by extensions ['colcon_meta']
+[0.817s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(pydyna_simple) by extension 'colcon_meta'
+[0.817s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(pydyna_simple) by extensions ['ros']
+[0.817s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(pydyna_simple) by extension 'ros'
+[0.818s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'pydyna_simple' with type 'ros.ament_python' and name 'pydyna_simple'[0m
+[0.818s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) using defaults
+[0.818s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) discover
+[0.818s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) using defaults
+[0.818s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) discover
+[0.818s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) using defaults
+[0.882s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following_interfaces' build argument 'cmake_args' from command line to 'None'
+[0.883s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following_interfaces' build argument 'cmake_target' from command line to 'None'
+[0.883s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following_interfaces' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.883s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following_interfaces' build argument 'cmake_clean_cache' from command line to 'False'
+[0.883s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following_interfaces' build argument 'cmake_clean_first' from command line to 'False'
+[0.883s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following_interfaces' build argument 'cmake_force_configure' from command line to 'False'
+[0.883s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following_interfaces' build argument 'ament_cmake_args' from command line to 'None'
+[0.883s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following_interfaces' build argument 'catkin_cmake_args' from command line to 'None'
+[0.883s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following_interfaces' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.883s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'path_following_interfaces' with the following arguments: {'ament_cmake_args': None, 'build_base': 'C:\\TCC-Autonomous-Ship\\src\\main_ws\\src\\build\\path_following_interfaces', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': 'C:\\TCC-Autonomous-Ship\\src\\main_ws\\src\\install', 'merge_install': True, 'path': 'C:\\TCC-Autonomous-Ship\\src\\main_ws\\src\\path_following_interfaces', 'symlink_install': False, 'test_result_base': None}[0m
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following' build argument 'cmake_args' from command line to 'None'
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following' build argument 'cmake_target' from command line to 'None'
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following' build argument 'cmake_clean_cache' from command line to 'False'
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following' build argument 'cmake_clean_first' from command line to 'False'
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following' build argument 'cmake_force_configure' from command line to 'False'
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following' build argument 'ament_cmake_args' from command line to 'None'
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following' build argument 'catkin_cmake_args' from command line to 'None'
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'path_following' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.898s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'path_following' with the following arguments: {'ament_cmake_args': None, 'build_base': 'C:\\TCC-Autonomous-Ship\\src\\main_ws\\src\\build\\path_following', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': 'C:\\TCC-Autonomous-Ship\\src\\main_ws\\src\\install', 'merge_install': True, 'path': 'C:\\TCC-Autonomous-Ship\\src\\main_ws\\src\\path_following', 'symlink_install': False, 'test_result_base': None}[0m
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'pydyna_simple' build argument 'cmake_args' from command line to 'None'
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'pydyna_simple' build argument 'cmake_target' from command line to 'None'
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'pydyna_simple' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'pydyna_simple' build argument 'cmake_clean_cache' from command line to 'False'
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'pydyna_simple' build argument 'cmake_clean_first' from command line to 'False'
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'pydyna_simple' build argument 'cmake_force_configure' from command line to 'False'
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'pydyna_simple' build argument 'ament_cmake_args' from command line to 'None'
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'pydyna_simple' build argument 'catkin_cmake_args' from command line to 'None'
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'pydyna_simple' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.913s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'pydyna_simple' with the following arguments: {'ament_cmake_args': None, 'build_base': 'C:\\TCC-Autonomous-Ship\\src\\main_ws\\src\\build\\pydyna_simple', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': 'C:\\TCC-Autonomous-Ship\\src\\main_ws\\src\\install', 'merge_install': True, 'path': 'C:\\TCC-Autonomous-Ship\\src\\main_ws\\src\\pydyna_simple', 'symlink_install': False, 'test_result_base': None}[0m
+[0.917s] [34mcolcon.colcon_core.executor[0m [1;30mINFO[0m Executing jobs using 'parallel' executor
+[0.944s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mrun_until_complete[0m
+[0.944s] [34mcolcon.colcon_ros.task.ament_cmake.build[0m [1;30mINFO[0m Building ROS package in 'C:\TCC-Autonomous-Ship\src\main_ws\src\path_following_interfaces' with build type 'ament_cmake'
+[0.944s] [34mcolcon.colcon_cmake.task.cmake.build[0m [1;30mINFO[0m Building CMake package in 'C:\TCC-Autonomous-Ship\src\main_ws\src\path_following_interfaces'
+[0.954s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_core.shell.sh': Not used on Windows systems
+[0.954s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.008s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in 'C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces': C:\Program Files\CMake\bin\cmake.EXE C:\TCC-Autonomous-Ship\src\main_ws\src\path_following_interfaces -DCMAKE_INSTALL_PREFIX=C:\TCC-Autonomous-Ship\src\main_ws\src\install[0m

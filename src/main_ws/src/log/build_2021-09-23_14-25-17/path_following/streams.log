@@ -1,0 +1,18 @@
+[0.516s] Traceback (most recent call last):
+  File "c:\users\phmar\appdata\local\programs\python\python36\lib\site-packages\colcon_core\executor\__init__.py", line 91, in __call__
+    rc = await self.task(*args, **kwargs)
+  File "c:\users\phmar\appdata\local\programs\python\python36\lib\site-packages\colcon_core\task\__init__.py", line 93, in __call__
+    return await task_method(*args, **kwargs)
+  File "c:\users\phmar\appdata\local\programs\python\python36\lib\site-packages\colcon_ros\task\ament_python\build.py", line 51, in build
+    setup_py_data = get_setup_data(self.context.pkg, env)
+  File "c:\users\phmar\appdata\local\programs\python\python36\lib\site-packages\colcon_core\task\python\__init__.py", line 20, in get_setup_data
+    return dict(pkg.metadata[key](env))
+  File "c:\users\phmar\appdata\local\programs\python\python36\lib\site-packages\colcon_ros\package_identification\ros.py", line 130, in getter
+    desc.path / 'setup.py', env=env)
+  File "c:\users\phmar\appdata\local\programs\python\python36\lib\site-packages\colcon_python_setup_py\package_identification\python_setup_py.py", line 242, in get_setup_information
+    setup_py, env=env)
+  File "c:\users\phmar\appdata\local\programs\python\python36\lib\site-packages\colcon_python_setup_py\package_identification\python_setup_py.py", line 283, in _get_setup_information
+    cwd=os.path.abspath(str(setup_py.parent)), check=True, env=env)
+  File "c:\users\phmar\appdata\local\programs\python\python36\lib\subprocess.py", line 438, in run
+    output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['c:\\users\\phmar\\appdata\\local\\programs\\python\\python36\\python.exe', '-c', "import sys;from setuptools.extern.packaging.specifiers import SpecifierSet;from distutils.core import run_setup;dist = run_setup(    'setup.py', script_args=('--dry-run',), stop_after='config');skip_keys = ('cmdclass', 'distclass', 'ext_modules', 'metadata');data = {    key: value for key, value in dist.__dict__.items()     if (        not key.startswith('_') and         not callable(value) and         key not in skip_keys and         key not in dist.display_option_names    )};data['metadata'] = {    k: v for k, v in dist.metadata.__dict__.items()     if k not in ('license_files', 'provides_extras')};sys.stdout.buffer.write(repr(data).encode('utf-8'))"]' returned non-zero exit status 1.

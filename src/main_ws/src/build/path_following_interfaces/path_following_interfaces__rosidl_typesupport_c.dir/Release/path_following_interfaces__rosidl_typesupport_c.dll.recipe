@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\x64\Release\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\Release\path_following_interfaces__rosidl_generator_c.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\Release\path_following_interfaces__rosidl_typesupport_c.dll</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
