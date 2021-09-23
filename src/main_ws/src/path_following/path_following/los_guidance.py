@@ -69,7 +69,11 @@ def main(args=None):
     rclpy.init(args=args)
     los_guidance_node = LosGuidance()
     
-    rclpy.spin(los_guidance_node)
+    try:
+        rclpy.spin(los_guidance_node)
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+        pass
 
     los_guidance_node.destroy_node()
     rclpy.shutdown()

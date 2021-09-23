@@ -11,6 +11,8 @@ ros2 action list
 
 ros2 run <package_name> <executable_name>
 
+ros2 run
+
 ----------------
 
 Remapping allows you to reassign default node properties, 

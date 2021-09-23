@@ -2,6 +2,9 @@ from time import sleep
 
 import pydyna
 import venus.viewer
+from venus.objects import (
+    GeoPos, Rudder, Vessel, Size, KeyValue, Button
+)
 
 import rclpy
 from rclpy.node import Node
@@ -29,19 +32,19 @@ class Venus(Node):
             self.callback_rudder_angle,
             1)
 
-    def venus_init():
+    def venus_init(self):
         # GET MAPQUEST API KEY
         self.viewer = venus.viewer.Venus(mapquest_key = "1bZQGGHqFLQBezmB29WKAHTJKBXM0wDl", logging=True, port=6150)
-        self.initial_position = venus.objects.GeoPos(-23.06255, -44.2772) # angra dos reis
+        initial_position = GeoPos(-23.06255, -44.2772) # angra dos reis
         self.viewer.set_viewport(initial_position, 15)
-        vessel_config = venus.objects.Vessel(
+        vessel_config = Vessel(
             position = initial_position,
             angle = 0,
-            size = venus.objects.Size(32, 186),
+            size = Size(32, 186),
             rudders=[Rudder(angle=0, length=0.1, visual_options={"color": "red"})],
             visual_options={
                 "stroke": True,
-                "color": "#3388ff",  # stroke color
+                "color": "green",  # stroke color
                 "weight": 3,  # stroke weight
                 "opacity": 1.0,  # stroke opacity
                 "lineCap": "round",
@@ -49,7 +52,7 @@ class Venus(Node):
                 "dashArray": None,
                 "dashOffset": None,
                 "fill": True,
-                "fillColor": "#3388ff",
+                "fillColor": "red",
                 "fillOpacity": 0.2,
                 "fillRule": "evenodd",
             },
@@ -87,8 +90,12 @@ def main(args=None):
     rclpy.init(args=args)
     venus_node = Venus()
     
-    rclpy.spin(venus_node)
-
+    try:
+        rclpy.spin(venus_node)
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+        pass
+    
     venus_node.viewer.stop()
     venus_node.destroy_node()
     rclpy.shutdown()

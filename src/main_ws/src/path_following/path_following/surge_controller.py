@@ -47,10 +47,12 @@ class SurgeController(Node):
 def main(args=None):
     rclpy.init(args=args)
     surge_controller_node = SurgeController()
-
-    surge_controller_node.get_logger().info('send surge')
     
-    rclpy.spin(surge_controller_node)
+    try:
+        rclpy.spin(surge_controller_node)
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+        pass
 
     surge_controller_node.destroy_node()
     rclpy.shutdown()
