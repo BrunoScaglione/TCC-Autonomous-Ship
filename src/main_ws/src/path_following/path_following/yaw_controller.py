@@ -20,7 +20,7 @@ class YawController(Node):
         self.subscription_desired_yaw_angle = self.create_subscription(
             Float32,
             '/desired_yaw_angle',
-            self.callback_yaw_angle,
+            self.callback_desired_yaw_angle,
             1)
 
         self.publisher_rudder_angle = self.create_publisher(

@@ -54,7 +54,7 @@ class KalmanFilter(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    kalman_filter_node = KalmanFIlter()
+    kalman_filter_node = KalmanFilter()
     
     rclpy.spin(kalman_filter_node)
 

@@ -20,7 +20,7 @@ class SurgeController(Node):
         self.subscription_desired_surge_velocity = self.create_subscription(
             Float32,
             '/desired_surge_velocity',
-            self.callback_surge_velocity,
+            self.callback_desired_surge_velocity,
             1)
 
         self.publisher_propeller_thrust = self.create_publisher(
@@ -47,6 +47,8 @@ class SurgeController(Node):
 def main(args=None):
     rclpy.init(args=args)
     surge_controller_node = SurgeController()
+
+    surge_controller_node.get_logger().info('send surge')
     
     rclpy.spin(surge_controller_node)
 
