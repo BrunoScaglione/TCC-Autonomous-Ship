@@ -9,6 +9,9 @@
 
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>time</exec_depend>
+  <exec_depend>flask</exec_depend>
+  <exec_depend>json</exec_depend>
+  <exec_depend>venus</exec_depend>
 
   <depend>path_following_interfaces</depend>
   <depend>rclpy</depend>
