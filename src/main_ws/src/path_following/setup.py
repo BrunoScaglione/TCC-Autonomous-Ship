@@ -1,6 +1,7 @@
 import os
 from glob import glob
 from setuptools import setup
+from glob import glob
 
 package_name = 'path_following'
 
