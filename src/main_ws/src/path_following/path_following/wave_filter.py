@@ -60,7 +60,7 @@ def main(args=None):
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
     finally:
-        yaw_controller_node.destroy_node()
+        wave_filter_node.destroy_node()
         rclpy.shutdown()
 
 if __name__ == '__main__':

@@ -36,10 +36,10 @@ class KalmanFilter(Node):
         )
         
     def callback_simulated_state(self, msg):
-        log_state(self, msg, 'subscriber')
+        self.log_state(self, msg, 'subscriber')
         estimated_state_msg = self.state_estimate(msg)
         self.publisher_estimated_state.publish(estimated_state_msg)
-        log_state(self, estimated_state_msg, 'publisher')
+        self.log_state(self, estimated_state_msg, 'publisher')
 
     
     def state_estimate(xs):
@@ -61,7 +61,7 @@ def main(args=None):
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
     finally:
-        yaw_controller_node.destroy_node()
+        kalman_filter_node.destroy_node()
         rclpy.shutdown()
 
 if __name__ == '__main__':

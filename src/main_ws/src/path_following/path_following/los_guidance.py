@@ -74,7 +74,7 @@ def main(args=None):
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
     finally:
-        yaw_controller_node.destroy_node()
+        los_guidance_node.destroy_node()
         rclpy.shutdown()
 
 if __name__ == '__main__':

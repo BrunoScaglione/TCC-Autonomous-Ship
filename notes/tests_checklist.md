@@ -6,6 +6,7 @@ obs: windows uses \ instead of / for dirs
 2. run pydyna_simple launch file (already start rosbag)
     1. Open new terminal and source setup.bat of the overlay
     2. run launch file: >> ros2 launch pydyna_simple pydyna_simple.launch.py . Launch file is working now! but cant see it process running, using >> ros2 run path_following simul
+    3. run launch for other nodes: >> ros2 launch path_following path_following.launch.py
 3. inspect topics and servi
     1. list topics: >> ros2 topic list -t
     2. rosqt_graph: >> rqt_graph         

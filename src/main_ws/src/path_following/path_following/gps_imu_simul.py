@@ -36,10 +36,10 @@ class GpsImuSimulator(Node):
         )
         
     def callback_state(self, msg):
-        log_state(self, msg, 'subscriber')
-        simulated_state_msg = state_simul(msg)
+        self.log_state(self, msg, 'subscriber')
+        simulated_state_msg = self.state_simul(msg)
         self.publisher_simulated_state.publish(simulated_state_msg)
-        log_state(self, msg, 'publisher')
+        self.log_state(self, msg, 'publisher')
     
     def state_simul(x):
         xs_msg = State()
@@ -60,7 +60,7 @@ def main(args=None):
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
     finally:
-        yaw_controller_node.destroy_node()
+        gps_imu_simulator_node.destroy_node()
         rclpy.shutdown()
 
 if __name__ == '__main__':
