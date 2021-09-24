@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\CMakeFiles\6330d252bf4e6ab730dc0fee6471feb3\RUN_TESTS_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{1FD477B5-E867-361B-B142-244A19A07523}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

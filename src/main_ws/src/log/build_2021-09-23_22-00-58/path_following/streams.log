@@ -1,0 +1,81 @@
+[1.297s] Invoking command in 'C:\TCC-Autonomous-Ship\src\main_ws\src\path_following': AMENT_PREFIX_PATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install;%AMENT_PREFIX_PATH% CMAKE_PREFIX_PATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install;%CMAKE_PREFIX_PATH% PYTHONPATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages;C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages;%PYTHONPATH% Path=C:\TCC-Autonomous-Ship\src\main_ws\src\install\bin;%Path% c:\users\phmar\appdata\local\programs\python\python36\python.exe setup.py egg_info --egg-base ..\build\path_following build --build-base C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build install --prefix C:\TCC-Autonomous-Ship\src\main_ws\src\install --record C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\install.log --single-version-externally-managed
+[1.781s] running egg_info
+[1.781s] creating ..\build\path_following\path_following.egg-info
+[1.781s] writing ..\build\path_following\path_following.egg-info\PKG-INFO
+[1.781s] writing dependency_links to ..\build\path_following\path_following.egg-info\dependency_links.txt
+[1.781s] writing entry points to ..\build\path_following\path_following.egg-info\entry_points.txt
+[1.781s] writing requirements to ..\build\path_following\path_following.egg-info\requires.txt
+[1.781s] writing top-level names to ..\build\path_following\path_following.egg-info\top_level.txt
+[1.781s] writing manifest file '..\build\path_following\path_following.egg-info\SOURCES.txt'
+[1.797s] reading manifest file '..\build\path_following\path_following.egg-info\SOURCES.txt'
+[1.797s] writing manifest file '..\build\path_following\path_following.egg-info\SOURCES.txt'
+[1.797s] running build
+[1.797s] running build_py
+[1.797s] creating C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build
+[1.797s] creating C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib
+[1.797s] creating C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.797s] copying path_following\backend.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.797s] copying path_following\control_allocation.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.812s] copying path_following\gps_imu_simul.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.812s] copying path_following\kalman_filter.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.812s] copying path_following\los_guidance.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.828s] copying path_following\surge_controller.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.828s] copying path_following\venus.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.828s] copying path_following\wave_filter.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.844s] copying path_following\yaw_controller.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.844s] copying path_following\__init__.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following
+[1.844s] running install
+[1.844s] running install_lib
+[1.844s] creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.844s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\backend.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.844s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\control_allocation.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.859s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\gps_imu_simul.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.859s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\kalman_filter.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.859s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\los_guidance.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.859s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\surge_controller.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.859s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\venus.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.859s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\wave_filter.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.859s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\yaw_controller.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.859s] copying C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build\lib\path_following\__init__.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following
+[1.859s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\backend.py to backend.cpython-36.pyc
+[1.859s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\control_allocation.py to control_allocation.cpython-36.pyc
+[1.875s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\gps_imu_simul.py to gps_imu_simul.cpython-36.pyc
+[1.875s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\kalman_filter.py to kalman_filter.cpython-36.pyc
+[1.875s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\los_guidance.py to los_guidance.cpython-36.pyc
+[1.875s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\surge_controller.py to surge_controller.cpython-36.pyc
+[1.875s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\venus.py to venus.cpython-36.pyc
+[1.875s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\wave_filter.py to wave_filter.cpython-36.pyc
+[1.875s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py to yaw_controller.cpython-36.pyc
+[1.890s] byte-compiling C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\__init__.py to __init__.cpython-36.pyc
+[1.890s] running install_data
+[1.890s] copying resource\path_following -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\ament_index\resource_index\packages
+[1.890s] copying package.xml -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\path_following
+[1.890s] creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\path_following\logs
+[1.890s] creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\path_following\logs\mylogs
+[1.890s] creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\path_following\logs\pydynalogs
+[1.890s] creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\path_following\logs\roslogs
+[1.890s] creating C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\path_following\db
+[1.890s] copying launch\path_following.launch.py -> C:\TCC-Autonomous-Ship\src\main_ws\src\install\share\path_following
+[1.890s] running install_egg_info
+[1.890s] Copying ..\build\path_following\path_following.egg-info to C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following-0.0.0-py3.6.egg-info
+[1.906s] running install_scripts
+[1.937s] Installing backend-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.937s] Installing backend.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.937s] Installing control_allocation-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.937s] Installing control_allocation.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.937s] Installing gps_imu_simul-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing gps_imu_simul.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing kalman_filter-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing kalman_filter.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing los_guidance-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing los_guidance.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing surge_controller-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing surge_controller.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing venus-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing venus.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing wave_filter-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing wave_filter.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing yaw_controller-script.py script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] Installing yaw_controller.exe script to C:\TCC-Autonomous-Ship\src\main_ws\src\install\lib\path_following
+[1.953s] writing list of installed files to 'C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\install.log'
+[2.000s] Invoked command in 'C:\TCC-Autonomous-Ship\src\main_ws\src\path_following' returned '0': AMENT_PREFIX_PATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install;%AMENT_PREFIX_PATH% CMAKE_PREFIX_PATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install;%CMAKE_PREFIX_PATH% PYTHONPATH=C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages;C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages;%PYTHONPATH% Path=C:\TCC-Autonomous-Ship\src\main_ws\src\install\bin;%Path% c:\users\phmar\appdata\local\programs\python\python36\python.exe setup.py egg_info --egg-base ..\build\path_following build --build-base C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\build install --prefix C:\TCC-Autonomous-Ship\src\main_ws\src\install --record C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following\install.log --single-version-externally-managed

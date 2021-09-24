@@ -1,0 +1,11 @@
+[console_scripts]
+backend = path_following.backend:main
+control_allocation = path_following.control_allocation:main
+gps_imu_simul = path_following.gps_imu_simul:main
+kalman_filter = path_following.kalman_filter:main
+los_guidance = path_following.los_guidance:main
+surge_controller = path_following.surge_controller:main
+venus = path_following.venus:main
+wave_filter = path_following.wave_filter:main
+yaw_controller = path_following.yaw_controller:main
+

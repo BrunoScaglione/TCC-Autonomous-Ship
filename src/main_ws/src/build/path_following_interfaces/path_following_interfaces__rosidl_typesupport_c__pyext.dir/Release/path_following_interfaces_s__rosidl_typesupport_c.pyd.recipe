@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\x64\Release\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\x64\Release\path_following_interfaces__cpp</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\Release\path_following_interfaces__rosidl_generator_c.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\Release\path_following_interfaces__rosidl_typesupport_c.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\Release\path_following_interfaces__rosidl_typesupport_cpp.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\Release\path_following_interfaces__rosidl_typesupport_fastrtps_cpp.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\Release\path_following_interfaces__rosidl_typesupport_fastrtps_c.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\Release\path_following_interfaces__rosidl_typesupport_introspection_c.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\Release\path_following_interfaces__rosidl_typesupport_introspection_cpp.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\x64\Release\path_following_interfaces</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\path_following_interfaces__py\x64\Release\path_following_interfaces__py</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_generator_py\path_following_interfaces\path_following_interfaces__python.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_generator_py\path_following_interfaces\path_following_interfaces_s__rosidl_typesupport_c.pyd</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
