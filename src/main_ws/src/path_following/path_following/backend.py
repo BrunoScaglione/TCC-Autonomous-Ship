@@ -8,6 +8,7 @@ import rclpy
 from rclpy.node import Node
 
 from path_following_interfaces.srv import Waypoints, StartEndSimul
+from std_msgs.msg import Bool
 
 class Backend(Node):
     def __init__(self):
@@ -18,6 +19,14 @@ class Backend(Node):
 
         self.client_start_end_simul = \
             self.create_client(StartEndSimul, '/start_end_simul')
+
+        self.publisher_shutdown = self.create_publisher(
+            Bool,
+            '/shutdown',
+            1)
+
+        self.shutdown_msg = Bool()
+
         self.client_waypoints = self.create_client(Waypoints, '/waypoints')
         self.start_end_simul_srv = StartEndSimul.Request()
         self.waypoints_srv = Waypoints.Request()
@@ -138,7 +147,6 @@ def start_system():
             backend_node.get_logger().info('returning HTTP OK to client')
             return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
-        raise
         backend_node.get_logger().info('returning HTTP internal server error to client')
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
 
@@ -160,6 +168,19 @@ def end_simul():
             backend_node.get_logger().info("Received reporting: %s" % reporting_end_simul)
             backend_node.get_logger().info('returning HTTP OK to client')
             return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    except:
+        backend_node.get_logger().info('returning HTTP internal server error to client')
+        return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
+
+@app.route("/shutdown")
+def shutdown_nodes():
+    try:
+        backend_node.shutdown_msg.data = True
+        backend_node.get_logger().info("Shutting down nodes")
+        self.publisher_shutdown.publish(backend_node.shutdown_msg)
+
+        backend_node.get_logger().info('Returning HTTP OK to client')
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
         backend_node.get_logger().info('returning HTTP internal server error to client')
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}

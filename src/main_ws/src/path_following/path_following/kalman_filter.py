@@ -1,14 +1,23 @@
+import sys
+
 import rclpy
 from rclpy.node import Node
 
 # custom interface
 from path_following_interfaces.msg import State
+from std_msgs.msg import Bool
 
 class KalmanFilter(Node):
     def __init__(self):
         super().__init__('kalman_filter_simulator_node')
 
         self.xe_msg = State()
+
+        self.subscription_shutdown = self.create_subscription(
+            Bool,
+            '/shutdown',
+            self.callback_shutdown,
+            1)
 
         self.subscription_simulated_state = self.create_subscription(
             State,
@@ -20,6 +29,9 @@ class KalmanFilter(Node):
             State,
             '/estimated_state',
             1)
+
+    def callback_shutdown():
+        sys.exit()
         
     def callback_simulated_state(self, msg):
         self.log_state(msg, 'subscriber')
@@ -59,6 +71,8 @@ def main(args=None):
         rclpy.spin(kalman_filter_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+    except SystemExit:
+        print('Stopped with user shutdown request')
     finally:
         kalman_filter_node.destroy_node()
         rclpy.shutdown()

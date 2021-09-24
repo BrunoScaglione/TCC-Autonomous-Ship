@@ -1,9 +1,12 @@
+import sys
+
 import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32
 # custom interface
 from path_following_interfaces.msg import State
+from std_msgs.msg import Bool
 
 class SurgeController(Node):
     def __init__(self):
@@ -12,6 +15,12 @@ class SurgeController(Node):
         self.desired_surge_velocity = 0
 
         self.thrust_msg = Float32()
+
+        self.subscription_shutdown = self.create_subscription(
+            Bool,
+            '/shutdown',
+            self.callback_shutdown,
+            1)
 
         self.subscription_filtered_state = self.create_subscription(
             State,
@@ -29,6 +38,9 @@ class SurgeController(Node):
             Float32,
             '/propeller_thrust',
             1)
+
+    def callback_shutdown():
+        sys.exit()
         
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered surge velocity: %f' % msg.velocity.u)
@@ -52,6 +64,8 @@ def main(args=None):
         rclpy.spin(surge_controller_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+    except SystemExit:
+        print('Stopped with user shutdown request')
     finally:
         surge_controller_node.destroy_node()
         rclpy.shutdown()

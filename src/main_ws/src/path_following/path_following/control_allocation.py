@@ -1,13 +1,22 @@
+import sys
+
 import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32
+from std_msgs.msg import Bool
 
 class ControlAllocation(Node):
     def __init__(self):
         super().__init__('control_allocation_node')
 
         self.rotation_msg = Float32()
+
+        self.subscription_shutdown = self.create_subscription(
+            Bool,
+            '/shutdown',
+            self.callback_shutdown,
+            1)
 
         self.subscription_propeller_thrust = self.create_subscription(
             Float32,
@@ -19,6 +28,9 @@ class ControlAllocation(Node):
             Float32,
             '/propeller_rotation',
             1)
+    
+    def callback_shutdown():
+        sys.exit()
         
     def callback_propeller_thrust(self, msg):
         self.get_logger().info('listened propeller thrust: %f' % msg.data)
@@ -36,6 +48,8 @@ def main(args=None):
         rclpy.spin(control_allocation_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+    except SystemExit:
+        print('Stopped with user shutdown request')
     finally:
         control_allocation_node.destroy_node()
         rclpy.shutdown()
