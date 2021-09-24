@@ -1,4 +1,3 @@
-import time
 import json
 
 from flask import Flask, request
@@ -21,17 +20,14 @@ class Backend(Node):
         client_waypoints = self.create_client(Waypoints, '/waypoints')
 
 def wait_future(node, node_future):
-    start = time.time()
-    now = start
-    while ((now - start) < 5):
-        rclpy.spin_once(node)
-        if node_future.done():
-            try:
-                return node_future.result(), 0
-            except Exception as e:
-                return None, 0
-        now = time.time()
-    return None, 1
+    rclpy.spin_once(node, timeout_sec=5)
+    if node_future.done():
+        try:
+            return node_future.result(), 0
+        except:
+            return None, 0
+    else:
+        return None, 1
 
 def log_initial_state(node, initial_state):
     node.get_logger().info(

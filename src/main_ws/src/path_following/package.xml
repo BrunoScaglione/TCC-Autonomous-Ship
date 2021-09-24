@@ -8,7 +8,6 @@
   <license>Apache License 2.0</license>
 
   <exec_depend>std_msgs</exec_depend>
-  <exec_depend>time</exec_depend>
   <exec_depend>flask</exec_depend>
   <exec_depend>json</exec_depend>
   <exec_depend>venus</exec_depend>
