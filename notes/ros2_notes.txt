@@ -1017,7 +1017,7 @@ ros2 launch python_parameters python_parameters_launch.py
 
 --------------------
 
-Getting started with ros2doctor
+Getting started with ros2 doctor
 
 1 Check your setup
 

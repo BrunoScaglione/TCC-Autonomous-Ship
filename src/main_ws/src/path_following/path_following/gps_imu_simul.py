@@ -8,6 +8,8 @@ class GpsImuSimulator(Node):
     def __init__(self):
         super().__init__('gps_imu_simulator_node')
 
+        self.xs_msg = State()
+
         self.subscription_state = self.create_subscription(
             State,
             '/state',
@@ -18,49 +20,47 @@ class GpsImuSimulator(Node):
             State,
             '/simulated_state',
             1)
-
-    def log_state(self, msg, communicator):
+        
+    def callback_state(self, msg):
+        self.log_state(msg, 'subscriber')
+        simulated_state_msg = self.state_simul(msg)
+        self.publisher_simulated_state.publish(simulated_state_msg)
+        self.log_state(simulated_state_msg, 'publisher')
+    
+    def state_simul(self, x):
+        self.xs_msg.position.x = 1.0 # FILLER
+        self.xs_msg.position.y = 1.0 # FILLER
+        self.xs_msg.position.psi = 1.0 # FILLER
+        self.xs_msg.velocity.u = 1.0 # FILLER
+        self.xs_msg.velocity.v = 1.0 # FILLER
+        self.xs_msg.velocity.r = 1.0 # FILLER
+        return self.xs_msg # 
+    
+    def log_state(self, state, communicator):
         log_str = 'listened' if communicator == 'subscriber' else 'published simulated'
         self.get_logger().info(
             '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 log_str,
-                msg.state.position.x, 
-                msg.state.position.y, 
-                msg.state.position.psi, # yaw angle
-                msg.state.velocity.u, 
-                msg.state.velocity.v, 
-                msg.state.velocity.r,
-                msg.state.time 
+                state.position.x, 
+                state.position.y, 
+                state.position.psi, # yaw angle
+                state.velocity.u, 
+                state.velocity.v, 
+                state.velocity.r,
+                state.time 
             )
         )
-        
-    def callback_state(self, msg):
-        log_state(self, msg, 'subscriber')
-        simulated_state_msg = state_simul(msg)
-        self.publisher_simulated_state.publish(simulated_state_msg)
-        log_state(self, msg, 'publisher')
-    
-    def state_simul(x):
-        xs_msg = State()
-        xs_msg.position.x = 1 # FILLER
-        xs_msg.position.y = 1 # FILLER
-        xs_msg.position.psi = 1 # FILLER
-        xs_msg.velocity.u = 1 # FILLER
-        xs_msg.velocity.v = 1 # FILLER
-        xs_msg.velocity.r = 1 # FILLER
-        return xs_msg # 
 
 def main(args=None):
-    rclpy.init(args=args)
-    gps_imu_simulator_node = GpsImuSimulator()
-    
     try:
+        rclpy.init(args=args)
+        gps_imu_simulator_node = GpsImuSimulator()
         rclpy.spin(gps_imu_simulator_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
     finally:
-        yaw_controller_node.destroy_node()
+        gps_imu_simulator_node.destroy_node()
         rclpy.shutdown()
 
 if __name__ == '__main__':

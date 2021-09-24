@@ -35,7 +35,7 @@ class Venus(Node):
     def venus_init(self):
         # GET MAPQUEST API KEY
         self.viewer = venus.viewer.Venus(mapquest_key = "1bZQGGHqFLQBezmB29WKAHTJKBXM0wDl", logging=True, port=6150)
-        initial_position = GeoPos(-23.06255, -44.2772) # angra dos reis
+        self.initial_position = GeoPos(-23.06255, -44.2772) # angra dos reis
         self.viewer.set_viewport(initial_position, 15)
         vessel_config = Vessel(
             position = initial_position,
@@ -66,31 +66,31 @@ class Venus(Node):
         self.vessel = self.viewer.add(vessel_config)
 
     def callback_state(self, msg):
+        state = msg
         self.get_logger().info(
             'listened state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
-                msg.position.x, 
-                msg.position.y, 
-                msg.position.psi, # yaw angle
-                msg.velocity.u, 
-                msg.velocity.v, 
-                msg.velocity.r,
-                msg.time 
+                state.position.x, 
+                state.position.y, 
+                state.position.psi, # yaw angle
+                state.velocity.u, 
+                state.velocity.v, 
+                state.velocity.r,
+                state.time 
             )
         )
         sleep(0.05)
-        self.vessel.position = self.initial_position.relative(msg.position.x, msg.position.y)
-        self.vessel.angle = math.degrees(msg.position.psi)
+        self.vessel.position = self.initial_position.relative(state.position.x, state.position.y)
+        self.vessel.angle = math.degrees(state.position.psi)
     
     def callback_rudder_angle(self, msg):
         self.get_logger().info('listened rudder angle: %f' % msg.position.psi)
         self.vessel.rudders[0].angle = math.degrees(msg.data)
 
 def main(args=None):
-    rclpy.init(args=args)
-    venus_node = Venus()
-    
     try:
+        rclpy.init(args=args)
+        venus_node = Venus()
         rclpy.spin(venus_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
@@ -98,6 +98,7 @@ def main(args=None):
         venus_node.viewer.stop()
         venus_node.destroy_node()
         rclpy.shutdown()
+        print("Oiiiiiiiiiiiiiiiiiiiiii")
 
 if __name__ == '__main__':
     main()

@@ -13,6 +13,11 @@ obs: windows uses \ instead of / for dirs
 4. send topics through cli (inputs)
     1. rudder_angle topic: >> ros2 topic pub --once /rudder_angle std_msgs/msg/Float32 "{data: 0}"
     2. proppeller_rotation topic: >> ros2 topic pub --once /propeller_rotation std_msgs/msg/Float32 "{data: 1}"
+
+    ros2 topic pub --once /propeller_thrust std_msgs/msg/Float32 "{data: 1.0}"  
+
+
+    3. >> ros2 topic pub --once /state path_following_interfaces/msg/State "{position: {x: 0, y: 0, psi: 1.571}, velocity: {u: 0, v: 0, r: 0}}"
 5. send request through cli (backend req)
     1. send default req (inital state = 0 and end_simul=False): >> ros2 service call /start_end_simul path_following_interfaces/srv/StartEndSimul "{}"
     2. send with other inital state: >> ros2 service call /start_end_simul path_following_interfaces/srv/StartEndSimul "{initial_state: {position: {x: 0, y: 0, psi: 1.571}, velocity: {u: 0, v: 0, r: 0}}}"

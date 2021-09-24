@@ -10,6 +10,9 @@ class LosGuidance(Node):
     def __init__(self):
         super().__init__('los_guidance_node')
 
+        self.des_yaw_msg = Float32()
+        self.des_velocity_msg = Float32()
+
         self.current_waypoint = 1 #index of waypoint ship has to reach (includes starting (0,0,0)
 
         self.server = self.create_service(Waypoints, '/waypoints', self.callback_waypoints)
@@ -23,6 +26,11 @@ class LosGuidance(Node):
         self.publisher_desired_yaw_angle = self.create_publisher(
             Float32,
             '/desired_yaw_angle',
+            1)
+
+        self.publisher_desired_surge_velocity = self.create_publisher(
+            Float32,
+            '/desired_surge_velocity',
             1)
 
     def log_state(self, msg):
@@ -49,7 +57,7 @@ class LosGuidance(Node):
         return res
         
     def callback_filtered_state(self, msg):
-        log_state(self, msg)
+        self.log_state(msg)
         des_yaw_msg, des_velocity_msg = self.los(msg)
         self.publisher_desired_yaw_angle.publish(des_yaw_msg)
         self.get_logger().info('published desired yaw angle: %f' % des_yaw_msg.data)
@@ -59,22 +67,19 @@ class LosGuidance(Node):
     def los(self, xf):
         # use waypoints stored in self.waypoints
         # these contain desired position x and y, and velocity u
-        des_yaw_msg = Float32()
-        des_velocity_msg = Float32()
-        des_yaw_msg.data = 1
-        des_velocity_msg.data = 1 
-        return des_yaw_msg, des_velocity_msg
+        self.des_yaw_msg.data = 1.0
+        self.des_velocity_msg.data = 1.0 
+        return self.des_yaw_msg, self.des_velocity_msg
 
 def main(args=None):
-    rclpy.init(args=args)
-    los_guidance_node = LosGuidance()
-    
     try:
+        rclpy.init(args=args)
+        los_guidance_node = LosGuidance()
         rclpy.spin(los_guidance_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
     finally:
-        yaw_controller_node.destroy_node()
+        los_guidance_node.destroy_node()
         rclpy.shutdown()
 
 if __name__ == '__main__':
