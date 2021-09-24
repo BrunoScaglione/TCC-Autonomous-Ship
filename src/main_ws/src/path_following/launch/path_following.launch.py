@@ -11,7 +11,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     pkg_share_dir = get_package_share_directory('path_following')
     pkg_install_dir = get_package_prefix('path_following')
-    pkg_dir = os.path.join(pkg_install_dir, 'lib', 'path_following')
+    pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
 
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
@@ -34,13 +34,6 @@ def generate_launch_description():
                 {'pkg_share_dir': pkg_share_dir},
                 {'pkg_dir': pkg_dir}
         ]
-    )
-
-    start_backend_node = Node(
-        package='path_following',
-        executable='backend',
-        name='backend_node',
-        output='screen'
     )
 
     start_los_guidance_node = Node(
@@ -97,11 +90,17 @@ def generate_launch_description():
         executable='venus',
         name='venus_node',
         output='screen'
-    )          
+    )
+
+    start_backend_node = Node(
+        package='path_following',
+        executable='backend',
+        name='backend_node',
+        output='screen'
+    )         
 
     ld.add_action(rosbag_record_all)
     ld.add_action(start_pydyna_simple_node)
-    ld.add_action(start_backend_node)
     ld.add_action(start_los_guidance_node)
     ld.add_action(start_surge_controller_node)
     ld.add_action(start_yaw_controller_node)
@@ -110,5 +109,6 @@ def generate_launch_description():
     ld.add_action(start_kalman_filter_node)
     ld.add_action(start_wave_filter_node)
     ld.add_action(start_venus_node)
+    ld.add_action(start_backend_node)
     
     return ld

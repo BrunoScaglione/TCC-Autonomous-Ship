@@ -11,6 +11,8 @@ class YawController(Node):
 
         self.desired_yaw_angle = 0
 
+        self.rudder_msg = Float32()
+
         self.subscription_filtered_state = self.create_subscription(
             State,
             '/filtered_state',
@@ -40,22 +42,19 @@ class YawController(Node):
     
     def yaw_control(self, psi):
         psi_des = self.desired_yaw_angle
-        rudder_msg = Float32()
-        rudder_msg.data = 1 
-        return rudder_msg # 
+        self.rudder_msg.data = 0.0
+        return self.rudder_msg # 
 
 def main(args=None):
-    rclpy.init(args=args)
-    yaw_controller_node = YawController()
-    
     try:
+        rclpy.init(args=args)
+        yaw_controller_node = YawController()
         rclpy.spin(yaw_controller_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
     finally:
         yaw_controller_node.destroy_node()
         rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()

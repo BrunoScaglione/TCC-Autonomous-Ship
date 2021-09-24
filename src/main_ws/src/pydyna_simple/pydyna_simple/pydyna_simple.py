@@ -127,29 +127,30 @@ class PydynaSimpleNode(Node):
         )
     
 def main(args=None):
-    rclpy.init(args=args)
-    my_pydyna_node = PydynaSimpleNode()
-    
-    my_pydyna_node.get_logger().info('started main')
-
-    while rclpy.ok():
-        my_pydyna_node.get_logger().info('entered rclpy.ok loop')
-        rclpy.spin_once(my_pydyna_node)
-        if my_pydyna_node.end_simul == 1:
-            break
-        print(f'proppeler_counter: {my_pydyna_node.proppeler_counter}')
-        print(f'rudder_counter: {my_pydyna_node.rudder_counter}')
-        if my_pydyna_node.proppeler_counter == my_pydyna_node.rudder_counter:
-            if not my_pydyna_node.subscriptions_synced:
-                my_pydyna_node.extrapolate_state()
-                my_pydyna_node.publish_state()
-                my_pydyna_node.subscriptions_synced = True
-        else:
-            my_pydyna_node.subscriptions_synced = False
-            
-    my_pydyna_node.get_logger().info('Ended Simulation')
-    my_pydyna_node.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.init(args=args)
+        my_pydyna_node = PydynaSimpleNode()
+        my_pydyna_node.get_logger().info('started main')
+        while rclpy.ok():
+            my_pydyna_node.get_logger().info('entered rclpy.ok loop')
+            rclpy.spin_once(my_pydyna_node)
+            if my_pydyna_node.end_simul == 1:
+                break
+            print(f'proppeler_counter: {my_pydyna_node.proppeler_counter}')
+            print(f'rudder_counter: {my_pydyna_node.rudder_counter}')
+            if my_pydyna_node.proppeler_counter == my_pydyna_node.rudder_counter:
+                if not my_pydyna_node.subscriptions_synced:
+                    my_pydyna_node.extrapolate_state()
+                    my_pydyna_node.publish_state()
+                    my_pydyna_node.subscriptions_synced = True
+            else:
+                my_pydyna_node.subscriptions_synced = False
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+    finally:       
+        my_pydyna_node.get_logger().info('Ended Simulation')
+        my_pydyna_node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

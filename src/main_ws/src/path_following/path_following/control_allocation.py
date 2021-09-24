@@ -7,6 +7,8 @@ class ControlAllocation(Node):
     def __init__(self):
         super().__init__('control_allocation_node')
 
+        self.rotation_msg = Float32()
+
         self.subscription_propeller_thrust = self.create_subscription(
             Float32,
             '/propeller_thrust',
@@ -24,15 +26,13 @@ class ControlAllocation(Node):
         self.publisher_propeller_rotation.publish(propeller_rotation)
     
     def control_allocation(self, tau):
-        rotation_msg = Float32()
-        rotation_msg.data = 1 
-        return rotation_msg # 
+        self.rotation_msg.data = 1.0
+        return self.rotation_msg 
 
 def main(args=None):
-    rclpy.init(args=args)
-    control_allocation_node = ControlAllocation()
-    
     try:
+        rclpy.init(args=args)
+        control_allocation_node = ControlAllocation()
         rclpy.spin(control_allocation_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')

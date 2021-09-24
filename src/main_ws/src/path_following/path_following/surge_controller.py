@@ -11,6 +11,8 @@ class SurgeController(Node):
 
         self.desired_surge_velocity = 0
 
+        self.thrust_msg = Float32()
+
         self.subscription_filtered_state = self.create_subscription(
             State,
             '/filtered_state',
@@ -40,15 +42,13 @@ class SurgeController(Node):
     
     def surge_control(self, u): # u is surge velocity
         u_des = self.desired_surge_velocity
-        thrust_msg = Float32()
-        thrust_msg.data = 1 
-        return thrust_msg 
+        self.thrust_msg.data = 1.0 
+        return self.thrust_msg 
 
 def main(args=None):
-    rclpy.init(args=args)
-    surge_controller_node = SurgeController()
-    
     try:
+        rclpy.init(args=args)
+        surge_controller_node = SurgeController()
         rclpy.spin(surge_controller_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
