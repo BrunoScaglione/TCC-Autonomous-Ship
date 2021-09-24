@@ -28,16 +28,6 @@ class Backend(Node):
                     node.get_logger().info("Service call failed %r" % (e,))
                     return None
 
-
-def main(args=None):
-    rclpy.init(args=args)
-    backend_node = Backend()
-    
-    rclpy.spin(backend_node)
-
-    backend_node.destroy_node()
-    rclpy.shutdown()
-
 app = Flask(__name__)
 
 @app.route("/waypoints", methods=['POST'])

@@ -78,10 +78,10 @@ def generate_launch_description():
         output='screen'
     )
 
-    start_gps_kalman_filter_node = Node(
+    start_kalman_filter_node = Node(
         package='path_following',
-        executable='gps_kalman_filter',
-        name='gps_kalman_filter_node',
+        executable='kalman_filter',
+        name='kalman_filter_node',
         output='screen'
     ) 
 
@@ -107,7 +107,7 @@ def generate_launch_description():
     ld.add_action(start_yaw_controller_node)
     ld.add_action(start_control_allocation_node)
     ld.add_action(start_gps_imu_simul_node)
-    ld.add_action(start_gps_kalman_filter_node)
+    ld.add_action(start_kalman_filter_node)
     ld.add_action(start_wave_filter_node)
     ld.add_action(start_venus_node)
     
