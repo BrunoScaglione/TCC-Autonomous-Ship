@@ -28,6 +28,20 @@ class Backend(Node):
                     node.get_logger().info("Service call failed %r" % (e,))
                     return None
 
+def log_state(self, state):
+    self.get_logger().info(
+        'received from client initial state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+        % (
+            state.position.x, 
+            state.position.y, 
+            state.position.psi, # yaw angle
+            state.velocity.u, 
+            state.velocity.v, 
+            state.velocity.r,
+            state.time 
+        )
+    )
+
 rclpy.init(args=None)
 backend_node = Backend()
 
@@ -37,6 +51,14 @@ app = Flask(__name__)
 def receive_waypoints():
     waypoints = request.json
 
+    num_waypoints = len(waypoints.position.x)
+    self.get_logger().info('received from client %d waypoints' % num_waypoints)
+    for i in range(num_waypoints):
+        self.get_logger().info(
+            'received waypoint %d: %f %f %f' % 
+            (i, waypoints.position.x[i], waypoints.position.y[i], waypoints.velocity[i])
+        )
+
     backend_node.waypoints_srv.position.x = waypoints['position']['x']
     backend_node.waypoints_srv.position.y = waypoints['position']['y']
     backend_node.waypoints_srv.velocity = waypoints['velocity']
@@ -44,6 +66,8 @@ def receive_waypoints():
 @app.route("/inital_condition", methods=['POST'])
 def receive_inital_condition():
     initial_condition = request.json
+
+    log_state(backend_node, initial_condition)
 
     backend_node.start_end_simul_srv.initial_state.position.x = \
         initial_condition['position']['x']
@@ -62,6 +86,8 @@ def receive_inital_condition():
 def start_system():
     backend_node.start_end_simul_srv.end_simul = 0
 
+    self.get_logger().info("Starting system")
+
     future_start_simul = backend_node.client_start_end_simul. \
         call_async(backend_node.start_end_simul_srv)
     reporting_start_simul = backend_node.wait_future(backend_node, future_start_simul)
@@ -77,6 +103,9 @@ def start_system():
 @app.route("/end")
 def end_simul():
     backend_node.start_end_simul_srv.end_simul = 1
+
+    self.get_logger().info("Ending system")
+
     future_end_simul = backend_node.client_start_end_simul. \
         call_async(backend_node.start_end_simul_srv)
     reporting_end_simul = backend_node.wait_future(backend_node, future_end_simul)
