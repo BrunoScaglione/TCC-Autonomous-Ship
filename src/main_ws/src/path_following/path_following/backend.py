@@ -1,4 +1,6 @@
+import time
 import json
+
 from flask import Flask, request
 
 import rclpy
@@ -19,14 +21,17 @@ class Backend(Node):
         client_waypoints = self.create_client(Waypoints, '/waypoints')
 
 def wait_future(node, node_future):
-    while True:
+    start = time.time()
+    now = start
+    while ((now - start) < 5):
         rclpy.spin_once(node)
         if node_future.done():
             try:
-                return node_future.result()
+                return node_future.result(), 0
             except Exception as e:
-                node.get_logger().info("Service call failed %r" % (e,))
-                return None
+                return None, 0
+        now = time.time()
+    return None, 1
 
 def log_initial_state(node, initial_state):
     node.get_logger().info(
@@ -66,7 +71,6 @@ def receive_waypoints():
         backend_node.get_logger().info('Returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
-        raise
         backend_node.get_logger().info(
             "Waypoints received from client are not valid\n"
             "Returning HTTP bad request to client"
@@ -111,20 +115,23 @@ def start_system():
 
         future_start_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
-        reporting_start_simul = wait_future(backend_node, future_start_simul)
-        backend_node.get_logger().info("Received reporting: %s" % reporting_start_simul)
+        reporting_start_simul, tout_start_simul = wait_future(backend_node, future_start_simul)
 
         future_waypoints = backend_node.client_waypoints. \
             call_async(backend_node.waypoints_srv)
-        reporting_waypoints = wait_future(backend_node, future_waypoints)
-        backend_node.get_logger().info("Received reporting: %s" % reporting_waypoints)
+        reporting_waypoints, tout_waypoints = wait_future(backend_node, future_waypoints)
 
-        backend_node.get_logger().info('returning HTTP OK to client')
-        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+        if tout_start_simul or tout_waypoints:
+            backend_node.get_logger().info('returning HTTP Gateaway timedout to client')
+            return json.dumps({'success':False}), 504, {'ContentType':'application/json'}
+        else:
+            backend_node.get_logger().info("Received reporting: %s" % reporting_start_simul)
+            backend_node.get_logger().info("Received reporting: %s" % reporting_waypoints)
+            backend_node.get_logger().info('returning HTTP OK to client')
+            return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
-        raise
-        backend_node.get_logger().info('returning HTTP bad request to client')
-        return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
+        backend_node.get_logger().info('returning HTTP internal server error to client')
+        return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
 
 @app.route("/end")
 def end_simul():
@@ -135,14 +142,18 @@ def end_simul():
 
         future_end_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
-        reporting_end_simul = wait_future(backend_node, future_end_simul)
-        backend_node.get_logger().info("Received reporting: %s" % reporting_end_simul)
+        reporting_end_simul, tout_end_simul = wait_future(backend_node, future_end_simul)
 
-        backend_node.get_logger().info('returning HTTP OK to client')
-        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+        if tout_end_simul:
+            backend_node.get_logger().info('returning HTTP Gateaway timedout to client')
+            return json.dumps({'success':False}), 504, {'ContentType':'application/json'}
+        else:
+            backend_node.get_logger().info("Received reporting: %s" % reporting_end_simul)
+            backend_node.get_logger().info('returning HTTP OK to client')
+            return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
-        backend_node.get_logger().info('returning HTTP bad request to client')
-        return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
+        backend_node.get_logger().info('returning HTTP internal server error to client')
+        return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
 
 def main():
     try:
