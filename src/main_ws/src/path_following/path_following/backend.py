@@ -28,9 +28,9 @@ class Backend(Node):
                     node.get_logger().info("Service call failed %r" % (e,))
                     return None
 
-def log_state(self, state):
-    self.get_logger().info(
-        'received from client initial state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+def log_state(node, state):
+    node.get_logger().info(
+        'Received from client initial state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
         % (
             state.position.x, 
             state.position.y, 
@@ -53,18 +53,25 @@ def receive_waypoints():
         waypoints = request.json
 
         num_waypoints = len(waypoints.position.x)
-        self.get_logger().info('received from client %d waypoints' % num_waypoints)
+        backend_node.get_logger().info('received from client %d waypoints' % num_waypoints)
         for i in range(num_waypoints):
             backend_node.get_logger().info(
-                'received waypoint %d: %f %f %f' % 
+                'Received waypoint %d: %f %f %f' % 
                 (i, waypoints.position.x[i], waypoints.position.y[i], waypoints.velocity[i])
             )
 
         backend_node.waypoints_srv.position.x = waypoints['position']['x']
         backend_node.waypoints_srv.position.y = waypoints['position']['y']
         backend_node.waypoints_srv.velocity = waypoints['velocity']
+
+        backend_node.get_logger().info('Returning HTTP OK to client')
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
-        backend_node.get_logger().info('waypoints received from client are not valid')
+        backend_node.get_logger().info(
+            "Waypoints received from client are not valid"
+            "Returning HTTP bad request to client"
+        )
+        return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
 
 @app.route("/inital_condition", methods=['POST'])
 def receive_inital_condition():
@@ -85,8 +92,15 @@ def receive_inital_condition():
             initial_condition['velocity']['v']
         backend_node.start_end_simul_srv.initial_state.velocity.r = \
             initial_condition['velocity']['r']
+            
+        backend_node.get_logger().info('Returning HTTP OK to client')
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
-        backend_node.get_logger().info('initial condition received from client is not valid')
+        backend_node.get_logger().info(
+            "Initial condition received from client is not valid"
+            "Returning HTTP bad request to client"
+        )
+        return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
 
 @app.route("/start")
 def start_system():
@@ -116,7 +130,7 @@ def end_simul():
     try:
         backend_node.start_end_simul_srv.end_simul = 1
 
-        self.get_logger().info("Ending system")
+        backend_node.get_logger().info("Ending system")
 
         future_end_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
