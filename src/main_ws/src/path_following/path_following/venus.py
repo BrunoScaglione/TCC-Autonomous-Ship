@@ -91,7 +91,7 @@ class Venus(Node):
 def main(args=None):
     try:
         rclpy.init(args=args)
-        venus_node = Venus()
+        venus_node = Venus() # port 6150
         rclpy.spin(venus_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')

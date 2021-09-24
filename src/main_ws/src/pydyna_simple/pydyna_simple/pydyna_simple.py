@@ -63,10 +63,10 @@ class PydynaSimpleNode(Node):
             self.ship = self.sim.vessels['104']
             x, y, psi = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.psi
             u, v, r = req.initial_state.velocity.u, req.initial_state.velocity.v, req.initial_state.velocity.r
-            self.ship._set_linear_position([x, y, 0])
-            self.ship._set_angular_position([0, 0, math.radians(90)-psi])
-            self.ship._set_linear_velocity([u, v, 0])
-            self.ship._set_angular_velocity([0, 0, r])
+            self.ship.linear_position = [x, y, 0]
+            self.ship.angular_position = [0, 0, math.radians(90)-psi]
+            self.ship.linear_velocity = [u, v, 0]
+            self.ship.angular_velocity = [0, 0, r]
             self.proppeler_counter = 0
             self.rudder_counter = 0
 
