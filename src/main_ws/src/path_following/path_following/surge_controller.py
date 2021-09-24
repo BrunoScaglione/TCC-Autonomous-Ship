@@ -4,9 +4,9 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32
+from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
-from std_msgs.msg import Bool
 
 class SurgeController(Node):
     def __init__(self):

@@ -7,8 +7,9 @@ from flask import Flask, request
 import rclpy
 from rclpy.node import Node
 
-from path_following_interfaces.srv import Waypoints, StartEndSimul
 from std_msgs.msg import Bool
+# custom interfaces
+from path_following_interfaces.srv import Waypoints, StartEndSimul
 
 class Backend(Node):
     def __init__(self):

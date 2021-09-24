@@ -1,3 +1,4 @@
+import sys
 import os
 import numpy as np
 import math
@@ -8,6 +9,7 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32
+from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
 #custom service
@@ -28,6 +30,12 @@ class PydynaSimpleNode(Node):
         self.num_simul = 0
         self.end_simul = 0
 
+        self.subscription_shutdown = self.create_subscription(
+            Bool,
+            '/shutdown',
+            self.callback_shutdown,
+            1)
+
         self.server = self.create_service(StartEndSimul, '/start_end_simul', self.callback_start_end_simul)
 
         self.subscription_propeller = self.create_subscription(
@@ -43,6 +51,9 @@ class PydynaSimpleNode(Node):
             1)
 
         self.publisher_state = self.create_publisher(State, 'state', 1)
+    
+    def callback_shutdown():
+        sys.exit()
 
     def callback_start_end_simul(self, req, res):
 

@@ -3,8 +3,8 @@ import sys
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import Float32
 from std_msgs.msg import Bool
+from std_msgs.msg import Float32
 
 class ControlAllocation(Node):
     def __init__(self):
