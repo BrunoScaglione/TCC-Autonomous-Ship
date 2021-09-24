@@ -1,4 +1,6 @@
+import os
 import json
+from datetime import datetime
 
 from flask import Flask, request
 
@@ -10,6 +12,9 @@ from path_following_interfaces.srv import Waypoints, StartEndSimul
 class Backend(Node):
     def __init__(self):
         super().__init__('backend_node')
+
+        self.declare_parameter('db_dir', './')
+        self.db_dir = self.get_parameter('db_dir').get_parameter_value().string_value
 
         self.client_start_end_simul = \
             self.create_client(StartEndSimul, '/start_end_simul')
@@ -51,6 +56,12 @@ app = Flask(__name__)
 def receive_waypoints():
     try:
         waypoints = request.json
+
+        now = datatime.now()
+        time_stamp = now.strftime("%Y_%m_%d-%H_%M_%S")
+
+        with open(os.path.join(db_dir, f'waypoints_{time_stamp}.json'), 'w', encoding='utf-8') as f:
+            json.dump(waypoints, f, ensure_ascii=False, indent=4)
 
         num_waypoints = len(waypoints['position']['x'])
         backend_node.get_logger().info('received from client %d waypoints' % num_waypoints)

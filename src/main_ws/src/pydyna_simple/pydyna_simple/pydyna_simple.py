@@ -18,10 +18,12 @@ class PydynaSimpleNode(Node):
     def __init__(self):
         super().__init__('pydyna_simple_node')
 
-        self.declare_parameter('pkg_dir', '')
-        self.declare_parameter('pkg_share_dir', '')
+        self.declare_parameter('pkg_dir', './')
+        self.declare_parameter('pkg_share_dir', './')
+        self.declare_parameter('p3d', 'TankerL186B32_T085.p3d')
         self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
         self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
+        self.p3d = self.get_parameter('p3d').get_parameter_value().string_value
 
         self.num_simul = 0
         self.end_simul = 0
@@ -57,8 +59,8 @@ class PydynaSimpleNode(Node):
             self.rudder_angle = 0
             self.subscriptions_synced = False
 
-            self.rpt = pydyna.create_text_report(f'{self.pkg_share_dir}/logs/pydynalogs/pydyna_log_{self.num_simul}')
-            self.sim = pydyna.create_simulation(f'{self.pkg_dir}/config/TankerL186B32_T085.p3d')
+            self.rpt = pydyna.create_text_report(os.path.join(self.pkg_share_dir, f'logs/pydynalogs/pydyna_log_{self.num_simul}'))
+            self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config/{p3d}'))
             
             self.ship = self.sim.vessels['104']
             x, y, psi = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.psi
