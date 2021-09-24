@@ -11,7 +11,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     pkg_share_dir = get_package_share_directory('pydyna_simple')
     pkg_install_dir = get_package_prefix('pydyna_simple')
-    pkg_dir = os.path.join(pydyna_install_dir, 'lib', 'pydyna_simple')
+    pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
 
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
