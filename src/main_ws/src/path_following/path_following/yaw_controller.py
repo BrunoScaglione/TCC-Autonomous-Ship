@@ -52,10 +52,10 @@ def main(args=None):
         rclpy.spin(yaw_controller_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        pass
+    finally:
+        yaw_controller_node.destroy_node()
+        rclpy.shutdown()
 
-    yaw_controller_node.destroy_node()
-    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

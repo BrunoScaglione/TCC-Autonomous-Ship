@@ -52,10 +52,9 @@ def main(args=None):
         rclpy.spin(surge_controller_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        pass
-
-    surge_controller_node.destroy_node()
-    rclpy.shutdown()
+    finally:
+        yaw_controller_node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
