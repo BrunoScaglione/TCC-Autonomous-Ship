@@ -18,27 +18,26 @@ class Backend(Node):
         client_start_end_simul = self.create_client(StartEndSimul, '/start_end_simul')
         client_waypoints = self.create_client(Waypoints, '/waypoints')
 
-    def wait_future(node, node_future):
-        while true:
-            rclpy.spin_once(node)
-            if node_future.done():
-                try:
-                    return node_future.result()
-                except Exception as e:
-                    node.get_logger().info("Service call failed %r" % (e,))
-                    return None
+def wait_future(node, node_future):
+    while True:
+        rclpy.spin_once(node)
+        if node_future.done():
+            try:
+                return node_future.result()
+            except Exception as e:
+                node.get_logger().info("Service call failed %r" % (e,))
+                return None
 
-def log_state(node, state):
+def log_initial_state(node, initial_state):
     node.get_logger().info(
-        'Received from client initial state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+        'Received from client initial state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}}' 
         % (
-            state.position.x, 
-            state.position.y, 
-            state.position.psi, # yaw angle
-            state.velocity.u, 
-            state.velocity.v, 
-            state.velocity.r,
-            state.time 
+            initial_state['position']['x'], 
+            initial_state['position']['y'], 
+            initial_state['position']['psi'], # yaw angle
+            initial_state['velocity']['u'], 
+            initial_state['velocity']['v'], 
+            initial_state['velocity']['r'],
         )
     )
 
@@ -52,12 +51,12 @@ def receive_waypoints():
     try:
         waypoints = request.json
 
-        num_waypoints = len(waypoints.position.x)
+        num_waypoints = len(waypoints['position']['x'])
         backend_node.get_logger().info('received from client %d waypoints' % num_waypoints)
         for i in range(num_waypoints):
             backend_node.get_logger().info(
                 'Received waypoint %d: %f %f %f' % 
-                (i, waypoints.position.x[i], waypoints.position.y[i], waypoints.velocity[i])
+                (i, waypoints['position']['x'][i], waypoints['position']['y'][i], waypoints['velocity'][i])
             )
 
         backend_node.waypoints_srv.position.x = waypoints['position']['x']
@@ -67,18 +66,19 @@ def receive_waypoints():
         backend_node.get_logger().info('Returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
+        raise
         backend_node.get_logger().info(
-            "Waypoints received from client are not valid"
+            "Waypoints received from client are not valid\n"
             "Returning HTTP bad request to client"
         )
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
 
-@app.route("/inital_condition", methods=['POST'])
+@app.route("/initial_condition", methods=['POST'])
 def receive_inital_condition():
     try:
         initial_condition = request.json
 
-        log_state(backend_node, initial_condition)
+        log_initial_state(backend_node, initial_condition)
 
         backend_node.start_end_simul_srv.initial_state.position.x = \
             initial_condition['position']['x']
@@ -92,12 +92,12 @@ def receive_inital_condition():
             initial_condition['velocity']['v']
         backend_node.start_end_simul_srv.initial_state.velocity.r = \
             initial_condition['velocity']['r']
-            
+
         backend_node.get_logger().info('Returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
         backend_node.get_logger().info(
-            "Initial condition received from client is not valid"
+            "Initial condition received from client is not valid\n"
             "Returning HTTP bad request to client"
         )
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
@@ -105,36 +105,37 @@ def receive_inital_condition():
 @app.route("/start")
 def start_system():
     try:
-        backend_node.start_end_simul_srv.end_simul = 0
+        backend_node.start_end_simul_srv.end_simul = False
 
         backend_node.get_logger().info("Starting system")
 
         future_start_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
-        reporting_start_simul = backend_node.wait_future(backend_node, future_start_simul)
+        reporting_start_simul = wait_future(backend_node, future_start_simul)
         backend_node.get_logger().info("Received reporting: %s" % reporting_start_simul)
 
         future_waypoints = backend_node.client_waypoints. \
             call_async(backend_node.waypoints_srv)
-        reporting_waypoints = backend_node.wait_future(backend_node, future_waypoints)
+        reporting_waypoints = wait_future(backend_node, future_waypoints)
         backend_node.get_logger().info("Received reporting: %s" % reporting_waypoints)
 
         backend_node.get_logger().info('returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
+        raise
         backend_node.get_logger().info('returning HTTP bad request to client')
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
 
 @app.route("/end")
 def end_simul():
     try:
-        backend_node.start_end_simul_srv.end_simul = 1
+        backend_node.start_end_simul_srv.end_simul = True
 
         backend_node.get_logger().info("Ending system")
 
         future_end_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
-        reporting_end_simul = backend_node.wait_future(backend_node, future_end_simul)
+        reporting_end_simul = wait_future(backend_node, future_end_simul)
         backend_node.get_logger().info("Received reporting: %s" % reporting_end_simul)
 
         backend_node.get_logger().info('returning HTTP OK to client')
