@@ -60,10 +60,9 @@ def main(args=None):
         rclpy.spin(kalman_filter_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        pass
-
-    kalman_filter_node.destroy_node()
-    rclpy.shutdown()
+    finally:
+        yaw_controller_node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

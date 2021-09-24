@@ -94,11 +94,10 @@ def main(args=None):
         rclpy.spin(venus_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        pass
-    
-    venus_node.viewer.stop()
-    venus_node.destroy_node()
-    rclpy.shutdown()
+    finally:
+        venus_node.viewer.stop()
+        venus_node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

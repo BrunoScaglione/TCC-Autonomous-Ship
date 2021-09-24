@@ -28,15 +28,8 @@ class Backend(Node):
                     node.get_logger().info("Service call failed %r" % (e,))
                     return None
 
-
-def main(args=None):
-    rclpy.init(args=args)
-    backend_node = Backend()
-    
-    rclpy.spin(backend_node)
-
-    backend_node.destroy_node()
-    rclpy.shutdown()
+rclpy.init(args=None)
+backend_node = Backend()
 
 app = Flask(__name__)
 
@@ -91,8 +84,17 @@ def end_simul():
     
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
+def main():
+    try:
+        app.run() # port 5000 by default
+    except KeyboardInterrupt:
+        print('Stopped with user interrupt')
+    finally:
+        backend_node.destroy_node()
+        rclpy.shutdown()
+
 if __name__ == '__main__':
-    app.run() # port 5000 by default
+    main()
 
 
 
