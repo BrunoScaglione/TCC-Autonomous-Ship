@@ -1,7 +1,3 @@
-'''
-THIS FILE HAS AN UNSOLVED PROBLEM
-'''
-
 import json
 
 from flask import Flask, request
@@ -20,9 +16,6 @@ class Backend(Node):
         self.client_waypoints = self.create_client(Waypoints, '/waypoints')
         self.start_end_simul_srv = StartEndSimul.Request()
         self.waypoints_srv = Waypoints.Request()
-
-        client_start_end_simul = self.create_client(StartEndSimul, '/start_end_simul')
-        client_waypoints = self.create_client(Waypoints, '/waypoints')
     
     def log_state(self, state):
         self.get_logger().info(
@@ -37,16 +30,10 @@ class Backend(Node):
             )
         )
 
-'''
-PROBLEM: function below giving always (None, 1).
-The client is receiveing gateaway timeout, but 
-the nodes responded normally, and are working as expected.
-Additionally, this is currently not taking levarage of the asynchronus call,
-which is bad
-'''
 def wait_future(node, future_str):
-    rclpy.spin_once(node, timeout_sec=5)
     my_future = getattr(node, future_str)
+    rclpy.spin_until_future_complete(node, my_future, timeout_sec=5)
+    print(my_future.done())
     if my_future.done():
         try:
             return my_future.result(), 0
@@ -125,6 +112,7 @@ def start_system():
         backend_node.future_start_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
         reporting_start_simul, tout_start_simul = wait_future(backend_node, "future_start_simul")
+        delattr(backend_node, "future_start_simul")
 
         backend_node.future_waypoints = backend_node.client_waypoints. \
             call_async(backend_node.waypoints_srv)
@@ -139,6 +127,7 @@ def start_system():
             backend_node.get_logger().info('returning HTTP OK to client')
             return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
+        raise
         backend_node.get_logger().info('returning HTTP internal server error to client')
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
 

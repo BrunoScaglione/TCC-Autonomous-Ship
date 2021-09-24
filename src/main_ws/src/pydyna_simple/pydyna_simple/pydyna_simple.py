@@ -1,5 +1,4 @@
 import os
-import sys
 import numpy as np
 import math
 
@@ -152,7 +151,6 @@ def main(args=None):
         my_pydyna_node.get_logger().info('Ended Simulation')
         my_pydyna_node.destroy_node()
         rclpy.shutdown()
-        sys.exit()
 
 if __name__ == '__main__':
     main()
