@@ -18,15 +18,15 @@ class Backend(Node):
         client_start_end_simul = self.create_client(StartEndSimul, '/start_end_simul')
         client_waypoints = self.create_client(Waypoints, '/waypoints')
 
-    def wait_future(node, node_future):
-        while true:
-            rclpy.spin_once(node)
-            if node_future.done():
-                try:
-                    return node_future.result()
-                except Exception as e:
-                    node.get_logger().info("Service call failed %r" % (e,))
-                    return None
+def wait_future(node, node_future):
+    while True:
+        rclpy.spin_once(node)
+        if node_future.done():
+            try:
+                return node_future.result()
+            except Exception as e:
+                node.get_logger().info("Service call failed %r" % (e,))
+                return None
 
 def log_initial_state(node, initial_state):
     node.get_logger().info(
@@ -66,13 +66,14 @@ def receive_waypoints():
         backend_node.get_logger().info('Returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
+        raise
         backend_node.get_logger().info(
             "Waypoints received from client are not valid\n"
             "Returning HTTP bad request to client"
         )
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
 
-@app.route("/inital_condition", methods=['POST'])
+@app.route("/initial_condition", methods=['POST'])
 def receive_inital_condition():
     try:
         initial_condition = request.json
@@ -104,36 +105,37 @@ def receive_inital_condition():
 @app.route("/start")
 def start_system():
     try:
-        backend_node.start_end_simul_srv.end_simul = 0
+        backend_node.start_end_simul_srv.end_simul = False
 
         backend_node.get_logger().info("Starting system")
 
         future_start_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
-        reporting_start_simul = backend_node.wait_future(backend_node, future_start_simul)
+        reporting_start_simul = wait_future(backend_node, future_start_simul)
         backend_node.get_logger().info("Received reporting: %s" % reporting_start_simul)
 
         future_waypoints = backend_node.client_waypoints. \
             call_async(backend_node.waypoints_srv)
-        reporting_waypoints = backend_node.wait_future(backend_node, future_waypoints)
+        reporting_waypoints = wait_future(backend_node, future_waypoints)
         backend_node.get_logger().info("Received reporting: %s" % reporting_waypoints)
 
         backend_node.get_logger().info('returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
+        raise
         backend_node.get_logger().info('returning HTTP bad request to client')
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
 
 @app.route("/end")
 def end_simul():
     try:
-        backend_node.start_end_simul_srv.end_simul = 1
+        backend_node.start_end_simul_srv.end_simul = True
 
         backend_node.get_logger().info("Ending system")
 
         future_end_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
-        reporting_end_simul = backend_node.wait_future(backend_node, future_end_simul)
+        reporting_end_simul = wait_future(backend_node, future_end_simul)
         backend_node.get_logger().info("Received reporting: %s" % reporting_end_simul)
 
         backend_node.get_logger().info('returning HTTP OK to client')
