@@ -23,7 +23,7 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     rosbag_record_all = ExecuteProcess(
-        cmd=['ros2', 'bag', 'record', '-a'], # '-o', 'rosbags'
+        cmd=['ros2', 'bag', 'record', '/state'], # use '-a' if want to record all
         output='screen'
     )
 
