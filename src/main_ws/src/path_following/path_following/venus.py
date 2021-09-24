@@ -1,3 +1,4 @@
+import math
 from time import sleep
 
 import pydyna
@@ -36,9 +37,9 @@ class Venus(Node):
         # GET MAPQUEST API KEY
         self.viewer = venus.viewer.Venus(mapquest_key = "1bZQGGHqFLQBezmB29WKAHTJKBXM0wDl", logging=True, port=6150)
         self.initial_position = GeoPos(-23.06255, -44.2772) # angra dos reis
-        self.viewer.set_viewport(initial_position, 15)
+        self.viewer.set_viewport(self.initial_position, 15)
         vessel_config = Vessel(
-            position = initial_position,
+            position = self.initial_position,
             angle = 0,
             size = Size(32, 186),
             rudders=[Rudder(angle=0, length=0.1, visual_options={"color": "red"})],
@@ -79,12 +80,12 @@ class Venus(Node):
                 state.time 
             )
         )
-        sleep(0.05)
+        #sleep(0.05)
         self.vessel.position = self.initial_position.relative(state.position.x, state.position.y)
         self.vessel.angle = math.degrees(state.position.psi)
     
     def callback_rudder_angle(self, msg):
-        self.get_logger().info('listened rudder angle: %f' % msg.position.psi)
+        self.get_logger().info('listened rudder angle: %f' % msg.data)
         self.vessel.rudders[0].angle = math.degrees(msg.data)
 
 def main(args=None):
@@ -98,7 +99,6 @@ def main(args=None):
         venus_node.viewer.stop()
         venus_node.destroy_node()
         rclpy.shutdown()
-        print("Oiiiiiiiiiiiiiiiiiiiiii")
 
 if __name__ == '__main__':
     main()

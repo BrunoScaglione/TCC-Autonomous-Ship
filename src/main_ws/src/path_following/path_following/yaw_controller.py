@@ -42,7 +42,7 @@ class YawController(Node):
     
     def yaw_control(self, psi):
         psi_des = self.desired_yaw_angle
-        self.rudder_msg.data = 1.0
+        self.rudder_msg.data = 0.0
         return self.rudder_msg # 
 
 def main(args=None):

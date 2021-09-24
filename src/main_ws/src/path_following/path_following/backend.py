@@ -1,3 +1,7 @@
+'''
+THIS FILE HAS AN UNSOLVED PROBLEM
+'''
+
 import json
 
 from flask import Flask, request
@@ -10,6 +14,7 @@ from path_following_interfaces.srv import Waypoints, StartEndSimul
 class Backend(Node):
     def __init__(self):
         super().__init__('backend_node')
+
         self.client_start_end_simul = \
             self.create_client(StartEndSimul, '/start_end_simul')
         self.client_waypoints = self.create_client(Waypoints, '/waypoints')
@@ -18,29 +23,37 @@ class Backend(Node):
 
         client_start_end_simul = self.create_client(StartEndSimul, '/start_end_simul')
         client_waypoints = self.create_client(Waypoints, '/waypoints')
+    
+    def log_state(self, state):
+        self.get_logger().info(
+            'Received from client initial state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}}' 
+            % (
+                state['position']['x'], 
+                state['position']['y'], 
+                state['position']['psi'], # yaw angle
+                state['velocity']['u'], 
+                state['velocity']['v'], 
+                state['velocity']['r'],
+            )
+        )
 
-def wait_future(node, node_future):
+'''
+PROBLEM: function below giving always (None, 1).
+The client is receiveing gateaway timeout, but 
+the nodes responded normally, and are working as expected.
+Additionally, this is currently not taking levarage of the asynchronus call,
+which is bad
+'''
+def wait_future(node, future_str):
     rclpy.spin_once(node, timeout_sec=5)
-    if node_future.done():
+    my_future = getattr(node, future_str)
+    if my_future.done():
         try:
-            return node_future.result(), 0
+            return my_future.result(), 0
         except:
             return None, 0
     else:
         return None, 1
-
-def log_initial_state(node, initial_state):
-    node.get_logger().info(
-        'Received from client initial state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}}' 
-        % (
-            initial_state['position']['x'], 
-            initial_state['position']['y'], 
-            initial_state['position']['psi'], # yaw angle
-            initial_state['velocity']['u'], 
-            initial_state['velocity']['v'], 
-            initial_state['velocity']['r'],
-        )
-    )
 
 rclpy.init(args=None)
 backend_node = Backend()
@@ -78,7 +91,7 @@ def receive_inital_condition():
     try:
         initial_condition = request.json
 
-        log_initial_state(backend_node, initial_condition)
+        backend_node.log_state(initial_condition)
 
         backend_node.start_end_simul_srv.initial_state.position.x = \
             initial_condition['position']['x']
@@ -109,13 +122,13 @@ def start_system():
 
         backend_node.get_logger().info("Starting system")
 
-        future_start_simul = backend_node.client_start_end_simul. \
+        backend_node.future_start_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
-        reporting_start_simul, tout_start_simul = wait_future(backend_node, future_start_simul)
+        reporting_start_simul, tout_start_simul = wait_future(backend_node, "future_start_simul")
 
-        future_waypoints = backend_node.client_waypoints. \
+        backend_node.future_waypoints = backend_node.client_waypoints. \
             call_async(backend_node.waypoints_srv)
-        reporting_waypoints, tout_waypoints = wait_future(backend_node, future_waypoints)
+        reporting_waypoints, tout_waypoints = wait_future(backend_node, "future_waypoints")
 
         if tout_start_simul or tout_waypoints:
             backend_node.get_logger().info('returning HTTP Gateaway timedout to client')
@@ -136,9 +149,9 @@ def end_simul():
 
         backend_node.get_logger().info("Ending system")
 
-        future_end_simul = backend_node.client_start_end_simul. \
+        backend_node.future_end_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
-        reporting_end_simul, tout_end_simul = wait_future(backend_node, future_end_simul)
+        reporting_end_simul, tout_end_simul = wait_future(backend_node, "future_end_simul")
 
         if tout_end_simul:
             backend_node.get_logger().info('returning HTTP Gateaway timedout to client')
