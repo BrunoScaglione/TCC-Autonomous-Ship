@@ -1,3 +1,0 @@
-[INFO 1632955230.298482600] [pydyna_simple_node]: started main (main() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple\pydyna_simple.py:133)
-[INFO 1632955230.299763000] [pydyna_simple_node]: entered rclpy.ok loop (main() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple\pydyna_simple.py:135)
-[INFO 1632955713.611337000] [pydyna_simple_node]: Ended Simulation (main() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\pydyna_simple\pydyna_simple.py:151)
