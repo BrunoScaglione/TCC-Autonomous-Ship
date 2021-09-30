@@ -1,3 +1,5 @@
+import sys
+
 import rclpy
 from rclpy.node import Node
 
@@ -14,6 +16,12 @@ class LosGuidance(Node):
         self.des_velocity_msg = Float32()
 
         self.current_waypoint = 1 #index of waypoint ship has to reach (includes starting (0,0,0)
+
+        self.subscription_shutdown = self.create_subscription(
+            Bool,
+            '/shutdown',
+            self.callback_shutdown,
+            1)
 
         self.server = self.create_service(Waypoints, '/waypoints', self.callback_waypoints)
 
@@ -47,6 +55,9 @@ class LosGuidance(Node):
             )
         )
 
+    def callback_shutdown():
+        sys.exit()
+
     def callback_waypoints(self, req, res):
         self.waypoints = req # {position: {x: , y: } velocity: }
         num_waypoints = len(req.position.x)
@@ -78,6 +89,8 @@ def main(args=None):
         rclpy.spin(los_guidance_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+    except SystemExit:
+        print('Stopped with user shutdown request')
     finally:
         los_guidance_node.destroy_node()
         rclpy.shutdown()

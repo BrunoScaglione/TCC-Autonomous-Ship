@@ -13,6 +13,8 @@ def generate_launch_description():
     pkg_install_dir = get_package_prefix('path_following')
     pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
+    p3d = 'TankerL186B32_T085.p3d'
+    db_dir = os.path.join(pkg_share_dir, 'db')
 
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
     # Set LOG format
@@ -21,7 +23,7 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     rosbag_record_all = ExecuteProcess(
-        cmd=['ros2', 'bag', 'record', '-a'], # '-o', 'rosbags'
+        cmd=['ros2', 'bag', 'record', '/state'], # use '-a' if want to record all
         output='screen'
     )
 
@@ -32,7 +34,8 @@ def generate_launch_description():
         output='screen',
         parameters=[
                 {'pkg_share_dir': pkg_share_dir},
-                {'pkg_dir': pkg_dir}
+                {'pkg_dir': pkg_dir},
+                {'p3d': p3d}
         ]
     )
 
@@ -96,7 +99,10 @@ def generate_launch_description():
         package='path_following',
         executable='backend',
         name='backend_node',
-        output='screen'
+        output='screen',
+        parameters=[
+                {'db_dir': db_dir}
+        ]
     )         
 
     ld.add_action(rosbag_record_all)

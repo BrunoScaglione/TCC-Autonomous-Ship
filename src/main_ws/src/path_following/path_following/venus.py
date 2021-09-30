@@ -1,3 +1,4 @@
+import sys
 import math
 from time import sleep
 import math
@@ -14,12 +15,19 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 # custom interface
 from path_following_interfaces.msg import State
+from std_msgs.msg import Bool
 
 class Venus(Node):
     def __init__(self):
         super().__init__('venus_node')
 
         self.venus_init()
+
+        self.subscription_shutdown = self.create_subscription(
+            Bool,
+            '/shutdown',
+            self.callback_shutdown,
+            1)
 
         self.subscription_state = self.create_subscription(
             State,
@@ -85,6 +93,9 @@ class Venus(Node):
         self.vessel.position = self.initial_position.relative(state.position.x, state.position.y)
         self.vessel.angle = math.degrees(state.position.psi)
     
+    def callback_shutdown():
+        sys.exit()
+    
     def callback_rudder_angle(self, msg):
         self.get_logger().info('listened rudder angle: %f' % msg.data)
         self.vessel.rudders[0].angle = math.degrees(msg.data)
@@ -92,10 +103,12 @@ class Venus(Node):
 def main(args=None):
     try:
         rclpy.init(args=args)
-        venus_node = Venus()
+        venus_node = Venus() # port 6150
         rclpy.spin(venus_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+    except SystemExit:
+        print('Stopped with user shutdown request')
     finally:
         venus_node.viewer.stop()
         venus_node.destroy_node()

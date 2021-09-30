@@ -1,9 +1,12 @@
+import sys
+
 import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32
 # custom interface
 from path_following_interfaces.msg import State
+from std_msgs.msg import Bool
 
 class YawController(Node):
     def __init__(self):
@@ -12,6 +15,12 @@ class YawController(Node):
         self.desired_yaw_angle = 0
 
         self.rudder_msg = Float32()
+
+        self.subscription_shutdown = self.create_subscription(
+            Bool,
+            '/shutdown',
+            self.callback_shutdown,
+            1)
 
         self.subscription_filtered_state = self.create_subscription(
             State,
@@ -29,6 +38,9 @@ class YawController(Node):
             Float32,
             '/rudder_angle',
             1)
+
+    def callback_shutdown():
+        sys.exit()
         
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered yaw angle: %f' % msg.position.psi)
@@ -52,6 +64,8 @@ def main(args=None):
         rclpy.spin(yaw_controller_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+    except SystemExit:
+        print('Stopped with user shutdown request')
     finally:
         yaw_controller_node.destroy_node()
         rclpy.shutdown()
