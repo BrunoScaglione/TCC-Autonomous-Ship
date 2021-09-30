@@ -1,0 +1,18 @@
+^C:\TCC-AUTONOMOUS-SHIP\SRC\MAIN_WS\SRC\BUILD\PATH_FOLLOWING_INTERFACES\CMAKEFILES\24C929268DACA410F1BFA61C776BA5D9\PATH_FOLLOWING_INTERFACES.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\TCC-AUTONOMOUS-SHIP\SRC\MAIN_WS\SRC\PATH_FOLLOWING_INTERFACES\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/TCC-Autonomous-Ship/src/main_ws/src/path_following_interfaces -BC:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces --check-stamp-file C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,0 +1,8 @@
+[INFO 1632866205.436175000] [rosbag2_storage]: Opened database 'rosbag2_2021_09_28-18_56_45\rosbag2_2021_09_28-18_56_45_0.db3' for READ_WRITE. (open() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_storage_default_plugins\src\rosbag2_storage_default_plugins\sqlite\sqlite_storage.cpp:217)
+[INFO 1632866205.436276500] [rosbag2_recorder]: Listening for topics... (record() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_transport\src\rosbag2_transport\recorder.cpp:97)
+[INFO 1632866205.438867100] [rosbag2_recorder]: Subscribed to topic '/parameter_events' (subscribe_topic() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_transport\src\rosbag2_transport\recorder.cpp:207)
+[INFO 1632866205.439596500] [rosbag2_recorder]: Subscribed to topic '/rosout' (subscribe_topic() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_transport\src\rosbag2_transport\recorder.cpp:207)
+[INFO 1632866205.676011400] [rosbag2_recorder]: Subscribed to topic '/rudder_angle' (subscribe_topic() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_transport\src\rosbag2_transport\recorder.cpp:207)
+[INFO 1632866205.676597300] [rosbag2_recorder]: Subscribed to topic '/propeller_rotation' (subscribe_topic() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_transport\src\rosbag2_transport\recorder.cpp:207)
+[INFO 1632866205.697533300] [rosbag2_recorder]: Subscribed to topic '/state' (subscribe_topic() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_transport\src\rosbag2_transport\recorder.cpp:207)
+[INFO 1632866291.130362200] [rclcpp]: signal_handler(signal_value=2) (signal_handler() at C:\dev\ros2_galactic\src\ros2\rclcpp\rclcpp\src\rclcpp\signal_handler.cpp:224)
