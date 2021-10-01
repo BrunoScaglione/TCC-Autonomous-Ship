@@ -1,8 +1,6 @@
 import sys
 import math
-from time import sleep
 
-import pydyna
 import venus.viewer
 from venus.objects import (
     GeoPos, Rudder, Vessel, Size, KeyValue, Button

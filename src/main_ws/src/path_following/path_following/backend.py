@@ -94,7 +94,7 @@ def receive_waypoints():
         )
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
 
-@app.route("/initial_condition", methods=['POST'])
+@app.route("/initialCondition", methods=['POST'])
 def receive_inital_condition():
     try:
         initial_condition = request.json
