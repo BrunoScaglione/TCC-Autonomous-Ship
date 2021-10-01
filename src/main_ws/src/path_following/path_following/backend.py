@@ -67,10 +67,10 @@ def receive_waypoints():
     try:
         waypoints = request.json
 
-        now = datatime.now()
+        now = datetime.now()
         time_stamp = now.strftime("%Y_%m_%d-%H_%M_%S")
 
-        with open(os.path.join(db_dir, f'waypoints_{time_stamp}.json'), 'w', encoding='utf-8') as f:
+        with open(os.path.join(backend_node.db_dir, f'waypoints_{time_stamp}.json'), 'w', encoding='utf-8') as f:
             json.dump(waypoints, f, ensure_ascii=False, indent=4)
 
         num_waypoints = len(waypoints['position']['x'])
@@ -138,8 +138,11 @@ def start_system():
         backend_node.future_waypoints = backend_node.client_waypoints. \
             call_async(backend_node.waypoints_srv)
         reporting_waypoints, tout_waypoints = wait_future(backend_node, "future_waypoints")
+        delattr(backend_node, "future_waypoints")
 
         if tout_start_simul or tout_waypoints:
+            print('tout_start_simul: ', tout_start_simul)
+            print('tout_waypoints: ', tout_waypoints)
             backend_node.get_logger().info('returning HTTP Gateaway timedout to client')
             return json.dumps({'success':False}), 504, {'ContentType':'application/json'}
         else:
@@ -178,7 +181,7 @@ def shutdown_nodes():
     try:
         backend_node.shutdown_msg.data = True
         backend_node.get_logger().info("Shutting down nodes")
-        self.publisher_shutdown.publish(backend_node.shutdown_msg)
+        backend_node.publisher_shutdown.publish(backend_node.shutdown_msg)
 
         backend_node.get_logger().info('Returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}

@@ -71,7 +71,7 @@ class PydynaSimpleNode(Node):
             self.subscriptions_synced = False
 
             self.rpt = pydyna.create_text_report(os.path.join(self.pkg_share_dir, f'logs/pydynalogs/pydyna_log_{self.num_simul}'))
-            self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config/{p3d}'))
+            self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config/{self.p3d}'))
             
             self.ship = self.sim.vessels['104']
             x, y, psi = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.psi
