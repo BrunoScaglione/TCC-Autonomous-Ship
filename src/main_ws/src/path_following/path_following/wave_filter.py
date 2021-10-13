@@ -40,13 +40,7 @@ class WaveFilter(Node):
         self.log_state(filtered_state_msg, 'publisher')
     
     def state_filter(self, x):
-        self.xf_msg.position.x = 1.0 # FILLER
-        self.xf_msg.position.y = 1.0 # FILLER
-        self.xf_msg.position.psi = 1.0 # FILLER
-        self.xf_msg.velocity.u = 1.0 # FILLER
-        self.xf_msg.velocity.v = 1.0 # FILLER
-        self.xf_msg.velocity.r = 1.0 # FILLER
-        return self.xf_msg # 
+        return x # FILLER
 
     def log_state(self, state, communicator):
         log_str = 'listened estimated' if communicator == 'subscriber' else 'published filtered'

@@ -12,7 +12,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 # custom interface
-from path_following_interfaces.msg import State
+from path_following_interfaces.msg import Waypoints, State
 
 class Venus(Node):
     def __init__(self):
@@ -33,10 +33,16 @@ class Venus(Node):
             1)
 
         # obs: this wasnt in the initial schematic
-        self.subscription_state = self.create_subscription(
+        self.subscription_rudder = self.create_subscription(
             Float32,
             '/rudder_angle',
             self.callback_rudder_angle,
+            1)
+
+        self.subscription_waypoints = self.create_subscription(
+            Waypoints,
+            '/waypoints',
+            self.callback_waypoints,
             1)
 
     def venus_init(self):
@@ -96,6 +102,16 @@ class Venus(Node):
     def callback_rudder_angle(self, msg):
         self.get_logger().info('listened rudder angle: %f' % msg.data)
         self.vessel.rudders[0].angle = math.degrees(msg.data)
+
+    def callback_waypoints(self, msg):
+        self.waypoints = msg # {position: {x: [...], y: [...]} velocity: [...]}
+
+        # TODO: DRAW WAYPOINTS IN MAP HERE
+
+        num_waypoints = len(msg.position.x)
+        self.get_logger().info('listened %d waypoints' % num_waypoints)
+        for i in range(num_waypoints):
+            self.get_logger().info('listened waypoint %d: %f %f %f' % (i, msg.position.x[i], msg.position.y[i], msg.velocity[i]))
 
 def main(args=None):
     try:

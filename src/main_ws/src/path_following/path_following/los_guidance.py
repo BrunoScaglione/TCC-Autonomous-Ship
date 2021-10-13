@@ -6,8 +6,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 #custom service
-from path_following_interfaces.srv import Waypoints
-from path_following_interfaces.msg import State
+from path_following_interfaces.msg import Waypoints, State
 
 class LosGuidance(Node):
     def __init__(self):
@@ -16,7 +15,7 @@ class LosGuidance(Node):
         self.des_yaw_msg = Float32()
         self.des_velocity_msg = Float32()
 
-        self.current_waypoint = 1 #index of waypoint ship has to reach (includes starting (0,0,0)
+        self.current_waypoint = 1 #index of waypoint the ship has to reach next (includes starting (0,0,0)
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -24,7 +23,11 @@ class LosGuidance(Node):
             self.callback_shutdown,
             1)
 
-        self.server = self.create_service(Waypoints, '/waypoints', self.callback_waypoints)
+        self.subscription_waypoints = self.create_subscription(
+            Waypoints,
+            '/waypoints',
+            self.callback_waypoints,
+            1)
 
         self.subscription_filtered_state = self.create_subscription(
             State,
@@ -59,14 +62,12 @@ class LosGuidance(Node):
     def callback_shutdown():
         sys.exit()
 
-    def callback_waypoints(self, req, res):
-        self.waypoints = req # {position: {x: , y: } velocity: }
-        num_waypoints = len(req.position.x)
+    def callback_waypoints(self, msg):
+        self.waypoints = msg # {position: {x: [...], y: [...]} velocity: [...]}
+        num_waypoints = len(msg.position.x)
         self.get_logger().info('listened %d waypoints' % num_waypoints)
         for i in range(num_waypoints):
-            self.get_logger().info('listened waypoint %d: %f %f %f' % (i, req.position.x[i], req.position.y[i], req.velocity[i]))
-        res.reporting = 'Received Waypoints'
-        return res
+            self.get_logger().info('listened waypoint %d: %f %f %f' % (i, msg.position.x[i], msg.position.y[i], msg.velocity[i]))
         
     def callback_filtered_state(self, msg):
         self.log_state(msg)

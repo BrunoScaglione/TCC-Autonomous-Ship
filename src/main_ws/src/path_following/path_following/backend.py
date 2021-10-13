@@ -9,7 +9,8 @@ from rclpy.node import Node
 
 from std_msgs.msg import Bool
 # custom interfaces
-from path_following_interfaces.srv import Waypoints, StartEndSimul
+from path_following_interfaces.msg import Waypoints 
+from path_following_interfaces.srv import StartEndSimul
 
 class Backend(Node):
     def __init__(self):
@@ -21,6 +22,11 @@ class Backend(Node):
         self.client_start_end_simul = \
             self.create_client(StartEndSimul, '/start_end_simul')
 
+        self.publisher_waypoints = self.create_publisher(
+            Waypoints,
+            '/waypoints',
+            1)
+
         self.publisher_shutdown = self.create_publisher(
             Bool,
             '/shutdown',
@@ -28,9 +34,8 @@ class Backend(Node):
 
         self.shutdown_msg = Bool()
 
-        self.client_waypoints = self.create_client(Waypoints, '/waypoints')
         self.start_end_simul_srv = StartEndSimul.Request()
-        self.waypoints_srv = Waypoints.Request()
+        self.waypoints_msg = Waypoints()
     
     def log_state(self, state):
         self.get_logger().info(
@@ -80,14 +85,16 @@ def receive_waypoints():
                 'Received waypoint %d: %f %f %f' % 
                 (i, waypoints['position']['x'][i], waypoints['position']['y'][i], waypoints['velocity'][i])
             )
-
-        backend_node.waypoints_srv.position.x = waypoints['position']['x']
-        backend_node.waypoints_srv.position.y = waypoints['position']['y']
-        backend_node.waypoints_srv.velocity = waypoints['velocity']
+        
+        
+        backend_node.waypoints_msg.position.x = waypoints['position']['x']
+        backend_node.waypoints_msg.position.y = waypoints['position']['y']
+        backend_node.waypoints_msg.velocity = waypoints['velocity']
 
         backend_node.get_logger().info('Returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
-    except:
+    except Exception as e:
+        print(e)
         backend_node.get_logger().info(
             "Waypoints received from client are not valid\n"
             "Returning HTTP bad request to client"
@@ -95,7 +102,7 @@ def receive_waypoints():
         return json.dumps({'success':False}), 400, {'ContentType':'application/json'}
 
 @app.route("/initialCondition", methods=['POST'])
-def receive_inital_condition():
+def receive_initial_condition():
     try:
         initial_condition = request.json
 
@@ -130,24 +137,18 @@ def start_system():
 
         backend_node.get_logger().info("Starting system")
 
+        backend_node.publisher_waypoints.publish(backend_node.waypoints_msg)
+
         backend_node.future_start_simul = backend_node.client_start_end_simul. \
             call_async(backend_node.start_end_simul_srv)
         reporting_start_simul, tout_start_simul = wait_future(backend_node, "future_start_simul")
         delattr(backend_node, "future_start_simul")
 
-        backend_node.future_waypoints = backend_node.client_waypoints. \
-            call_async(backend_node.waypoints_srv)
-        reporting_waypoints, tout_waypoints = wait_future(backend_node, "future_waypoints")
-        delattr(backend_node, "future_waypoints")
-
-        if tout_start_simul or tout_waypoints:
-            print('tout_start_simul: ', tout_start_simul)
-            print('tout_waypoints: ', tout_waypoints)
+        if tout_start_simul:
             backend_node.get_logger().info('returning HTTP Gateaway timedout to client')
             return json.dumps({'success':False}), 504, {'ContentType':'application/json'}
         else:
             backend_node.get_logger().info("Received reporting: %s" % reporting_start_simul)
-            backend_node.get_logger().info("Received reporting: %s" % reporting_waypoints)
             backend_node.get_logger().info('returning HTTP OK to client')
             return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
