@@ -1,3 +1,6 @@
-# Code each block
-# GUI for setting waypoints
 # Remember to account for rudder saturation in yaw control (|delta| < 35 degrees)
+# GUI will actually be venus
+# Report: 
+- remember to rewrite surge control part
+- change architectre figure: GUI and colors 
+- # Need to make a route for setting different locations in the map

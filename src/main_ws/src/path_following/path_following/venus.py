@@ -59,7 +59,7 @@ class Venus(Node):
             position = self.initial_position,
             angle = 0,
             size = Size(32, 186),
-            rudders=[Rudder(angle=0, length=0.1, visual_options={"color": "red"})],
+            rudders=[Rudder(angle=0, length=0.1, visual_options={"color": "orange"})],
             visual_options={
                 "stroke": True,
                 "color": "green",  # stroke color
@@ -81,6 +81,7 @@ class Venus(Node):
             ],
         )
         self.vessel = self.viewer.add(vessel_config)
+        self.viewer.on_object_drag_end = self.on_object_drag_end
 
     def callback_state(self, msg):
         state = msg
@@ -107,17 +108,20 @@ class Venus(Node):
         self.get_logger().info('listened rudder angle: %f' % msg.data)
         self.vessel.rudders[0].angle = math.degrees(msg.data)
 
+    ## cant access properties of venus objects (they do not seem to have them)
+
     def callback_waypoints(self, msg):
         # initial x,y,u
         msg.position.x.insert(0, 0)
         msg.position.y.insert(0, 0)
         msg.velocity.insert(0, 0) # FILLER (just to maintain same lenght of the lists)
         self.waypoints = msg # {position: {x: [...], y: [...]} velocity: [...]}
+        
         num_waypoints = len(msg.position.x)
-        self.get_logger().info('listened %d waypoints' % num_waypoints)
+        self.get_logger().info('inital waypoint + listened %d waypoints' % num_waypoints-1)
 
         # draw in the map
-        self.beacons = []
+        self.beacons = [] # lists: [object, position]
         self.lines = []
         for i in range(num_waypoints):
             wx, wy, wv = msg.position.x[i], msg.position.y[i], msg.velocity[i]
@@ -135,31 +139,83 @@ class Venus(Node):
                     KeyValue("Velocity U", str(wv)) 
                 ]
 
-            beacon = self.viewer.add(
-                Beacon(
-                    position=self.initial_position.relative(wx, wy),
-                    visual_options={
-                        "background-color": background_color,
-                        "border-radius": "50%"
-                    },
-                    data_panel=beacon_data_panel,
-                    draggable=True
-                )
+            beacon = Beacon(
+                position=self.initial_position.relative(wx, wy),
+                visual_options={
+                    "background-color": background_color,
+                    "border-radius": "50%"
+                },
+                data_panel=beacon_data_panel,
+                draggable=True
             )
-            self.beacons.append(beacon)
+            self.viewer.add(beacon)
+            self.beacons.append([beacon, self.initial_position.relative(wx, wy)])
 
-            # couldnt use beacon.position
             if i != num_waypoints-1:
                 wx_next, wy_next = msg.position.x[i+1], msg.position.y[i+1]
-                line = self.viewer.add(
-                    Line(
-                        points=[self.initial_position.relative(wx, wy), self.initial_position.relative(wx_next, wy_next)],
-                        visual_options={"color": "yellow", "weight": 5},
-                        draggable=False
-                    )
+                line = Line(
+                    points=[self.initial_position.relative(wx, wy), self.initial_position.relative(wx_next, wy_next)],
+                    visual_options={"color": "yellow", "weight": 5},
+                    draggable=False
                 )
-            self.lines.append(line)
-            
+                self.viewer.add(line)
+                self.lines.append(line)
+
+    def on_object_drag_end(self, obj, new_position):
+        num_beacons = len(self.beacons)
+        beacons_objects = [el[0] for el in self.beacons]
+        beacon_idx = beacons_objects.index(obj)
+        if 0 < beacon_idx < num_beacons-1:
+            line_before = self.lines[beacon_idx-1]
+            line_after = self.lines[beacon_idx]
+
+            new_line_before = Line(
+                points=[self.beacons[beacon_idx-1][1], new_position],
+                visual_options={"color": "yellow", "weight": 5},
+                draggable=False
+            )
+
+            new_line_after = Line(
+                points=[new_position, self.beacons[beacon_idx+1][1]],
+                visual_options={"color": "yellow", "weight": 5},
+                draggable=False
+            )
+
+            self.viewer.remove(line_before)
+            self.viewer.remove(line_after)
+
+            self.viewer.add(new_line_before)
+            self.viewer.add(new_line_after)
+
+            self.lines[beacon_idx-1] = new_line_before
+            self.lines[beacon_idx] = new_line_after
+        elif beacon_idx == 0:
+            line_after = self.lines[beacon_idx]
+
+            new_line_after = Line(
+                points=[new_position, self.beacons[beacon_idx+1][1]],
+                visual_options={"color": "yellow", "weight": 5},
+                draggable=False
+            )
+
+            self.viewer.remove(line_after)
+            self.viewer.add(new_line_after)
+            self.lines[beacon_idx] = new_line_after
+        else:
+            line_before = self.lines[beacon_idx-1]
+
+            new_line_before = Line(
+                points=[self.beacons[beacon_idx-1][1], new_position],
+                visual_options={"color": "yellow", "weight": 5},
+                draggable=False
+            )
+
+            self.viewer.remove(line_before)
+            self.viewer.add(new_line_before)
+            self.lines[beacon_idx-1] = new_line_before
+
+        self.beacons[beacon_idx][1] = new_position
+
 def main(args=None):
     try:
         rclpy.init(args=args)
