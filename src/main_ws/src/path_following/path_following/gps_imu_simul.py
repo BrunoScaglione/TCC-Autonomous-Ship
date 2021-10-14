@@ -3,9 +3,9 @@ import sys
 import rclpy
 from rclpy.node import Node
 
+from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
-from std_msgs.msg import Bool
 
 class GpsImuSimulator(Node):
     def __init__(self):
@@ -40,13 +40,7 @@ class GpsImuSimulator(Node):
         self.log_state(simulated_state_msg, 'publisher')
     
     def state_simul(self, x):
-        self.xs_msg.position.x = 1.0 # FILLER
-        self.xs_msg.position.y = 1.0 # FILLER
-        self.xs_msg.position.psi = 1.0 # FILLER
-        self.xs_msg.velocity.u = 1.0 # FILLER
-        self.xs_msg.velocity.v = 1.0 # FILLER
-        self.xs_msg.velocity.r = 1.0 # FILLER
-        return self.xs_msg # 
+        return x # FILLER 
     
     def log_state(self, state, communicator):
         log_str = 'listened' if communicator == 'subscriber' else 'published simulated'

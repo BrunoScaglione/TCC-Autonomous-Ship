@@ -1,21 +1,28 @@
 import sys
 
+import numpy as np
+from scipy.optimize import fsolve
+
 import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32
+from std_msgs.msg import Bool
 #custom service
-from path_following_interfaces.srv import Waypoints
-from path_following_interfaces.msg import State
+from path_following_interfaces.msg import Waypoints, State
 
 class LosGuidance(Node):
     def __init__(self):
         super().__init__('los_guidance_node')
 
+        # los parameters
+        self.R = 186*2 # leght*2, hardcoded for our ship
+
         self.des_yaw_msg = Float32()
         self.des_velocity_msg = Float32()
 
-        self.current_waypoint = 1 #index of waypoint ship has to reach (includes starting (0,0,0)
+        #index of waypoint the ship has to reach next (first waypoint is starting position)
+        self.current_waypoint = 1 
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -23,7 +30,11 @@ class LosGuidance(Node):
             self.callback_shutdown,
             1)
 
-        self.server = self.create_service(Waypoints, '/waypoints', self.callback_waypoints)
+        self.subscription_waypoints = self.create_subscription(
+            Waypoints,
+            '/waypoints',
+            self.callback_waypoints,
+            1)
 
         self.subscription_filtered_state = self.create_subscription(
             State,
@@ -58,14 +69,16 @@ class LosGuidance(Node):
     def callback_shutdown():
         sys.exit()
 
-    def callback_waypoints(self, req, res):
-        self.waypoints = req # {position: {x: , y: } velocity: }
-        num_waypoints = len(req.position.x)
-        self.get_logger().info('listened %d waypoints' % num_waypoints)
+    def callback_waypoints(self, msg):
+        msg.position.x.insert(0, 0)
+        msg.position.y.insert(0, 0)
+        msg.velocity.insert(0, 0) # FILLER (just to maintain same lenght of the lists)
+        self.waypoints = msg # {position: {x: [...], y: [...]} velocity: [...]}
+        
+        num_waypoints = len(msg.position.x)
+        self.get_logger().info('initial waypoint + listened %d waypoints' % (num_waypoints-1))
         for i in range(num_waypoints):
-            self.get_logger().info('listened waypoint %d: %f %f %f' % (i, req.position.x[i], req.position.y[i], req.velocity[i]))
-        res.reporting = 'Received Waypoints'
-        return res
+            self.get_logger().info('listened waypoint %d: %f %f %f' % (i, msg.position.x[i], msg.position.y[i], msg.velocity[i]))
         
     def callback_filtered_state(self, msg):
         self.log_state(msg)
@@ -75,12 +88,63 @@ class LosGuidance(Node):
         self.publisher_desired_surge_velocity.publish(des_velocity_msg)
         self.get_logger().info('published desired velocity: %f' % des_velocity_msg.data)
     
+        
+    def reached_next_waypoint(self, xf):
+        x, y = xf.position.x, xf.position.y
+        idx = self.current_waypoint
+        wx, wy = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
+        return 1 if (x-wx)**2 + (y-wy)**2 < self.R**2 else 0
+
+    @staticmethod
+    def equations(p, params):
+        x_los, y_los = p
+        wx, wy, wx_past, wy_past, R = params
+        return (
+            (x_los-wx)**2 + (y_los-wy)**2 - R**2, 
+            ((wy - wy_past)/(wx - wx_past))*(x_los - wx) - (y_los - wy)
+        )
+    
     def los(self, xf):
         # use waypoints stored in self.waypoints
         # these contain desired position x and y, and velocity u
-        self.des_yaw_msg.data = 1.0
-        self.des_velocity_msg.data = 1.0 
-        return self.des_yaw_msg, self.des_velocity_msg
+        num_waypoints = len(self.waypoints.position.x)
+        if self.reached_next_waypoint(xf) and self.current_waypoint < num_waypoints-1:
+            self.current_waypoint += 1
+
+            idx = self.current_waypoint
+            x, y = xf.position.x, xf.position.y
+            u, v = xf.velocity.u, xf.velocity.v
+            U = (u**2  + v**2)**0.5
+            wx, wy = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
+            wx_past, wy_past = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
+
+            # find x_los and y_los by solving 2 eq
+            # analytic solution:
+            # 1. isolating x_los
+            # ((wy - wy_past)/(wx - wx_past))*(x_los - wx) == (y_los - wy)
+            # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
+            # 2.  substitute and solve for y_los
+            # (x_los-wx)**2 + (y_los-wy)**2 == self.R**2
+            # 3.  get x_los
+            # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
+
+            x_los, y_los = fsolve(self.equations, (1, 1), args=(wx, wy, wx_past, wy_past, self.R))
+            beta = np.arcsin(v/U)
+            chi_d = np.arctan2((y_los - y)/(x_los - x))
+            psi_d =  chi_d - beta
+
+            self.des_yaw_msg.data = psi_d
+            self.des_velocity_msg.data = u
+            return self.des_yaw_msg, self.des_velocity_msg
+        elif self.current_waypoint == num_waypoints-1:
+            self.get_logger().info('Reached final waypoint Uhulll')
+
+            self.des_yaw_msg.data = 0
+            self.des_velocity_msg.data = 0
+            return self.des_yaw_msg, self.des_velocity_msg
+
+
+
 
 def main(args=None):
     try:

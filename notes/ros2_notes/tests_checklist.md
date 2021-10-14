@@ -18,8 +18,8 @@ obs: windows uses \ instead of / for dirs
     ros2 topic pub --once /propeller_thrust std_msgs/msg/Float32 "{data: 1.0}"  
 
 
-    3. >> ros2 topic pub --once /state path_following_interfaces/msg/State "{position: {x: 5, y: 5, psi: 1.571}, velocity: {u: 5, v: 5, r: 5}}"
-5. send request through cli (backend req)
+    1. >> ros2 topic pub --once /waypoints path_following_interfaces/msg/Waypoints "{position: {x: [200.0,400.0,600.0,800.0,1000.0], y: [200.0,400.0,600.0,800.0,1000.0]}, velocity: [1.0,2.0,3.0,4.0,5.0]}"
+5. send requ[][]est through cli (backend req)
     1. send default req (inital state = 0 and end_simul=False): >> ros2 service call /start_end_simul path_following_interfaces/srv/StartEndSimul "{}"
     2. send with other inital state: >> ros2 service call /start_end_simul path_following_interfaces/srv/StartEndSimul "{initial_state: {position: {x: 0, y: 0, psi: 1.571}, velocity: {u: 0, v: 0, r: 0}}}"
     3. send with end_simul: >> ros2 service call /start_end_simul path_following_interfaces/srv/StartEndSimul "{end_simul: 1}"

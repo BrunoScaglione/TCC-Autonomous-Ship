@@ -4,13 +4,19 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32
+from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
-from std_msgs.msg import Bool
 
 class SurgeController(Node):
     def __init__(self):
         super().__init__('surge_controller_node')
+
+        # controller parameters
+        self.X_added_mass = -3375
+        self.m = 40415
+        self.phi = 0.32
+        self.K = 13
 
         self.desired_surge_velocity = 0
 
@@ -52,9 +58,17 @@ class SurgeController(Node):
         self.get_logger().info('listened desired surge velocity: %f' % msg.data)
         self.desired_surge_velocity = msg.data
     
-    def surge_control(self, u): # u is surge velocity
-        u_des = self.desired_surge_velocity
-        self.thrust_msg.data = 1.0 
+    def surge_control(self, xf): # x is surge velocity
+        xf_d = self.desired_surge_velocity
+        # sliping variable
+        s = xf - xf_d
+        # sat function
+        sats = max(-1,min(s/self.phi,1))
+        # input as function of x (control action)
+        u = xf*abs(xf)*(1.9091*(10**-4) - self.K*5.18*(10**-5)*sats) - 0.01*sats 
+        # thrust
+        tau = u*(self.m - self.X_added_mass)
+        self.thrust_msg.data = tau 
         return self.thrust_msg 
 
 def main(args=None):

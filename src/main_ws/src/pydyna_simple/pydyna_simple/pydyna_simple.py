@@ -1,3 +1,4 @@
+import sys
 import os
 import numpy as np
 import math
@@ -8,6 +9,7 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32
+from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
 #custom service
@@ -28,6 +30,12 @@ class PydynaSimpleNode(Node):
         self.num_simul = 0
         self.end_simul = 0
 
+        self.subscription_shutdown = self.create_subscription(
+            Bool,
+            '/shutdown',
+            self.callback_shutdown,
+            1)
+
         self.server = self.create_service(StartEndSimul, '/start_end_simul', self.callback_start_end_simul)
 
         self.subscription_propeller = self.create_subscription(
@@ -43,6 +51,9 @@ class PydynaSimpleNode(Node):
             1)
 
         self.publisher_state = self.create_publisher(State, 'state', 1)
+    
+    def callback_shutdown():
+        sys.exit()
 
     def callback_start_end_simul(self, req, res):
 
@@ -60,7 +71,7 @@ class PydynaSimpleNode(Node):
             self.subscriptions_synced = False
 
             self.rpt = pydyna.create_text_report(os.path.join(self.pkg_share_dir, f'logs/pydynalogs/pydyna_log_{self.num_simul}'))
-            self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config/{p3d}'))
+            self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config/{self.p3d}'))
             
             self.ship = self.sim.vessels['104']
             x, y, psi = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.psi
@@ -138,8 +149,6 @@ def main(args=None):
             rclpy.spin_once(my_pydyna_node)
             if my_pydyna_node.end_simul == 1:
                 break
-            print(f'proppeler_counter: {my_pydyna_node.proppeler_counter}')
-            print(f'rudder_counter: {my_pydyna_node.rudder_counter}')
             if my_pydyna_node.proppeler_counter == my_pydyna_node.rudder_counter:
                 if not my_pydyna_node.subscriptions_synced:
                     my_pydyna_node.extrapolate_state()

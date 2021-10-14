@@ -3,9 +3,9 @@ import sys
 import rclpy
 from rclpy.node import Node
 
+from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
-from std_msgs.msg import Bool
 
 class KalmanFilter(Node):
     def __init__(self):
@@ -56,13 +56,7 @@ class KalmanFilter(Node):
         )
 
     def state_estimate(self, xs):
-        self.xe_msg.position.x = 1.0 # FILLER
-        self.xe_msg.position.y = 1.0 # FILLER
-        self.xe_msg.position.psi = 1.0 # FILLER
-        self.xe_msg.velocity.u = 1.0 # FILLER
-        self.xe_msg.velocity.v = 1.0 # FILLER
-        self.xe_msg.velocity.r = 1.0 # FILLER
-        return self.xe_msg # 
+        return xs # FILLER
 
 def main(args=None):
     try:
