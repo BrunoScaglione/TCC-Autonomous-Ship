@@ -120,8 +120,12 @@ class Venus(Node):
         num_waypoints = len(msg.position.x)
         self.get_logger().info('initial waypoint + listened %d waypoints' % (num_waypoints-1))
 
-        # draw in the map
-        self.beacons = [] # lists: [object, position]
+        # Draw in the map
+
+        # lists inside: [object, GeoPos]
+        # GeoPos is only here because there was a problem using 
+        # the object's position to crate/update lines (need to investigate)
+        self.beacons = [] 
         self.lines = []
         for i in range(num_waypoints):
             wx, wy, wv = msg.position.x[i], msg.position.y[i], msg.velocity[i]
@@ -130,6 +134,7 @@ class Venus(Node):
             if i == 0:
                 background_color = "green"
                 beacon_data_panel = [KeyValue("Initial Position", "🏁")]
+                draggable = False
             else:
                 background_color = "red"
                 beacon_data_panel = [
@@ -138,6 +143,7 @@ class Venus(Node):
                     KeyValue("Position Y",  str(wy)), 
                     KeyValue("Velocity U", str(wv)) 
                 ]
+                draggable = True
 
             beacon = Beacon(
                 position=self.initial_position.relative(wx, wy),
@@ -146,17 +152,29 @@ class Venus(Node):
                     "border-radius": "50%"
                 },
                 data_panel=beacon_data_panel,
-                draggable=True
+                draggable=draggable
             )
             self.viewer.add(beacon)
             self.beacons.append([beacon, self.initial_position.relative(wx, wy)])
+
+        ######### <passing beacon position inside points does not work, dont know why> ######
+        # for j in range(num_waypoints):
+        #     if j != num_waypoints-1:
+        #         print(self.beacons[j][0].position.latitude)
+        #       
+        #         line = Line(
+        #             points=[self.beacons[j][0].position, self.beacons[j+1][0].position],
+        #             visual_options={"color": "yellow", "weight": 5}
+        #         )
+        #         self.viewer.add(line)
+        #         self.lines.append(line)
+        ######### <passing beacon position inside points does not work, dont know why/> ######
 
             if i != num_waypoints-1:
                 wx_next, wy_next = msg.position.x[i+1], msg.position.y[i+1]
                 line = Line(
                     points=[self.initial_position.relative(wx, wy), self.initial_position.relative(wx_next, wy_next)],
-                    visual_options={"color": "yellow", "weight": 5},
-                    draggable=False
+                    visual_options={"color": "yellow", "weight": 5}
                 )
                 self.viewer.add(line)
                 self.lines.append(line)
@@ -214,6 +232,9 @@ class Venus(Node):
             self.viewer.add(new_line_before)
             self.lines[beacon_idx-1] = new_line_before
 
+        self.beacons[beacon_idx][0].position = new_position
+        self.beacons[beacon_idx][0].data_panel[1] = KeyValue("Position X", str(1))
+        self.beacons[beacon_idx][0].data_panel[2] = KeyValue("Position Y", str(1))
         self.beacons[beacon_idx][1] = new_position
 
 def main(args=None):
