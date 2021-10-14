@@ -118,7 +118,7 @@ class Venus(Node):
         self.waypoints = msg # {position: {x: [...], y: [...]} velocity: [...]}
         
         num_waypoints = len(msg.position.x)
-        self.get_logger().info('inital waypoint + listened %d waypoints' % num_waypoints-1)
+        self.get_logger().info('initial waypoint + listened %d waypoints' % (num_waypoints-1))
 
         # draw in the map
         self.beacons = [] # lists: [object, position]
@@ -225,8 +225,6 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
-    except Exception as e:
-        print(e)
     finally:
         venus_node.viewer.stop()
         venus_node.destroy_node()

@@ -71,28 +71,30 @@ app = Flask(__name__)
 def receive_waypoints():
     try:
         waypoints = request.json
+        if not waypoints['from_gui']:
+            now = datetime.now()
+            time_stamp = now.strftime("%Y_%m_%d-%H_%M_%S")
 
-        now = datetime.now()
-        time_stamp = now.strftime("%Y_%m_%d-%H_%M_%S")
+            with open(os.path.join(backend_node.db_dir, f'waypoints_{time_stamp}.json'), 'w', encoding='utf-8') as f:
+                json.dump(waypoints, f, ensure_ascii=False, indent=4)
 
-        with open(os.path.join(backend_node.db_dir, f'waypoints_{time_stamp}.json'), 'w', encoding='utf-8') as f:
-            json.dump(waypoints, f, ensure_ascii=False, indent=4)
+            num_waypoints = len(waypoints['position']['x'])
+            backend_node.get_logger().info('received from client %d waypoints' % num_waypoints)
+            for i in range(num_waypoints):
+                backend_node.get_logger().info(
+                    'Received waypoint %d: %f %f %f' % 
+                    (i, waypoints['position']['x'][i], waypoints['position']['y'][i], waypoints['velocity'][i])
+                )
+            
+            backend_node.waypoints_msg.position.x = waypoints['position']['x']
+            backend_node.waypoints_msg.position.y = waypoints['position']['y']
+            backend_node.waypoints_msg.velocity = waypoints['velocity']
 
-        num_waypoints = len(waypoints['position']['x'])
-        backend_node.get_logger().info('received from client %d waypoints' % num_waypoints)
-        for i in range(num_waypoints):
-            backend_node.get_logger().info(
-                'Received waypoint %d: %f %f %f' % 
-                (i, waypoints['position']['x'][i], waypoints['position']['y'][i], waypoints['velocity'][i])
-            )
-        
-        
-        backend_node.waypoints_msg.position.x = waypoints['position']['x']
-        backend_node.waypoints_msg.position.y = waypoints['position']['y']
-        backend_node.waypoints_msg.velocity = waypoints['velocity']
-
-        backend_node.get_logger().info('Returning HTTP OK to client')
-        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+            backend_node.get_logger().info('Returning HTTP OK to client')
+            return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+        else:
+            # TODO: service for getting the updated waypoints from venus server
+            pass
     except Exception as e:
         print(e)
         backend_node.get_logger().info(

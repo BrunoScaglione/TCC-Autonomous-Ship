@@ -4,3 +4,5 @@
 - remember to rewrite surge control part
 - change architectre figure: GUI and colors 
 - # Need to make a route for setting different locations in the map
+- # TODOS
+- TODO: service for getting the updated waypoints from venus server
