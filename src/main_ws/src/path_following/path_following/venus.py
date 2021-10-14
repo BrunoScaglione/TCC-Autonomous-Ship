@@ -3,7 +3,13 @@ import math
 
 import venus.viewer
 from venus.objects import (
-    GeoPos, Rudder, Vessel, Size, KeyValue, Button
+    GeoPos, 
+    Rudder, 
+    Vessel,
+    Beacon,
+    Size, 
+    KeyValue,
+    Line
 )
 
 import rclpy
@@ -32,7 +38,6 @@ class Venus(Node):
             self.callback_state,
             1)
 
-        # obs: this wasnt in the initial schematic
         self.subscription_rudder = self.create_subscription(
             Float32,
             '/rudder_angle',
@@ -73,7 +78,6 @@ class Venus(Node):
                 KeyValue("ID", "0"),
                 KeyValue("Width", "32"),
                 KeyValue("Height", "186"),
-                Button("btn_vessel", "Click here"),
             ],
         )
         self.vessel = self.viewer.add(vessel_config)
@@ -104,15 +108,58 @@ class Venus(Node):
         self.vessel.rudders[0].angle = math.degrees(msg.data)
 
     def callback_waypoints(self, msg):
+        # initial x,y,u
+        msg.position.x.insert(0, 0)
+        msg.position.y.insert(0, 0)
+        msg.velocity.insert(0, 0) # FILLER (just to maintain same lenght of the lists)
         self.waypoints = msg # {position: {x: [...], y: [...]} velocity: [...]}
-
-        # TODO: DRAW WAYPOINTS IN MAP HERE
-
         num_waypoints = len(msg.position.x)
         self.get_logger().info('listened %d waypoints' % num_waypoints)
-        for i in range(num_waypoints):
-            self.get_logger().info('listened waypoint %d: %f %f %f' % (i, msg.position.x[i], msg.position.y[i], msg.velocity[i]))
 
+        # draw in the map
+        self.beacons = []
+        self.lines = []
+        for i in range(num_waypoints):
+            wx, wy, wv = msg.position.x[i], msg.position.y[i], msg.velocity[i]
+            self.get_logger().info('listened waypoint %d: %f %f %f' % (i, wx, wy, wv))
+            
+            if i == 0:
+                background_color = "green"
+                beacon_data_panel = [KeyValue("Initial Position", "🏁")]
+            else:
+                background_color = "red"
+                beacon_data_panel = [
+                    KeyValue("Waypoint", "📍"), 
+                    KeyValue("Position X", str(wx)), 
+                    KeyValue("Position Y",  str(wy)), 
+                    KeyValue("Velocity U", str(wv)) 
+                ]
+
+            beacon = self.viewer.add(
+                Beacon(
+                    position=self.initial_position.relative(wx, wy),
+                    visual_options={
+                        "background-color": background_color,
+                        "border-radius": "50%"
+                    },
+                    data_panel=beacon_data_panel,
+                    draggable=True
+                )
+            )
+            self.beacons.append(beacon)
+
+            # couldnt use beacon.position
+            if i != num_waypoints-1:
+                wx_next, wy_next = msg.position.x[i+1], msg.position.y[i+1]
+                line = self.viewer.add(
+                    Line(
+                        points=[self.initial_position.relative(wx, wy), self.initial_position.relative(wx_next, wy_next)],
+                        visual_options={"color": "yellow", "weight": 5},
+                        draggable=False
+                    )
+                )
+            self.lines.append(line)
+            
 def main(args=None):
     try:
         rclpy.init(args=args)
@@ -122,6 +169,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
+    except Exception as e:
+        print(e)
     finally:
         venus_node.viewer.stop()
         venus_node.destroy_node()

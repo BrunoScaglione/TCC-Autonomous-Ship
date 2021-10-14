@@ -149,8 +149,6 @@ def main(args=None):
             rclpy.spin_once(my_pydyna_node)
             if my_pydyna_node.end_simul == 1:
                 break
-            print(f'proppeler_counter: {my_pydyna_node.proppeler_counter}')
-            print(f'rudder_counter: {my_pydyna_node.rudder_counter}')
             if my_pydyna_node.proppeler_counter == my_pydyna_node.rudder_counter:
                 if not my_pydyna_node.subscriptions_synced:
                     my_pydyna_node.extrapolate_state()
