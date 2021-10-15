@@ -1,7 +1,7 @@
 import sys
 
-import numpy as np
-from sympy import *
+import math
+from sympy import symbols, Eq, solve
 # import stackprinter
 
 import rclpy
@@ -130,6 +130,7 @@ class LosGuidance(Node):
         if self.current_waypoint < num_waypoints-1:
             if self.reached_next_waypoint(xf):
                 self.current_waypoint += 1
+                self.get_logger().info('changed waypoint at time: %f' % xf.time)
 
             idx = self.current_waypoint
             x, y = xf.position.x, xf.position.y
@@ -148,18 +149,12 @@ class LosGuidance(Node):
             # 3.  get x_los
             # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
 
-            self.get_logger().info('2')
             x_los, y_los = self.solve_system_of_equations(x, y, wx_next, wy_next, wx, wy)
-            self.get_logger().info('3')
-            beta = np.arcsin(v/U)
-            self.get_logger().info('4')
-            chi_d = np.arctan2([y_los - y], [x_los - x])[0]
-            self.get_logger().info('5')
-            psi_d = chi_d - beta
-            self.get_logger().info('6')
+            beta = math.asin(v/U)
+            chi_d = math.atan2(y_los - y, x_los - x)
+            psi_d = chi_d + beta # not chi_d - beta because our sway convention is to the left of the craft
             self.des_yaw_msg.data = psi_d
             self.des_velocity_msg.data = wv_next
-            self.get_logger().info('7')
 
             return (self.des_yaw_msg, self.des_velocity_msg)
         else:

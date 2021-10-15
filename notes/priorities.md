@@ -7,7 +7,8 @@
 - remember to rewrite surge control part
 - change architectre figure: GUI and colors 
 - control allocation subscribes to state also
-- fix nomoto equation 
+- fix nomoto equation
+- chi_d - beta conflicting convention, since we are using chi_d + beta (sway  convention is different)
 
 # TODOS
 - TODO: service for getting the updated waypoints from venus server
