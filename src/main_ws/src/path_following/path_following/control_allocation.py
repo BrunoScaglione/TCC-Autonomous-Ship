@@ -56,11 +56,11 @@ class ControlAllocation(Node):
         propeller_rotation = self.control_allocation(msg.data, self.surge_velocity)
         self.publisher_propeller_rotation.publish(propeller_rotation)
     
-    def control_allocation(self, tau, xf):
+    def control_allocation(self, tau, u):
         if tau > 0:
-            Np = self.c1*(math.sqrt(self.c2*(xf**2) + tau)) + self.c3*xf
+            Np = self.c1*(math.sqrt(self.c2*(u**2) + tau)) + self.c3*u
         else:
-            Np = -(self.c1*(math.sqrt(self.c2*(xf**2) - tau)) + self.c3*xf)
+            Np = -(self.c1*(math.sqrt(self.c2*(u**2) - tau)) + self.c3*u)
         self.rotation_msg.data = Np
         return self.rotation_msg 
 

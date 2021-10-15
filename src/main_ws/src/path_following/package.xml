@@ -14,7 +14,7 @@
   <exec_depend>json</exec_depend>
   <exec_depend>datetime</exec_depend>
   <exec_depend>venus</exec_depend>
-  <exec_depend>scipy</exec_depend>
+  <exec_depend>sympy</exec_depend>
 
   <depend>path_following_interfaces</depend>
   <depend>rclpy</depend>
