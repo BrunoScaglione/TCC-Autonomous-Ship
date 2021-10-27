@@ -16,7 +16,8 @@ it takes for the computer to run one step of the simulation
 - control allocation subscribes to state also
 - fix nomoto equation
 - chi_d - beta conflicting convention, since we are using chi_d + beta (sway  convention is different)
-- - not using gps_imu library anymore, using datasheets
-
+- not using gps_imu library anymore, using datasheets
+- put eqaution that relates generalized positions and velocities in the report
+- change Kalman Filter part a little, we will be using EKF
 # TODOS
 - TODO: service for getting the updated waypoints from venus server
