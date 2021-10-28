@@ -97,7 +97,7 @@ WAVES
     {
         NAME = "Wave_SimOff2",
         WAVE_ID = 2,
-        HEIGHT = 0.01000,
+        HEIGHT = 1.00000,
         PERIOD = 4.00000,
         DIRECTION = 0.00000,
         ANGLE = 225.00000,

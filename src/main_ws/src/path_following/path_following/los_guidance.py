@@ -25,7 +25,7 @@ class LosGuidance(Node):
         self.des_yaw_msg = Float32()
         self.des_velocity_msg = Float32()
 
-        #index of waypoint the ship has to reach next (first waypoint is starting position)
+        # index of waypoint the ship has to reach next (first waypoint is starting position)
         self.current_waypoint = 1 
 
         self.subscription_shutdown = self.create_subscription(
@@ -160,8 +160,8 @@ class LosGuidance(Node):
         else:
             self.get_logger().info('Reached final waypoint Uhulll')
             self.get_logger().info('4')
-            self.des_yaw_msg.data = 0
-            self.des_velocity_msg.data = 0
+            self.des_yaw_msg.data = 0.0
+            self.des_velocity_msg.data = 0.0
 
             return (self.des_yaw_msg, self.des_velocity_msg)
 

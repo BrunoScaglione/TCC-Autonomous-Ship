@@ -9,7 +9,7 @@ Datasheets used:
     }
     3. IMU (indutrial): https://inertiallabs.com/wp-content/uploads/2020/09/IMU-P_Datasheet.rev3_.3_Sept_2020.pdf
 '''
-
+ 
 import sys
 import collections
 
@@ -91,15 +91,21 @@ class GpsImuSimulator(Node):
             + ((np.sin(psi)*x_dot + np.cos(psi)*y_dot)*sigma_psi)**2 )**0.5
 
     def state_simul(self, x):
-        self.xs_msg.position.x = x.position.x + np.random.normal(0, self.sigma_x) # gps
-        self.xs_msg.position.y = x.position.y + np.random.normal(0, self.sigma_y) # gps
-        self.xs_msg.position.psi = x.position.psi + np.random.normal(0, self.sigma_psi) # gyrocompass
+        # self.xs_msg.position.x = x.position.x + np.random.normal(0, self.sigma_x) # gps
+        # self.xs_msg.position.y = x.position.y + np.random.normal(0, self.sigma_y) # gps
+        # self.xs_msg.position.psi = x.position.psi + np.random.normal(0, self.sigma_psi) # gyrocompass
 
-        self.xs_msg.velocity.u = x.velocity.u + np.random.normal(0, self.sigma_u) # gps
-        self.xs_msg.velocity.v = x.velocity.v + np.random.normal(0, self.sigma_v) # gps
-        self.xs_msg.velocity.r = x.velocity.r + np.random.normal(0, self.sigma_r) # imu
+        # self.xs_msg.velocity.u = x.velocity.u + np.random.normal(0, self.sigma_u) # gps
+        # self.xs_msg.velocity.v = x.velocity.v + np.random.normal(0, self.sigma_v) # gps
+        # self.xs_msg.velocity.r = x.velocity.r + np.random.normal(0, self.sigma_r) # imu
 
-        return self.xs_msg
+        # self.xs_msg.time = x.time
+
+        # return self.xs_msg
+
+        return x # debugging wave filter
+
+
     
     def log_state(self, state, communicator):
         log_str = 'listened' if communicator == 'subscriber' else 'published simulated'
