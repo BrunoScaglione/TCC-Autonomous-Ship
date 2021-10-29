@@ -94,7 +94,6 @@ class LosGuidance(Node):
             self.get_logger().info('published desired velocity: %f' % des_velocity_msg.data)
         except AttributeError:
             self.get_logger().info('Has not received waypoints yet, will ignore listened state')
-    
         
     def reached_next_waypoint(self, xf):
         x, y = xf.position.x, xf.position.y
