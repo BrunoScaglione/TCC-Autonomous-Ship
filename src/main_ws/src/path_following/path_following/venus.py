@@ -106,7 +106,7 @@ class Venus(Node):
     
     def callback_rudder_angle(self, msg):
         self.get_logger().info('listened rudder angle: %f' % msg.data)
-        self.vessel.rudders[0].angle = 90 - math.degrees(msg.data)
+        self.vessel.rudders[0].angle = - math.degrees(msg.data)
 
     ## cant access properties of venus objects (they do not seem to have them)
 
