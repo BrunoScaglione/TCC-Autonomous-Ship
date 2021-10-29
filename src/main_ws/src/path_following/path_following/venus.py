@@ -106,6 +106,7 @@ class Venus(Node):
     
     def callback_rudder_angle(self, msg):
         self.get_logger().info('listened rudder angle: %f' % msg.data)
+        # TODO: need to check if it is math.degrees(msg.data) (usual convention) or - math.degrees(msg.data)
         self.vessel.rudders[0].angle = - math.degrees(msg.data)
 
     ## cant access properties of venus objects (they do not seem to have them)
