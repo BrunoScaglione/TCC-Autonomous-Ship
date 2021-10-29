@@ -75,7 +75,7 @@ def receive_waypoints():
             now = datetime.now()
             time_stamp = now.strftime("%Y_%m_%d-%H_%M_%S")
 
-            with open(os.path.join(backend_node.db_dir, f'waypoints_{time_stamp}.json'), 'w', encoding='utf-8') as f:
+            with open(os.path.join(backend_node.db_dir, 'waypoints', f'waypoints_{time_stamp}.json'), 'w', encoding='utf-8') as f:
                 json.dump(waypoints, f, ensure_ascii=False, indent=4)
 
             num_waypoints = len(waypoints['position']['x'])

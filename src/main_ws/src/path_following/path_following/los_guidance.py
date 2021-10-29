@@ -12,9 +12,6 @@ from std_msgs.msg import Bool
 #custom service
 from path_following_interfaces.msg import Waypoints, State
 
-# for debugging
-# stackprinter.set_excepthook(style='darkbg2')
-
 class LosGuidance(Node):
     def __init__(self):
         super().__init__('los_guidance_node')
