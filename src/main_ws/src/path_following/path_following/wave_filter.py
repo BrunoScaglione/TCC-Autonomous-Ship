@@ -60,36 +60,40 @@ class WaveFilter(Node):
     
     def state_filter(self, x):
         # filters entire state
-        x_last_seven = [state.position.x for state in list(self.last_seven_states)]
-        y_last_seven = [state.position.y for state in list(self.last_seven_states)]
-        psi_last_seven = [state.position.psi for state in list(self.last_seven_states)]
-        u_last_seven = [state.velocity.u for state in list(self.last_seven_states)]
-        v_last_seven = [state.velocity.v for state in list(self.last_seven_states)]
-        r_last_seven = [state.velocity.r for state in list(self.last_seven_states)]
-        state_last_seven = [
-            x_last_seven, 
-            y_last_seven, 
-            psi_last_seven, 
-            u_last_seven, 
-            v_last_seven,
-            r_last_seven
-        ]
+        # debugging
 
-        state_last_seven_filtered = map(lambda sig: signal.sosfilt(self.sos, sig), state_last_seven)
-        state_current_filtered = [sig[-1] for sig in state_last_seven_filtered]
+        # x_last_seven = [state.position.x for state in list(self.last_seven_states)]
+        # y_last_seven = [state.position.y for state in list(self.last_seven_states)]
+        # psi_last_seven = [state.position.psi for state in list(self.last_seven_states)]
+        # u_last_seven = [state.velocity.u for state in list(self.last_seven_states)]
+        # v_last_seven = [state.velocity.v for state in list(self.last_seven_states)]
+        # r_last_seven = [state.velocity.r for state in list(self.last_seven_states)]
+        # state_last_seven = [
+        #     x_last_seven, 
+        #     y_last_seven, 
+        #     psi_last_seven, 
+        #     u_last_seven, 
+        #     v_last_seven,
+        #     r_last_seven
+        # ]
+
+        # state_last_seven_filtered = map(lambda sig: signal.sosfilt(self.sos, sig), state_last_seven)
+        # state_current_filtered = [sig[-1] for sig in state_last_seven_filtered]
             
-        self.xf_msg.position.x = state_current_filtered[0]
-        self.xf_msg.position.y = state_current_filtered[1]
-        self.y_filtered_history.append(self.xf_msg.position.y) # debugging
-        self.xf_msg.position.psi = state_current_filtered[2]
+        # self.xf_msg.position.x = state_current_filtered[0]
+        # self.xf_msg.position.y = state_current_filtered[1]
+        # self.y_filtered_history.append(self.xf_msg.position.y) # debugging
+        # self.xf_msg.position.psi = state_current_filtered[2]
 
-        self.xf_msg.velocity.u = state_current_filtered[3]
-        self.xf_msg.velocity.v = state_current_filtered[4]
-        self.xf_msg.velocity.r = state_current_filtered[5]
+        # self.xf_msg.velocity.u = state_current_filtered[3]
+        # self.xf_msg.velocity.v = state_current_filtered[4]
+        # self.xf_msg.velocity.r = state_current_filtered[5]
 
-        self.xf_msg.time = x.time
+        # self.xf_msg.time = x.time
 
-        return self.xf_msg 
+        # return self.xf_msg 
+
+        return x
 
     def log_state(self, state, communicator):
         log_str = 'listened estimated' if communicator == 'subscriber' else 'published filtered'
@@ -114,10 +118,10 @@ def main(args=None):
         rclpy.spin(wave_filter_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        plt.plot(wave_filter_node.y_history) # debugging
-        plt.plot(wave_filter_node.y_filtered_history) # debugging
-        plt.legend([" Real 'y' signal", "Filtered 'y' signal"]) # debugging
-        plt.show() # debugging
+        # plt.plot(wave_filter_node.y_history) # debugging
+        # plt.plot(wave_filter_node.y_filtered_history) # debugging
+        # plt.legend([" Real 'y' signal", "Filtered 'y' signal"]) # debugging
+        # plt.show() # debugging
     except SystemExit:
         print('Stopped with user shutdown request')
     finally:

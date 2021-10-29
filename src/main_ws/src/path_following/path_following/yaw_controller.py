@@ -1,4 +1,5 @@
 import sys
+import math
 
 import rclpy
 from rclpy.node import Node
@@ -12,7 +13,19 @@ class YawController(Node):
     def __init__(self):
         super().__init__('yaw_controller_node')
 
-        self.desired_yaw_angle = 0
+        #parameters
+        self.Kp = 1.34
+        self.Kd = 49.684
+        self.Ki = 0.00583
+
+        # desired yaw angle
+        # TODO: it is hardcoded now, this would need to be set according
+        #  to waypoints and inital conditions actually, use a fucntion to set
+        # this value
+        self.desired_yaw_angle = math.radians(45) 
+
+        # for the integral action (acumulates error)
+        self.psi_bar_int = 0
 
         self.rudder_msg = Float32()
 
@@ -44,18 +57,36 @@ class YawController(Node):
         
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered yaw angle: %f' % msg.position.psi)
-        rudder_msg = self.yaw_control(msg.position.psi)
+        rudder_msg = self.yaw_control(msg.position.psi, msg.velocity.r)
         self.publisher_rudder_angle.publish(rudder_msg)
         self.get_logger().info('published rudder angle: %f' % rudder_msg.data)
     
     def callback_desired_yaw_angle(self, msg):
         self.get_logger().info('listened desired yaw angle: %f' % msg.data)
+        self.desired_yaw_angle_old = self.desired_yaw_angle
         self.desired_yaw_angle = msg.data
     
-    def yaw_control(self, psi):
+    def yaw_control(self, psi, r):
+        # desired psi
         psi_des = self.desired_yaw_angle
-        self.rudder_msg.data = 0.0
-        return self.rudder_msg # 
+        # last desired psi
+        psi_des_old = self.desired_yaw_angle_old
+        # error
+        psi_bar = psi - psi_des
+        # derivative of the error (derivative action)
+        psi_bar_dot = r - (psi_des - psi_des_old)/0.1
+        # cumulative of the error (integral action)
+        self.psi_bar_int = self.psi_bar_int + psi_bar*0.1
+        # anti windup for the integral action
+        self.psi_bar_int = max(-0.5,min(self.psi_bar_int,0.5))
+
+        # control action 
+        rudder_angle = self.Kp * psi_bar + self.Kd * psi_bar_dot + self.Ki * self.psi_bar_int
+        # rudder saturation
+        rudder_angle = max(-0.5,min(rudder_angle,0.5))
+        self.rudder_msg.data = rudder_angle
+
+        return self.rudder_msg 
 
 def main(args=None):
     try:

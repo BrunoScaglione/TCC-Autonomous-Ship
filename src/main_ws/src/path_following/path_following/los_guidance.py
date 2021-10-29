@@ -91,7 +91,6 @@ class LosGuidance(Node):
             self.get_logger().info('published desired velocity: %f' % des_velocity_msg.data)
         except AttributeError:
             self.get_logger().info('Has not received waypoints yet, will ignore listened state')
-    
         
     def reached_next_waypoint(self, xf):
         x, y = xf.position.x, xf.position.y
@@ -113,8 +112,13 @@ class LosGuidance(Node):
         x_los2, y_los2 = soln[1]
         x_distance2 = abs(wx_next - x_los2)
 
-        self.get_logger().info('x_los1: %f, y_los1: %f' % (x_los1, y_los1))
-        self.get_logger().info('x_los2: %f, y_los2: %f' % (x_los2, y_los2))
+        #debugging
+        self.get_logger().info('wx_next: %f' % wx_next)
+
+        if x_distance1 < x_distance2:
+            self.get_logger().info('x_los: %f, y_los: %f' % (x_los1, y_los1))
+        else:
+            self.get_logger().info('x_los: %f, y_los: %f' % (x_los2, y_los2))
 
         return (x_los1, y_los1) if x_distance1 < x_distance2 else (x_los2, y_los2)
     
@@ -124,7 +128,7 @@ class LosGuidance(Node):
         num_waypoints = len(self.waypoints.position.x)
         self.get_logger().info('num_waypoints: %d' % num_waypoints)
 
-        if self.current_waypoint < num_waypoints-1:
+        if self.current_waypoint < num_waypoints:
             if self.reached_next_waypoint(xf):
                 self.current_waypoint += 1
                 self.get_logger().info('changed waypoint at time: %f' % xf.time)
@@ -148,15 +152,17 @@ class LosGuidance(Node):
 
             x_los, y_los = self.solve_system_of_equations(x, y, wx_next, wy_next, wx, wy)
             beta = math.asin(v/U)
-            chi_d = math.atan2(y_los - y, x_los - x)
-            psi_d = chi_d + beta # not chi_d - beta because our sway convention is to the left of the craft
+            chi_d = math.atan2(x_los - x, y_los - y)
+            psi_d = chi_d + beta
+            # debugging
+            self.get_logger().info('chi_d: %f' % chi_d)
+            self.get_logger().info('beta: %f' % beta)
             self.des_yaw_msg.data = psi_d
             self.des_velocity_msg.data = wv_next
 
             return (self.des_yaw_msg, self.des_velocity_msg)
         else:
             self.get_logger().info('Reached final waypoint Uhulll')
-            self.get_logger().info('4')
             self.des_yaw_msg.data = 0.0
             self.des_velocity_msg.data = 0.0
 

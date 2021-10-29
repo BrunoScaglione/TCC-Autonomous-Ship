@@ -18,7 +18,11 @@ class SurgeController(Node):
         self.phi = 0.32
         self.K = 13
 
-        self.desired_surge_velocity = 0
+        # TODO: it is hardcoded now, this would need to be set according 
+        # to waypoints actually 
+        # (desired surge velocity of the first waypoint), use a fucntion to set
+        # this value
+        self.desired_surge_velocity = 1
 
         self.thrust_msg = Float32()
 
