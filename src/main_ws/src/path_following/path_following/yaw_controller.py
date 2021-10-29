@@ -18,12 +18,14 @@ class YawController(Node):
         self.Kd = 49.684
         self.Ki = 0.00583
 
-        self.counter = 0.0
-        self.temp = 0.0
-        self.rd = 0.0
-        self.initial = 0.0
+        # desired yaw angle
+        # TODO: it is hardcoded now, this would need to be set according
+        #  to waypoints and inital conditions actually, use a fucntion to set
+        # this value
+        self.desired_yaw_angle = math.radians(45) 
 
-        self.desired_yaw_angle = 0
+        # for the integral action (acumulates error)
+        self.psi_bar_int = 0
 
         self.rudder_msg = Float32()
 
@@ -61,43 +63,29 @@ class YawController(Node):
     
     def callback_desired_yaw_angle(self, msg):
         self.get_logger().info('listened desired yaw angle: %f' % msg.data)
+        self.desired_yaw_angle_old = self.desired_yaw_angle
         self.desired_yaw_angle = msg.data
     
     def yaw_control(self, psi, r):
-        # psi desejado
-        psi_des =  self.desired_yaw_angle
-        psi_des = math.radians(0)
-
-        if self.rd == 0.0 and self.initial == 0:
-            self.rd = psi_des
-            self.temp = psi_des
-            self.initial = 1
-        else:
-            self.rd = psi_des - self.temp
-            self.temp = psi_des
-
-        # psi ~ = psi_bar
+        # desired psi
+        psi_des = self.desired_yaw_angle
+        # last desired psi
+        psi_des_old = self.desired_yaw_angle_old
+        # error
         psi_bar = psi - psi_des
+        # derivative of the error (derivative action)
+        psi_bar_dot = r - (psi_des - psi_des_old)/0.1
+        # cumulative of the error (integral action)
+        self.psi_bar_int = self.psi_bar_int + psi_bar*0.1
+        # anti windup for the integral action
+        self.psi_bar_int = max(-0.5,min(self.psi_bar_int,0.5))
 
-        #rudder_angle
-        rudder_angle = - self.Kp * psi_bar - self.Kd * r - self.Ki * self.counter
-
-
-        if rudder_angle > 0.6108:
-            rudder_angle = 0.6108
-        
-        if rudder_angle < -0.6108:
-            rudder_angle = -0.6108
-
-        self.counter = self.counter + psi_bar
-    
-        if self.counter > 0.5:
-            self.counter = 0.5
-        
-        if self.counter < -0.5:
-            self.counter = -0.5
-
+        # control action 
+        rudder_angle = self.Kp * psi_bar + self.Kd * psi_bar_dot + self.Ki * self.psi_bar_int
+        # rudder saturation
+        rudder_angle = max(-0.5,min(rudder_angle,0.5))
         self.rudder_msg.data = rudder_angle
+
         return self.rudder_msg 
 
 def main(args=None):

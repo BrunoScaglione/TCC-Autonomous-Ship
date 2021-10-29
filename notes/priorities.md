@@ -26,4 +26,5 @@ it takes for the computer to run one step of the simulation
 - make a section (in methods) to show the development each block
 
 # TODOS
-- TODO: service for getting the updated waypoints from venus server
+- service for getting the updated waypoints from venus server
+- desired surge velocity and yaw angle must be set at the beggining by receiving from initial conditions. Will to add some topics or change from service to topic
