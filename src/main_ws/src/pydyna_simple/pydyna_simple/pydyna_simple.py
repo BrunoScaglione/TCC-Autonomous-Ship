@@ -111,7 +111,7 @@ class PydynaSimpleNode(Node):
 
         self.state.position.x = self.ship.linear_position[0]
         self.state.position.y = self.ship.linear_position[1]
-        self.state.position.theta = self.ship.angular_position[2]
+        self.state.position.theta = self.ship.angular_position[2]%(2*np.pi)
         self.state.velocity.u = self.ship.linear_velocity[0]
         self.state.velocity.v = self.ship.linear_velocity[1]
         self.state.velocity.r = self.ship.angular_velocity[2]
