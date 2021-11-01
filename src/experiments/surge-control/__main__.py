@@ -6,7 +6,7 @@ from modules.controllers.SurgeController.utils.metrics import getMetrics as surg
 
 import modules.controllers.SurgeController as SurgeController
 
-K = SurgeController.K
+kf = SurgeController.kf
 kphi = SurgeController.kphi
 
 def main():
@@ -15,7 +15,7 @@ def main():
     # plot results
     surge_plots(*vets)
     # get metrics from results
-    params = f"for K = {K} and kphi = {kphi}\n"
+    params = f"for kf = {kf} and kphi = {kphi}\n"
     print(params)
     sm = surge_metrics(*vets)
     metrics = json.dumps(sm) + '\n'

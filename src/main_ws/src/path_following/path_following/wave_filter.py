@@ -23,7 +23,7 @@ class WaveFilter(Node):
         # sampled at 10Hz (can only work with <5Hz)
         # aproximating Fossen's 3 2order cascades at [0.4rad/s, 0.63rad/s, 1rad/s]) didnt work (large bias)
         # p23 wave period is 4 seconds -> freq is 0.25 Hz
-        self.sos = signal.butter(6, [4.5, 4.99], 'bandstop', fs=10, output='sos')
+        self.sos = signal.butter(6, [0.20, 0.3], 'bandstop', fs=10, output='sos')
 
         # for 6 order filter
         self.last_seven_states = collections.deque([], maxlen=7) 

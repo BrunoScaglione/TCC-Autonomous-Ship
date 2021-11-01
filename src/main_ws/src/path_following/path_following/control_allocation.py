@@ -53,8 +53,9 @@ class ControlAllocation(Node):
         
     def callback_propeller_thrust(self, msg):
         self.get_logger().info('listened propeller thrust: %f' % msg.data)
-        propeller_rotation = self.control_allocation(msg.data, self.surge_velocity)
-        self.publisher_propeller_rotation.publish(propeller_rotation)
+        propeller_rotation_msg = self.control_allocation(msg.data, self.surge_velocity)
+        self.publisher_propeller_rotation.publish(propeller_rotation_msg)
+        self.get_logger().info('published propeller rotation: %f' % propeller_rotation_msg.data)
     
     def control_allocation(self, tau, u):
         if tau > 0:

@@ -18,11 +18,15 @@ class YawController(Node):
         self.Kd = 49.684
         self.Ki = 0.00583
 
+        self.rudder_sat = 0.610865
+
         # desired yaw angle
         # TODO: it is hardcoded now, this would need to be set according
         #  to waypoints and inital conditions actually, use a fucntion to set
         # this value
-        self.desired_yaw_angle = math.radians(45) 
+        self.desired_yaw_angle = math.radians(45)
+
+        self.desired_yaw_angle_old = 0
 
         # for the integral action (acumulates error)
         self.psi_bar_int = 0
@@ -81,9 +85,9 @@ class YawController(Node):
         self.psi_bar_int = max(-0.5,min(self.psi_bar_int,0.5))
 
         # control action 
-        rudder_angle = self.Kp * psi_bar + self.Kd * psi_bar_dot + self.Ki * self.psi_bar_int
+        rudder_angle = - self.Kp * psi_bar - self.Kd * psi_bar_dot - self.Ki * self.psi_bar_int
         # rudder saturation
-        rudder_angle = max(-0.5,min(rudder_angle,0.5))
+        rudder_angle = max(self.rudder_sat,min(rudder_angle,self.rudder_sat))
         self.rudder_msg.data = rudder_angle
 
         return self.rudder_msg 

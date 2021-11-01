@@ -79,7 +79,7 @@ class PydynaSimpleNode(Node):
             self.ship.linear_position = [x, y, 0]
             self.ship.angular_position = [0, 0, math.radians(90)-psi]
             self.ship.linear_velocity = [u, v, 0]
-            self.ship.angular_velocity = [0, 0, r]
+            self.ship.angular_velocity = [0, 0, -r]
             self.proppeler_counter = 0
             self.rudder_counter = 0
 
