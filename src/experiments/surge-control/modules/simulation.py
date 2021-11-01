@@ -1,5 +1,7 @@
-import pydyna
 import numpy as np
+import math
+
+import pydyna
 
 from modules.controllers.SurgeController import surge_controller
 
@@ -9,6 +11,9 @@ def simulation():
     try:
         sim = pydyna.create_simulation('./config/TankerL186B32_T085.p3d')
         ship = sim.vessels['104']
+        # testing for different yaw angles
+        psi = 0
+        ship.angular_position = [0, 0, math.radians(90)-psi]
         propeller = ship.thrusters['0']
 
         #simulation parameters

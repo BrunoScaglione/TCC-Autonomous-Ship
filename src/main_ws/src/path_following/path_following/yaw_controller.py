@@ -29,7 +29,7 @@ class YawController(Node):
         self.desired_yaw_angle_old = 0
 
         # for the integral action (acumulates error)
-        self.psi_bar_int = 0
+        self.theta_bar_int = 0
 
         self.rudder_msg = Float32()
 
@@ -60,8 +60,8 @@ class YawController(Node):
         sys.exit()
         
     def callback_filtered_state(self, msg):
-        self.get_logger().info('listened filtered yaw angle: %f' % msg.position.psi)
-        rudder_msg = self.yaw_control(msg.position.psi, msg.velocity.r)
+        self.get_logger().info('listened filtered yaw angle: %f' % msg.position.theta)
+        rudder_msg = self.yaw_control(msg.position.theta, msg.velocity.r)
         self.publisher_rudder_angle.publish(rudder_msg)
         self.get_logger().info('published rudder angle: %f' % rudder_msg.data)
     
@@ -70,24 +70,24 @@ class YawController(Node):
         self.desired_yaw_angle_old = self.desired_yaw_angle
         self.desired_yaw_angle = msg.data
     
-    def yaw_control(self, psi, r):
-        # desired psi
-        psi_des = self.desired_yaw_angle
-        # last desired psi
-        psi_des_old = self.desired_yaw_angle_old
+    def yaw_control(self, theta, r):
+        # desired theta
+        theta_des = self.desired_yaw_angle
+        # last desired theta
+        theta_des_old = self.desired_yaw_angle_old
         # error
-        psi_bar = psi - psi_des
+        theta_bar = theta - theta_des
         # derivative of the error (derivative action)
-        psi_bar_dot = r - (psi_des - psi_des_old)/0.1
+        theta_bar_dot = r - (theta_des - theta_des_old)/0.1
         # cumulative of the error (integral action)
-        self.psi_bar_int = self.psi_bar_int + psi_bar*0.1
+        self.theta_bar_int = self.theta_bar_int + theta_bar*0.1
         # anti windup for the integral action
-        self.psi_bar_int = max(-0.5,min(self.psi_bar_int,0.5))
+        self.theta_bar_int = max(-0.5,min(self.theta_bar_int,0.5))
 
         # control action 
-        rudder_angle = - self.Kp * psi_bar - self.Kd * psi_bar_dot - self.Ki * self.psi_bar_int
+        rudder_angle = self.Kp * theta_bar + self.Kd * theta_bar_dot + self.Ki * self.theta_bar_int
         # rudder saturation
-        rudder_angle = max(self.rudder_sat,min(rudder_angle,self.rudder_sat))
+        rudder_angle = max(self.rudder_sat,min(rudder_angle, self.rudder_sat))
         self.rudder_msg.data = rudder_angle
 
         return self.rudder_msg 

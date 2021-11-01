@@ -74,12 +74,12 @@ class PydynaSimpleNode(Node):
             self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config/{self.p3d}'))
             
             self.ship = self.sim.vessels['104']
-            x, y, psi = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.psi
+            x, y, theta = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.theta
             u, v, r = req.initial_state.velocity.u, req.initial_state.velocity.v, req.initial_state.velocity.r
             self.ship.linear_position = [x, y, 0]
-            self.ship.angular_position = [0, 0, math.radians(90)-psi]
+            self.ship.angular_position = [0, 0, theta]
             self.ship.linear_velocity = [u, v, 0]
-            self.ship.angular_velocity = [0, 0, -r]
+            self.ship.angular_velocity = [0, 0, r]
             self.proppeler_counter = 0
             self.rudder_counter = 0
 
@@ -111,7 +111,7 @@ class PydynaSimpleNode(Node):
 
         self.state.position.x = self.ship.linear_position[0]
         self.state.position.y = self.ship.linear_position[1]
-        self.state.position.psi = math.radians(90) - self.ship.angular_position[2]
+        self.state.position.theta = self.ship.angular_position[2]
         self.state.velocity.u = self.ship.linear_velocity[0]
         self.state.velocity.v = self.ship.linear_velocity[1]
         self.state.velocity.r = self.ship.angular_velocity[2]
@@ -126,12 +126,12 @@ class PydynaSimpleNode(Node):
     def log_state(self, communicator):
         log_str = 'responded request with inital' if communicator == 'server' else 'published'
         self.get_logger().info(
-            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            '%s state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 log_str,
                 self.state.position.x, 
                 self.state.position.y, 
-                self.state.position.psi, # yaw angle
+                self.state.position.theta, # yaw angle
                 self.state.velocity.u, 
                 self.state.velocity.v, 
                 self.state.velocity.r,

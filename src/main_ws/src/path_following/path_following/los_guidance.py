@@ -1,6 +1,7 @@
 import sys
 
 import math
+import numpy as np
 from sympy import symbols, Eq, solve
 # import stackprinter
 
@@ -157,7 +158,8 @@ class LosGuidance(Node):
             # debugging
             self.get_logger().info('chi_d: %f' % chi_d)
             self.get_logger().info('beta: %f' % beta)
-            self.des_yaw_msg.data = psi_d
+            # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
+            self.des_yaw_msg.data = self.psi2teta(psi_d)
             self.des_velocity_msg.data = wv_next
 
             return (self.des_yaw_msg, self.des_velocity_msg)
@@ -167,6 +169,16 @@ class LosGuidance(Node):
             self.des_velocity_msg.data = 0.0
 
             return (self.des_yaw_msg, self.des_velocity_msg)
+    
+    @staticmethod
+    def psi2teta(psi):
+        if -np.pi/2 <= psi <= np.pi/2:
+            theta = 90 - psi
+        elif np.pi/2 < psi <= np.pi:
+            theta = 360 - psi
+        else: # -np.pi <= psi < -np.pi/2:
+            theta = 90 - psi
+        return theta
 
 def main(args=None):
     try:

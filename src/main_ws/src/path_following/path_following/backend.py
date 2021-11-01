@@ -39,11 +39,11 @@ class Backend(Node):
     
     def log_state(self, state):
         self.get_logger().info(
-            'Received from client initial state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}}' 
+            'Received from client initial state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}}' 
             % (
                 state['position']['x'], 
                 state['position']['y'], 
-                state['position']['psi'], # yaw angle
+                state['position']['theta'], # yaw angle from west spanning [0, 2pi]
                 state['velocity']['u'], 
                 state['velocity']['v'], 
                 state['velocity']['r'],
@@ -114,8 +114,8 @@ def receive_initial_condition():
             initial_condition['position']['x']
         backend_node.start_end_simul_srv.initial_state.position.y = \
             initial_condition['position']['y']
-        backend_node.start_end_simul_srv.initial_state.position.psi = \
-            initial_condition['position']['psi']
+        backend_node.start_end_simul_srv.initial_state.position.theta = \
+            initial_condition['position']['theta']
         backend_node.start_end_simul_srv.initial_state.velocity.u = \
             initial_condition['velocity']['u']
         backend_node.start_end_simul_srv.initial_state.velocity.v = \
