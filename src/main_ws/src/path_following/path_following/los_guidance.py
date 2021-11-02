@@ -56,11 +56,11 @@ class LosGuidance(Node):
 
     def log_state(self, msg):
         self.get_logger().info(
-            'listened filtered state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            'listened filtered state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 msg.position.x, 
                 msg.position.y, 
-                msg.position.psi, # yaw angle
+                msg.position.theta, # yaw angle
                 msg.velocity.u, 
                 msg.velocity.v, 
                 msg.velocity.r,
@@ -159,7 +159,7 @@ class LosGuidance(Node):
             self.get_logger().info('chi_d: %f' % chi_d)
             self.get_logger().info('beta: %f' % beta)
             # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
-            self.des_yaw_msg.data = self.psi2teta(psi_d)
+            self.des_yaw_msg.data = 1.57079632679 - psi_d # psi to theta (radians)
             self.des_velocity_msg.data = wv_next
 
             return (self.des_yaw_msg, self.des_velocity_msg)
@@ -169,16 +169,6 @@ class LosGuidance(Node):
             self.des_velocity_msg.data = 0.0
 
             return (self.des_yaw_msg, self.des_velocity_msg)
-    
-    @staticmethod
-    def psi2teta(psi):
-        if -np.pi/2 <= psi <= np.pi/2:
-            theta = 90 - psi
-        elif np.pi/2 < psi <= np.pi:
-            theta = 360 - psi
-        else: # -np.pi <= psi < -np.pi/2:
-            theta = 90 - psi
-        return theta
 
 def main(args=None):
     try:

@@ -1,7 +1,6 @@
 import sys
 import os
 import numpy as np
-import math
 
 import pydyna
 
@@ -105,7 +104,7 @@ class PydynaSimpleNode(Node):
         propeller = self.ship.thrusters['0']
         propeller.dem_rotation = self.propeller_rotation
         rudder = self.ship.rudders['0']
-        rudder.dem_angle = self.rudder_angle
+        rudder.dem_angle = -self.rudder_angle # pydyna uses counterclockwise convention
 
         self.sim.step()
 

@@ -24,7 +24,7 @@ class YawController(Node):
         # TODO: it is hardcoded now, this would need to be set according
         #  to waypoints and inital conditions actually, use a fucntion to set
         # this value
-        self.desired_yaw_angle = math.radians(45)
+        self.desired_yaw_angle = 1.334889326 # radians
 
         self.desired_yaw_angle_old = 0
 
@@ -85,9 +85,9 @@ class YawController(Node):
         self.theta_bar_int = max(-0.5,min(self.theta_bar_int,0.5))
 
         # control action 
-        rudder_angle = self.Kp * theta_bar + self.Kd * theta_bar_dot + self.Ki * self.theta_bar_int
+        rudder_angle = -self.Kp * theta_bar - self.Kd - theta_bar_dot - self.Ki * self.theta_bar_int
         # rudder saturation
-        rudder_angle = max(self.rudder_sat,min(rudder_angle, self.rudder_sat))
+        rudder_angle = max(-self.rudder_sat, min(rudder_angle, self.rudder_sat))
         self.rudder_msg.data = rudder_angle
 
         return self.rudder_msg 

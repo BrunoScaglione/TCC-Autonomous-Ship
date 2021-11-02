@@ -64,14 +64,14 @@ class WaveFilter(Node):
 
         # x_last_seven = [state.position.x for state in list(self.last_seven_states)]
         # y_last_seven = [state.position.y for state in list(self.last_seven_states)]
-        # psi_last_seven = [state.position.psi for state in list(self.last_seven_states)]
+        # theta_last_seven = [state.position.theta for state in list(self.last_seven_states)]
         # u_last_seven = [state.velocity.u for state in list(self.last_seven_states)]
         # v_last_seven = [state.velocity.v for state in list(self.last_seven_states)]
         # r_last_seven = [state.velocity.r for state in list(self.last_seven_states)]
         # state_last_seven = [
         #     x_last_seven, 
         #     y_last_seven, 
-        #     psi_last_seven, 
+        #     theta_last_seven, 
         #     u_last_seven, 
         #     v_last_seven,
         #     r_last_seven
@@ -83,7 +83,7 @@ class WaveFilter(Node):
         # self.xf_msg.position.x = state_current_filtered[0]
         # self.xf_msg.position.y = state_current_filtered[1]
         # self.y_filtered_history.append(self.xf_msg.position.y) # debugging
-        # self.xf_msg.position.psi = state_current_filtered[2]
+        # self.xf_msg.position.theta = state_current_filtered[2]
 
         # self.xf_msg.velocity.u = state_current_filtered[3]
         # self.xf_msg.velocity.v = state_current_filtered[4]
@@ -98,12 +98,12 @@ class WaveFilter(Node):
     def log_state(self, state, communicator):
         log_str = 'listened estimated' if communicator == 'subscriber' else 'published filtered'
         self.get_logger().info(
-            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            '%s state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 log_str,
                 state.position.x, 
                 state.position.y, 
-                state.position.psi, # yaw angle
+                state.position.theta, # yaw angle
                 state.velocity.u, 
                 state.velocity.v, 
                 state.velocity.r,

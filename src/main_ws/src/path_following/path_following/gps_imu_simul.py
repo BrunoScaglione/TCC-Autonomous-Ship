@@ -38,7 +38,7 @@ class GpsImuSimulator(Node):
         # assuming same variance for x and y, and 0 covariance
         self.sigma_x = 5.46112744197 # GPS 1: from horizontal acc
         self.sigma_y = 5.46112744197 # GPS 1: from horizontal acc
-        self.sigma_psi = 0.0523599 # GPS 1: from heading acc
+        self.sigma_theta = 0.0523599 # GPS 1: from heading acc
         self.sigma_u = None # is calculated dynamically 
         self.sigma_v = None # is calculated dynamically
         self.sigma_r = 0.0005 # IMU: from bias-in-run
@@ -82,18 +82,18 @@ class GpsImuSimulator(Node):
     def calculate_velocity_sigmas(self):
         x_dot = ( list(self.last_two_states)[0].position.x - list(self.last_two_states)[1].position.x )/0.1
         y_dot = ( list(self.last_two_states)[0].position.y - list(self.last_two_states)[1].position.y )/0.1
-        sigma_psi = self.sigma_psi
-        psi = list(self.last_two_states)[0].position.psi
+        sigma_theta = self.sigma_theta
+        theta = list(self.last_two_states)[0].position.theta
         # error propagation ([u, v].T = R@[xdot, ydot].T linear transformation or rotation matrix)
-        self.sigma_u = ( (np.cos(psi)*self.sigma_ydot)**2 + (np.sin(psi)*self.sigma_xdot)**2 \
-            + ((np.cos(psi)*x_dot - np.sin(psi)*y_dot)*sigma_psi)**2 )**0.5
-        self.sigma_v = ( (np.sin(psi)*self.sigma_ydot)**2 + (-np.cos(psi)*self.sigma_xdot)**2 \
-            + ((np.sin(psi)*x_dot + np.cos(psi)*y_dot)*sigma_psi)**2 )**0.5
+        self.sigma_u = ( (np.cos(theta)*self.sigma_xdot)**2 + (np.sin(theta)*self.sigma_ydot)**2 \
+            + ((-np.sin(theta)*x_dot + np.cos(theta)*y_dot)*sigma_theta)**2 )**0.5
+        self.sigma_v = ( (-np.sin(theta)*self.sigma_xdot)**2 + (np.cos(theta)*self.sigma_ydot)**2 \
+            + ((-np.cos(theta)*x_dot - np.sin(theta)*y_dot)*sigma_theta)**2 )**0.5
 
     def state_simul(self, x):
         # self.xs_msg.position.x = x.position.x + np.random.normal(0, self.sigma_x) # gps
         # self.xs_msg.position.y = x.position.y + np.random.normal(0, self.sigma_y) # gps
-        # self.xs_msg.position.psi = x.position.psi + np.random.normal(0, self.sigma_psi) # gyrocompass
+        # self.xs_msg.position.theta = x.position.theta + np.random.normal(0, self.sigma_theta) # gyrocompass
 
         # self.xs_msg.velocity.u = x.velocity.u + np.random.normal(0, self.sigma_u) # gps
         # self.xs_msg.velocity.v = x.velocity.v + np.random.normal(0, self.sigma_v) # gps
@@ -105,17 +105,15 @@ class GpsImuSimulator(Node):
 
         return x # debugging wave filter
 
-
-    
     def log_state(self, state, communicator):
         log_str = 'listened' if communicator == 'subscriber' else 'published simulated'
         self.get_logger().info(
-            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            '%s state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 log_str,
                 state.position.x, 
                 state.position.y, 
-                state.position.psi, # yaw angle
+                state.position.theta, # yaw angle
                 state.velocity.u, 
                 state.velocity.v, 
                 state.velocity.r,
