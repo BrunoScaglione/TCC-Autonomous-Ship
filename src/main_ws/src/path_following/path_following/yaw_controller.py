@@ -18,12 +18,20 @@ class YawController(Node):
         self.Kd = 49.684
         self.Ki = 0.00583
 
-        self.counter = 0.0
-        self.temp = 0.0
-        self.rd = 0.0
-        self.initial = 0.0
+        self.rudder_sat = 0.610865
 
-        self.desired_yaw_angle = 0
+        # desired yaw angle
+        # TODO: it is hardcoded now, this would need to be set according
+        #  to waypoints and inital conditions actually, use a fucntion to set
+        # this value
+        self.desired_yaw_angle = 1.334889326 # radians
+        self.desired_yaw_angle_old = 0
+
+        self.t_current_desired_yaw_angle = 0.1
+        self.t_last_desired_yaw_angle = 0
+
+        # for the integral action (acumulates error)
+        self.theta_bar_int = 0
 
         self.rudder_msg = Float32()
 
@@ -54,50 +62,43 @@ class YawController(Node):
         sys.exit()
         
     def callback_filtered_state(self, msg):
-        self.get_logger().info('listened filtered yaw angle: %f' % msg.position.psi)
-        rudder_msg = self.yaw_control(msg.position.psi, msg.velocity.r)
+        self.get_logger().info('listened filtered yaw angle: %f' % msg.position.theta)
+        self.t = msg.time
+        rudder_msg = self.yaw_control(msg.position.theta, msg.velocity.r)
         self.publisher_rudder_angle.publish(rudder_msg)
         self.get_logger().info('published rudder angle: %f' % rudder_msg.data)
     
     def callback_desired_yaw_angle(self, msg):
         self.get_logger().info('listened desired yaw angle: %f' % msg.data)
+        self.desired_yaw_angle_old = self.desired_yaw_angle
+
+        self.t_last_desired_yaw_angle = self.t_current_desired_yaw_angle
+        self.t_current_desired_yaw_angle = self.t
+
         self.desired_yaw_angle = msg.data
-    
-    def yaw_control(self, psi, r):
-        # psi desejado
-        psi_des = self.desired_yaw_angle
-        psi_des = math.radians(0)
 
-        if self.rd == 0.0 and self.initial == 0:
-            self.rd = psi_des
-            self.temp = psi_des
-            self.initial = 1
-        else:
-            self.rd = (psi_des - self.temp)/0.1
-            self.temp = psi_des
+    def yaw_control(self, theta, r):
+        # desired theta
+        theta_des = self.desired_yaw_angle
+        # last desired theta
+        theta_des_old = self.desired_yaw_angle_old
+        # error
+        theta_bar = theta - theta_des
+        self.get_logger().info('theta_bar: %f' % theta_bar)
+        theta_bar_dot = r - (theta_des - theta_des_old)/ \
+            (self.t_current_desired_yaw_angle - self.t_last_desired_yaw_angle)
+        # cumulative of the error (integral action)
+        self.theta_bar_int = self.theta_bar_int + theta_bar*0.1
+        # anti windup for the integral action
+        self.theta_bar_int = max(-0.5,min(self.theta_bar_int,0.5))
+        self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
 
-        # psi ~ = psi_bar
-        psi_bar = psi - psi_des
-
-        #rudder_angle
-        rudder_angle = - self.Kp * psi_bar - self.Kd * (r -self.rd) - self.Ki * self.counter
-
-
-        if rudder_angle > 0.6108:
-            rudder_angle = 0.6108
-        
-        if rudder_angle < -0.6108:
-            rudder_angle = -0.6108
-
-        self.counter = self.counter + (psi_bar * 0.1)
-    
-        if self.counter > 0.5:
-            self.counter = 0.5
-        
-        if self.counter < -0.5:
-            self.counter = -0.5
-
+        # control action 
+        rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * self.theta_bar_int
+        # rudder saturation
+        rudder_angle = max(-self.rudder_sat, min(rudder_angle, self.rudder_sat))
         self.rudder_msg.data = rudder_angle
+
         return self.rudder_msg 
 
 def main(args=None):

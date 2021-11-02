@@ -86,11 +86,11 @@ class Venus(Node):
     def callback_state(self, msg):
         state = msg
         self.get_logger().info(
-            'listened state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            'listened state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 state.position.x, 
                 state.position.y, 
-                state.position.psi, # yaw angle
+                state.position.theta, # yaw angle
                 state.velocity.u, 
                 state.velocity.v, 
                 state.velocity.r,
@@ -99,16 +99,16 @@ class Venus(Node):
         )
         #sleep(0.05)
         self.vessel.position = self.initial_position.relative(state.position.x, state.position.y)
-        self.vessel.angle = math.degrees(state.position.psi)
+        # measured from north clockwise (normal convention)
+        self.vessel.angle = 90 - math.degrees(state.position.theta) # theta to psi
     
     def callback_shutdown():
         sys.exit()
     
     def callback_rudder_angle(self, msg):
         self.get_logger().info('listened rudder angle: %f' % msg.data)
+        # measured from south clockwise (normal convention )
         self.vessel.rudders[0].angle = math.degrees(msg.data)
-
-    ## cant access properties of venus objects (they do not seem to have them)
 
     def callback_waypoints(self, msg):
         # initial x,y,u
@@ -155,6 +155,7 @@ class Venus(Node):
                 draggable=draggable
             )
             self.viewer.add(beacon)
+            # read below commented section tounderstand why i am doing this
             self.beacons.append([beacon, self.initial_position.relative(wx, wy)])
 
         ######### <passing beacon position inside points does not work, dont know why> ######
@@ -233,10 +234,11 @@ class Venus(Node):
             self.lines[beacon_idx-1] = new_line_before
 
         self.beacons[beacon_idx][0].position = new_position
+        self.beacons[beacon_idx][1] = new_position # just to pass inside lines
+        # FILLERS: str(1) -> need to get relative coordinates back
         self.beacons[beacon_idx][0].data_panel[1] = KeyValue("Position X", str(1))
         self.beacons[beacon_idx][0].data_panel[2] = KeyValue("Position Y", str(1))
-        self.beacons[beacon_idx][1] = new_position
-
+        
 def main(args=None):
     try:
         rclpy.init(args=args)

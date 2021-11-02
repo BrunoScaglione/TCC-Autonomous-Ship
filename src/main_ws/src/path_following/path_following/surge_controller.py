@@ -15,10 +15,13 @@ class SurgeController(Node):
         # controller parameters
         self.X_added_mass = -3375
         self.m = 40415
-        self.phi = 0.32
-        self.K = 13
+        self.kf = 13
 
-        self.desired_surge_velocity = 0
+        # TODO: it is hardcoded now, this would need to be set according 
+        # to waypoints actually 
+        # (desired surge velocity of the first waypoint), use a fucntion to set
+        # this value
+        self.desired_surge_velocity = 3
 
         self.thrust_msg = Float32()
 
@@ -47,7 +50,7 @@ class SurgeController(Node):
 
     def callback_shutdown():
         sys.exit()
-        
+         
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered surge velocity: %f' % msg.velocity.u)
         thrust_msg = self.surge_control(msg.velocity.u)
@@ -62,10 +65,12 @@ class SurgeController(Node):
         xf_d = self.desired_surge_velocity
         # sliping variable
         s = xf - xf_d
+        # phi (6.4% of desired velocity, based on phi = 0.32 for desired veloicty of 5m/s)
+        phi = 0.064*xf_d
         # sat function
-        sats = max(-1,min(s/self.phi,1))
+        sats = max(-1,min(s/phi,1))
         # input as function of x (control action)
-        u = xf*abs(xf)*(1.9091*(10**-4) - self.K*5.18*(10**-5)*sats) - 0.01*sats 
+        u = xf*abs(xf)*(1.9091*(10**-4) - self.kf*5.18*(10**-5)*sats) - 0.01*sats 
         # thrust
         tau = u*(self.m - self.X_added_mass)
         self.thrust_msg.data = tau 

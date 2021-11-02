@@ -1,6 +1,7 @@
 import sys
 
 import math
+import numpy as np
 from sympy import symbols, Eq, solve
 # import stackprinter
 
@@ -12,9 +13,6 @@ from std_msgs.msg import Bool
 #custom service
 from path_following_interfaces.msg import Waypoints, State
 
-# for debugging
-# stackprinter.set_excepthook(style='darkbg2')
-
 class LosGuidance(Node):
     def __init__(self):
         super().__init__('los_guidance_node')
@@ -25,7 +23,7 @@ class LosGuidance(Node):
         self.des_yaw_msg = Float32()
         self.des_velocity_msg = Float32()
 
-        #index of waypoint the ship has to reach next (first waypoint is starting position)
+        # index of waypoint the ship has to reach next (first waypoint is starting position)
         self.current_waypoint = 1 
 
         self.subscription_shutdown = self.create_subscription(
@@ -58,11 +56,11 @@ class LosGuidance(Node):
 
     def log_state(self, msg):
         self.get_logger().info(
-            'listened filtered state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            'listened filtered state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 msg.position.x, 
                 msg.position.y, 
-                msg.position.psi, # yaw angle
+                msg.position.theta, # yaw angle
                 msg.velocity.u, 
                 msg.velocity.v, 
                 msg.velocity.r,
@@ -115,8 +113,13 @@ class LosGuidance(Node):
         x_los2, y_los2 = soln[1]
         x_distance2 = abs(wx_next - x_los2)
 
-        self.get_logger().info('x_los1: %f, y_los1: %f' % (x_los1, y_los1))
-        self.get_logger().info('x_los2: %f, y_los2: %f' % (x_los2, y_los2))
+        #debugging
+        self.get_logger().info('wx_next: %f' % wx_next)
+
+        if x_distance1 < x_distance2:
+            self.get_logger().info('x_los: %f, y_los: %f' % (x_los1, y_los1))
+        else:
+            self.get_logger().info('x_los: %f, y_los: %f' % (x_los2, y_los2))
 
         return (x_los1, y_los1) if x_distance1 < x_distance2 else (x_los2, y_los2)
     
@@ -126,7 +129,7 @@ class LosGuidance(Node):
         num_waypoints = len(self.waypoints.position.x)
         self.get_logger().info('num_waypoints: %d' % num_waypoints)
 
-        if self.current_waypoint < num_waypoints-1:
+        if self.current_waypoint < num_waypoints:
             if self.reached_next_waypoint(xf):
                 self.current_waypoint += 1
                 self.get_logger().info('changed waypoint at time: %f' % xf.time)
@@ -150,18 +153,20 @@ class LosGuidance(Node):
 
             x_los, y_los = self.solve_system_of_equations(x, y, wx_next, wy_next, wx, wy)
             beta = math.asin(v/U)
-            chi_d = math.atan2(y_los - y, x_los - x)
-            psi_d = chi_d  - beta  
-            # not chi_d - beta because our sway convention is to the left of the craft
-            self.des_yaw_msg.data = psi_d
+            chi_d = math.atan2(x_los - x, y_los - y)
+            psi_d = chi_d + beta
+            # debugging
+            self.get_logger().info('chi_d: %f' % chi_d)
+            self.get_logger().info('beta: %f' % beta)
+            # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
+            self.des_yaw_msg.data = 1.57079632679 - psi_d # psi to theta (radians)
             self.des_velocity_msg.data = wv_next
 
             return (self.des_yaw_msg, self.des_velocity_msg)
         else:
             self.get_logger().info('Reached final waypoint Uhulll')
-            self.get_logger().info('4')
-            self.des_yaw_msg.data = 0
-            self.des_velocity_msg.data = 0
+            self.des_yaw_msg.data = 0.0
+            self.des_velocity_msg.data = 0.0
 
             return (self.des_yaw_msg, self.des_velocity_msg)
 

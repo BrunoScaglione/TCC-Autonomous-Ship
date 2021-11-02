@@ -53,12 +53,12 @@ class KalmanFilter(Node):
     def log_state(self, state, communicator):
         log_str = 'listened simulated' if communicator == 'subscriber' else 'published estimated'
         self.get_logger().info(
-            '%s state: {position: {x: %f, y: %f, psi: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            '%s state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 log_str,
                 state.position.x, 
                 state.position.y, 
-                state.position.psi, # yaw angle
+                state.position.theta, # yaw angle
                 state.velocity.u, 
                 state.velocity.v, 
                 state.velocity.r,

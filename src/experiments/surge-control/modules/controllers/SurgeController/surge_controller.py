@@ -3,13 +3,12 @@ import math
 import modules.controllers.SurgeController as SurgeController
 
 kphi = SurgeController.kphi
+kf = SurgeController.kf
 phi = SurgeController.phi
-phi = kphi*phi
 xd = SurgeController.xd
 m = SurgeController.m
 X_added_mass = SurgeController.X_added_mass
-# gain: tuning parameter
-K = SurgeController.K
+
 
 def getNp(tau: float, x:float) -> float:
     c1 = 0.036
@@ -25,10 +24,10 @@ def getNp(tau: float, x:float) -> float:
 def controller(x: float) -> float:
     # sliping variable
     s = x - xd
-    # sat function
-    sats = max(-1,min(s/phi,1))
+    # sat function 
+    sats = max(-1,min(s/(kphi*phi),1))
     # input as function of x (control)
-    u = x*abs(x)*(1.9091*(10**-4) - K*5.18*(10**-5)*sats) - 0.01*sats 
+    u = x*abs(x)*(1.9091*(10**-4) - kf*5.18*(10**-5)*sats) - 0.01*sats 
     # thrust
     tau = u*(m - X_added_mass)
     # control allocation

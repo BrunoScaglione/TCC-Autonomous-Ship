@@ -1,2 +1,2 @@
 PositionsXY position
-float32[] velocity [1.0, 2.0, 3.0, 4.0, 5.0]
+float32[] velocity [3.0, 3.5, 4.0, 4.5, 5.0]

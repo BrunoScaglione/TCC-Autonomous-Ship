@@ -36,7 +36,7 @@ def getPlots(
     axs[3].set_ylim([0,1.75])
 
     graphics_file = "simulation.png" \
-    if (SurgeController.K > 1) and (SurgeController.kphi > 1) else "simulation_raw.png"
+    if (SurgeController.kf > 1) and (SurgeController.kphi > 1) else "simulation_raw.png"
 
     plt.savefig("modules/controllers/SurgeController/results/" + graphics_file)
     #plt.show()

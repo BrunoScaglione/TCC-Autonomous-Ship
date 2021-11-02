@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>API - pydyna</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "API";
+    var mkdocs_page_input_path = "API.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> pydyna</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">API</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">pydyna</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>API</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="pydyna">pydyna</h1>
+
+<h2 id="pydyna.pydyna_7_2_3.create_simulation">create_simulation</h2>
+
+<pre><code class="python">create_simulation(*args)
+</code></pre>
+
+<p>This function is the main API entry-point to create a new <code>Simulation</code> session.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>p3d_or_json_file</code> [optional] (string) </strong>: the p3d or json filename containing the hydrodynamics model description to be loaded. If not provided, loads a default hydrodynamics model.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p><code>Simulation</code></p>
+<h2 id="pydyna.pydyna_7_2_3.destroy_simulation">destroy_simulation</h2>
+
+<pre><code class="python">destroy_simulation(sim)
+</code></pre>
+
+<p>This function terminates a <code>Simulation</code> session.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>sim</code> (Simulation) </strong>: the simulation instance to destroy</li>
+</ul>
+<h2 id="pydyna.pydyna_7_2_3.Simulation">Simulation</h2>
+
+<pre><code class="python">Simulation(self, *args, **kwargs)
+</code></pre>
+
+<p>Main class to interact with a simulation. Use <code>create_simulation()</code> and <code>destroy_simulation()</code> for instance creation/deletion.
+<h3 id="pydyna.pydyna_7_2_3.Simulation.catenaries">catenaries</h3></p>
+<p>Property (CatenaryDict): Dictionary of catenaries (id : Caternary)
+<h3 id="pydyna.pydyna_7_2_3.Simulation.current">current</h3></p>
+<p>Property (Current): Environment current
+<h3 id="pydyna.pydyna_7_2_3.Simulation.dt">dt</h3></p>
+<p>Property (float): Time interval for the integration step (s)
+<h3 id="pydyna.pydyna_7_2_3.Simulation.fenders">fenders</h3></p>
+<p>Property (FenderDict): Dictionary of fenders (id : Fender)
+<h3 id="pydyna.pydyna_7_2_3.Simulation.line_ordering">line_ordering</h3></p>
+<p>Property (string List): Original ordering of the lines as encountered in the P3d file
+<h3 id="pydyna.pydyna_7_2_3.Simulation.max_steps">max_steps</h3></p>
+<p>Property (int): Number of steps to integrate in fast-time mode
+<h3 id="pydyna.pydyna_7_2_3.Simulation.p3d_file">p3d_file</h3></p>
+<p>Property (string): P3d file used to generate this simulation
+<h3 id="pydyna.pydyna_7_2_3.Simulation.thisown">thisown</h3></p>
+<p>The membership flag
+<h3 id="pydyna.pydyna_7_2_3.Simulation.time_step">time_step</h3></p>
+<p>Property (int): Current integration time step
+<h3 id="pydyna.pydyna_7_2_3.Simulation.vessels">vessels</h3></p>
+<p>Property (VesselDict): Dictionary of vessels Keys: (id : Vessel)
+<h3 id="pydyna.pydyna_7_2_3.Simulation.wave">wave</h3></p>
+<p>Property (Wave): Environment wave
+<h3 id="pydyna.pydyna_7_2_3.Simulation.wind">wind</h3></p>
+<p>Property (Wind): Environment wind
+<h3 id="pydyna.pydyna_7_2_3.Simulation.step">step</h3></p>
+<pre><code class="python">Simulation.step(self)
+</code></pre>
+
+<p>Runs an integration step.
+<h3 id="pydyna.pydyna_7_2_3.Simulation.reset">reset</h3></p>
+<pre><code class="python">Simulation.reset(self)
+</code></pre>
+
+<p>Resets the simulation to the initial condition just after it has been created.
+<h2 id="pydyna.pydyna_7_2_3.Vessel">Vessel</h2></p>
+<pre><code class="python">Vessel(self, *args, **kwargs)
+</code></pre>
+
+<p>Models an ownship with its hydrodynamical properties.
+<h3 id="pydyna.pydyna_7_2_3.Vessel.anchors">anchors</h3></p>
+<p>Property (AnchorDict): Dictionary of anchors (id : Anchor) attached to this Vessel
+<h3 id="pydyna.pydyna_7_2_3.Vessel.angular_acceleration">angular_acceleration</h3></p>
+<p>Property (float[3]): Angular acceleration (rad/s^2)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.angular_position">angular_position</h3></p>
+<p>Property (float[3]): Angular position (counter-clockwise radians)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.angular_velocity">angular_velocity</h3></p>
+<p>Property (float[3]): Angular velocity (rad/s)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.breadth">breadth</h3></p>
+<p>Property (float): breadth (m)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.draught">draught</h3></p>
+<p>Property (float): draught (m)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.external_forces">external_forces</h3></p>
+<p>Property (ForceDict): Dictionary of external forces (id : Force) acting on this Vessel
+<h3 id="pydyna.pydyna_7_2_3.Vessel.height">height</h3></p>
+<p>Property (float): height (m)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.id">id</h3></p>
+<p>Property (string): Vessel identification
+<h3 id="pydyna.pydyna_7_2_3.Vessel.internal_forces">internal_forces</h3></p>
+<p>Property (ForceDict): Dictionary of internal forces (id : Force) acting on this Vessel
+Force id can be one of the following built-in values:
+  "wave1stOrder", "waveMeanDrift", "waveSlowDrift",
+  "waveDriftDamp", "swell1stOrder", "swellMeanDrift", "swellSlowDrift",
+  "swellDriftDamp", "thrusters", "sheer", "rudders", "externalForces",
+  "wind", "current", "lines", "hydrostaticRestoration", "towing",
+  "squatting", "straitChannels", "damping", "inertial", "interactions"</p>
+<h3 id="pydyna.pydyna_7_2_3.Vessel.length">length</h3>
+
+<p>Property (float): length (m)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.linear_acceleration">linear_acceleration</h3></p>
+<p>Property (float[3]): Keel Midship (KMS) local acceleration (m/s^2)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.linear_position">linear_position</h3></p>
+<p>Property (float[3]): Keel Midship (KMS) position (m)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.linear_velocity">linear_velocity</h3></p>
+<p>Property (float[3]): Keel Midship (KMS) local velocity (m/s)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.mass">mass</h3></p>
+<p>Property (float): mass (t)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.rudders">rudders</h3></p>
+<p>Property (RudderDict): Dictionary of rudders (id : Rudder) attached to this Vessel
+<h3 id="pydyna.pydyna_7_2_3.Vessel.thisown">thisown</h3></p>
+<p>The membership flag
+<h3 id="pydyna.pydyna_7_2_3.Vessel.thrusters">thrusters</h3></p>
+<p>Property (ThrusterDict): Dictionary of thrusters (id : Thruster) attached to this Vessel
+<h3 id="pydyna.pydyna_7_2_3.Vessel.volume">volume</h3></p>
+<p>Property (float): volume (m^3)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.water_velocity">water_velocity</h3></p>
+<p>Property (float[3]): Local current velocity relative to the vessel-fixed coordinate system (m/s)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.weight">weight</h3></p>
+<p>Property (float): weight (kN)
+<h3 id="pydyna.pydyna_7_2_3.Vessel.wind_velocity">wind_velocity</h3></p>
+<p>Property (float[3]): Global wind velocity (m/s)
+<h2 id="pydyna.pydyna_7_2_3.Rudder">Rudder</h2></p>
+<pre><code class="python">Rudder(self, *args, **kwargs)
+</code></pre>
+
+<p>Models the hidrodynamics of a rudder attached to a <code>Vessel</code>.
+<h3 id="pydyna.pydyna_7_2_3.Rudder.dem_angle">dem_angle</h3></p>
+<p>Property (float): Rudder demanded angle (counter-clockwise radians)
+<h3 id="pydyna.pydyna_7_2_3.Rudder.eff_angle">eff_angle</h3></p>
+<p>Property (float): Rudder effective angle (counter-clockwise radians)
+<h3 id="pydyna.pydyna_7_2_3.Rudder.id">id</h3></p>
+<p>Property (string): Rudder identification
+<h3 id="pydyna.pydyna_7_2_3.Rudder.max_angle">max_angle</h3></p>
+<p>Property (float): Rudder maximum angle (counter-clockwise radians)
+<h3 id="pydyna.pydyna_7_2_3.Rudder.thisown">thisown</h3></p>
+<p>The membership flag
+<h2 id="pydyna.pydyna_7_2_3.Thruster">Thruster</h2></p>
+<pre><code class="python">Thruster(self, *args, **kwargs)
+</code></pre>
+
+<p>Models the hidrodynamics of a propeller attached to a <code>Vessel</code>.
+<h3 id="pydyna.pydyna_7_2_3.Thruster.calc_rot_dynamics">calc_rot_dynamics</h3></p>
+<p>Property (bool): True if the rotation dynamics is to be calculated or False if it's calculated elsewhere
+<h3 id="pydyna.pydyna_7_2_3.Thruster.dem_angle">dem_angle</h3></p>
+<p>Property (float): Thruster demanded azimuthal angle (counter-clockwise radians)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.dem_pitch">dem_pitch</h3></p>
+<p>Property (float): Thruster demanded pitch (adimensional)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.dem_power">dem_power</h3></p>
+<p>Property (float): Thruster demanded power (kW)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.dem_rotation">dem_rotation</h3></p>
+<p>Property (float): Thruster demanded rotation (RPS)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.dem_thrust">dem_thrust</h3></p>
+<p>Property (float): Thruster demanded thrust (kN)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.eff_angle">eff_angle</h3></p>
+<p>Property (float): Thruster effective azimuthal angle (counter-clockwise radians)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.eff_pitch">eff_pitch</h3></p>
+<p>Property (float): Thruster effective pitch (adimensional)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.eff_power">eff_power</h3></p>
+<p>Property (float): Thruster effective power (kW)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.eff_rotation">eff_rotation</h3></p>
+<p>Property (float): Thruster effective rotation (RPS)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.eff_thrust">eff_thrust</h3></p>
+<p>Property (float): Thruster effective thrust (kN)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.id">id</h3></p>
+<p>Property (string): Thruster identification
+<h3 id="pydyna.pydyna_7_2_3.Thruster.max_angle">max_angle</h3></p>
+<p>Property (float):  Thruster maximum azimuthal angle (counter-clockwise radians)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.max_pitch">max_pitch</h3></p>
+<p>Property (float): Thruster maximum pitch (adimensional)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.max_power">max_power</h3></p>
+<p>Property (float): Thruster maximum power (kW)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.max_rotation">max_rotation</h3></p>
+<p>Property (float): Thruster maximum rotation (RPS)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.max_thrust">max_thrust</h3></p>
+<p>Property (float): Thruster maximum thrust (kN)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.thisown">thisown</h3></p>
+<p>The membership flag
+<h3 id="pydyna.pydyna_7_2_3.Thruster.torque">torque</h3></p>
+<p>Property (float):  Thruster torque (kNm)
+<h3 id="pydyna.pydyna_7_2_3.Thruster.vessel">vessel</h3></p>
+<p>Parent vessel -&gt; Vessel
+<h3 id="pydyna.pydyna_7_2_3.Thruster.water_velocity">water_velocity</h3></p>
+<p>Property (float[3]): Water velocity in the local system of reference (m/s)
+<h2 id="pydyna.pydyna_7_2_3.Anchor">Anchor</h2></p>
+<pre><code class="python">Anchor(self, *args, **kwargs)
+</code></pre>
+
+<p>Models the hydrodynamics of an anchor in a <code>Vessel</code>.
+<h3 id="pydyna.pydyna_7_2_3.Anchor.active">active</h3></p>
+<p>Property (bool): Anchor activation state
+<h3 id="pydyna.pydyna_7_2_3.Anchor.chain_max_length">chain_max_length</h3></p>
+<p>Property (float): Anchor maximum chain length (m)
+<h3 id="pydyna.pydyna_7_2_3.Anchor.depth">depth</h3></p>
+<p>Property (float): Anchor depth (m)
+<h3 id="pydyna.pydyna_7_2_3.Anchor.holding_power">holding_power</h3></p>
+<p>Property (float): Anchor holding power (kN)
+<h3 id="pydyna.pydyna_7_2_3.Anchor.id">id</h3></p>
+<p>Property (string): Anchor identification
+<h3 id="pydyna.pydyna_7_2_3.Anchor.thisown">thisown</h3></p>
+<p>The membership flag
+<h3 id="pydyna.pydyna_7_2_3.Anchor.weight">weight</h3></p>
+<p>Property (float):  Anchor weight (kN)
+<h3 id="pydyna.pydyna_7_2_3.Anchor.winch_brake_capacity">winch_brake_capacity</h3></p>
+<p>Property (float): Anchor winch brake capacity (kN)
+<h3 id="pydyna.pydyna_7_2_3.Anchor.winch_lift_capacity">winch_lift_capacity</h3></p>
+<p>Property (float): Anchor winch lift capacity (kN)
+<h3 id="pydyna.pydyna_7_2_3.Anchor.winch_speed">winch_speed</h3></p>
+<p>Property (float): Anchor dropping (negative values) or raising (positive values) winch speed (m/s)
+<h2 id="pydyna.pydyna_7_2_3.Force">Force</h2></p>
+<pre><code class="python">Force(self, *args, **kwargs)
+</code></pre>
+
+<p>Models the application of a force to a <code>Vessel</code>.
+<h3 id="pydyna.pydyna_7_2_3.Force.force">force</h3></p>
+<p>Property (float[3]): Force vector (kN)
+<h3 id="pydyna.pydyna_7_2_3.Force.id">id</h3></p>
+<p>Property (string): Force identification
+<h3 id="pydyna.pydyna_7_2_3.Force.moment">moment</h3></p>
+<p>Property (float[3]): Force moment (kN)
+<h3 id="pydyna.pydyna_7_2_3.Force.point">point</h3></p>
+<p>Property (float[3]): Force point of reference (local position with reference to the vessel Wamit center)
+<h3 id="pydyna.pydyna_7_2_3.Force.thisown">thisown</h3></p>
+<p>The membership flag
+<h2 id="pydyna.pydyna_7_2_3.Endpoint">Endpoint</h2></p>
+<pre><code class="python">Endpoint(self, *args, **kwargs)
+</code></pre>
+
+<p>Models a point of interaction with a <code>Vessel</code>.
+<h3 id="pydyna.pydyna_7_2_3.Endpoint.force">force</h3></p>
+<p>Property (Force): Reference to the Force at the end of this interaction Endpoint (cannot be None)
+<h3 id="pydyna.pydyna_7_2_3.Endpoint.position">position</h3></p>
+<p>Property (float[3]): Position of this interaction Endpoint in the global frame of reference (m)
+<h3 id="pydyna.pydyna_7_2_3.Endpoint.thisown">thisown</h3></p>
+<p>The membership flag
+<h3 id="pydyna.pydyna_7_2_3.Endpoint.velocity">velocity</h3></p>
+<p>Property (float[3]):  Velocity of this interaction Endpoint in the global frame of reference (m/s)
+<h3 id="pydyna.pydyna_7_2_3.Endpoint.vessel">vessel</h3></p>
+<p>Property (Vessel): Reference to the Vessel at the end of this interaction Endpoint (can be None)
+<h2 id="pydyna.pydyna_7_2_3.Catenary">Catenary</h2></p>
+<pre><code class="python">Catenary(self, *args, **kwargs)
+</code></pre>
+
+<p>Models the hydrodynamics of a catenary line connected to a <code>Vessel(s)</code>.
+<h3 id="pydyna.pydyna_7_2_3.Catenary.active">active</h3></p>
+<p>Property (bool): Line activation state
+<h3 id="pydyna.pydyna_7_2_3.Catenary.endpoint_a">endpoint_a</h3></p>
+<p>Property (Endpoint): Interaction endpoint A
+<h3 id="pydyna.pydyna_7_2_3.Catenary.endpoint_b">endpoint_b</h3></p>
+<p>Property (Endpoint): Interaction endpoint B
+<h3 id="pydyna.pydyna_7_2_3.Catenary.id">id</h3></p>
+<p>Property (string): Catenary identification
+<h3 id="pydyna.pydyna_7_2_3.Catenary.length">length</h3></p>
+<p>Property (float): Line length
+<h3 id="pydyna.pydyna_7_2_3.Catenary.thisown">thisown</h3></p>
+<p>The membership flag
+<h2 id="pydyna.pydyna_7_2_3.Fender">Fender</h2></p>
+<pre><code class="python">Fender(self, *args, **kwargs)
+</code></pre>
+
+<p>Models the hydrodynamics of a fender acting on a <code>Vessel</code>.
+<h3 id="pydyna.pydyna_7_2_3.Fender.active">active</h3></p>
+<p>Property (bool): Fender activation state
+<h3 id="pydyna.pydyna_7_2_3.Fender.endpoint_a">endpoint_a</h3></p>
+<p>Property (Endpoint): Interaction endpoint A
+<h3 id="pydyna.pydyna_7_2_3.Fender.endpoint_b">endpoint_b</h3></p>
+<p>Property (Endpoint): Interaction endpoint B
+<h3 id="pydyna.pydyna_7_2_3.Fender.id">id</h3></p>
+<p>Property (string): Fender identification
+<h3 id="pydyna.pydyna_7_2_3.Fender.length">length</h3></p>
+<p>Property (float): Line length
+<h3 id="pydyna.pydyna_7_2_3.Fender.thisown">thisown</h3></p>
+<p>The membership flag
+<h2 id="pydyna.pydyna_7_2_3.Wind">Wind</h2></p>
+<pre><code class="python">Wind(self, *args, **kwargs)
+</code></pre>
+
+<p>Models the dynamics of an environment wind which acts on the <code>Vessel(s)</code> being simulated.
+<h3 id="pydyna.pydyna_7_2_3.Wind.spectrum_angle">spectrum_angle</h3></p>
+<p>Property (float): Wind spectrum angle parameter (counter-clockwise radians)
+<h3 id="pydyna.pydyna_7_2_3.Wind.spectrum_type">spectrum_type</h3></p>
+<p>Property (string): Wind spectrum type</p>
+<p>Can be one of the following values:
+  "HARRIS",
+  "WILLS",
+  "REGULAR",
+  "API",
+  "NPD",
+  "OCHISHIN",
+  "DAVENPORT",
+  "QUEUFFEULOU" or
+  "KAIMAL"</p>
+<h3 id="pydyna.pydyna_7_2_3.Wind.spectrum_velocity">spectrum_velocity</h3>
+
+<p>Property (float): Wind spectrum velocity parameter (m/s)
+<h3 id="pydyna.pydyna_7_2_3.Wind.thisown">thisown</h3></p>
+<p>The membership flag
+<h3 id="pydyna.pydyna_7_2_3.Wind.get_velocity">get_velocity</h3></p>
+<pre><code class="python">Wind.get_velocity(self, t, in_vec)
+</code></pre>
+
+<p>Evaluates the wind velocity at time t and position (x, y, z).</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>t</code> (float) </strong>: the time (t)</li>
+<li><strong><code>pos</code> (float[3])</strong>: the position in global coordinates (m)</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p><code>`float[3]</code> `: global velocity (m/s)</p>
+<h2 id="pydyna.pydyna_7_2_3.Current">Current</h2>
+
+<pre><code class="python">Current(self, *args, **kwargs)
+</code></pre>
+
+<p>Models the dynamics of a water current which acts on the <code>Vessel(s)</code> being simulated.
+<h3 id="pydyna.pydyna_7_2_3.Current.field_axis_x">field_axis_x</h3></p>
+<p>Property(float[n]) : position x-component (m) of the current field</p>
+<h3 id="pydyna.pydyna_7_2_3.Current.field_axis_y">field_axis_y</h3>
+
+<p>Property(float[m]) :  position y-component (m) of the current field</p>
+<h3 id="pydyna.pydyna_7_2_3.Current.field_velocity_x">field_velocity_x</h3>
+
+<p>Property(float[n*m]) : velocity x-component (m/s) of the current field</p>
+<h3 id="pydyna.pydyna_7_2_3.Current.field_velocity_y">field_velocity_y</h3>
+
+<p>Property(float[n*m]) : velocity y-component (m/s) of the current field</p>
+<h3 id="pydyna.pydyna_7_2_3.Current.gain">gain</h3>
+
+<p>Property (float): Multiplier for the velocity (adimensional)
+<h3 id="pydyna.pydyna_7_2_3.Current.profile_angle">profile_angle</h3></p>
+<p>Property(float[n]) : angle (rad) of the corresponding profile depths</p>
+<h3 id="pydyna.pydyna_7_2_3.Current.profile_depth">profile_depth</h3>
+
+<p>Property(float[n]) : depth values (m) of the current profile</p>
+<h3 id="pydyna.pydyna_7_2_3.Current.profile_velocity">profile_velocity</h3>
+
+<p>Property(float[n]) : velocity (m/s) of the corresponding profile depths</p>
+<h3 id="pydyna.pydyna_7_2_3.Current.thisown">thisown</h3>
+
+<p>The membership flag
+<h3 id="pydyna.pydyna_7_2_3.Current.get_velocity">get_velocity</h3></p>
+<pre><code class="python">Current.get_velocity(self, t, in_vec)
+</code></pre>
+
+<p>Evaluates the current velocity at time t and position (x, y, z).</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>t</code> (float) </strong>: the time (s)</li>
+<li><strong><code>pos</code> (float[3])</strong>: the position in global coordinates (m)</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p><code>`float[3]</code> `: global velocity (m/s)</p>
+<h2 id="pydyna.pydyna_7_2_3.Wave">Wave</h2>
+
+<pre><code class="python">Wave(self, *args, **kwargs)
+</code></pre>
+
+<p>Models the dynamics of a wave in the water which acts on the <code>Vessel(s)</code> being simulated.
+<h3 id="pydyna.pydyna_7_2_3.Wave.field_angle">field_angle</h3></p>
+<p>Property(float[n*m]) : angles (rad) of the wave field</p>
+<h3 id="pydyna.pydyna_7_2_3.Wave.field_axis_x">field_axis_x</h3>
+
+<p>Property(float[n]) : position x-component (m) of the wave field</p>
+<h3 id="pydyna.pydyna_7_2_3.Wave.field_axis_y">field_axis_y</h3>
+
+<p>Property(float[m]) :  position y-component (m) of the wave field</p>
+<h3 id="pydyna.pydyna_7_2_3.Wave.field_multiplier">field_multiplier</h3>
+
+<p>Property(float[n*m]) : multipliers (adimensional) of the wave field</p>
+<h3 id="pydyna.pydyna_7_2_3.Wave.thisown">thisown</h3>
+
+<p>The membership flag
+<h3 id="pydyna.pydyna_7_2_3.Wave.get_height">get_height</h3></p>
+<pre><code class="python">Wave.get_height(self, t, in_vec)
+</code></pre>
+
+<p>Evaluates the wave height at time t and position (x, y).</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>t</code> (float) </strong>: the time (s)</li>
+<li><strong><code>pos</code> (float[2])</strong>: the position in global coordinates (m)</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p><code>`float</code> `: the wave height (m)</p>
+<h2 id="pydyna.pydyna_7_2_3.create_text_report">create_text_report</h2>
+
+<pre><code class="python">create_text_report(filename)
+</code></pre>
+
+<p>Creates a text-based <code>Report</code>.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>filename</code> (string) </strong>: the report filename to be written</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p><code>Report</code></p>
+<h2 id="pydyna.pydyna_7_2_3.destroy_report">destroy_report</h2>
+
+<pre><code class="python">destroy_report(report)
+</code></pre>
+
+<p>Finishes a <code>Report</code> printing.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>report</code> (Report) </strong>: the report instance to destroy</li>
+</ul>
+<h2 id="pydyna.pydyna_7_2_3.Report">Report</h2>
+
+<pre><code class="python">Report(self, *args, **kwargs)
+</code></pre>
+
+<p>Main class to create a text report. See <code>create_report()</code> and ``destroy_report()" functions.
+<h3 id="pydyna.pydyna_7_2_3.Report.filename">filename</h3></p>
+<p>Report filename -&gt; string
+<h3 id="pydyna.pydyna_7_2_3.Report.thisown">thisown</h3></p>
+<p>The membership flag
+<h3 id="pydyna.pydyna_7_2_3.Report.write">write</h3></p>
+<pre><code class="python">Report.write(self, *args)
+</code></pre>
+
+<p><em>Overload 1:</em>
+ Prints <code>Vessel</code> data (including rudders, thrusters, forces) for time t.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>t</code> (float) </strong>: the time (s)</li>
+<li><strong><code>e</code> (Vessel) </strong>: the vessel instance with its subobjects to be printed</li>
+</ul>
+<p>|</p>
+<ul>
+<li>__<em>Overload 2__:</em>
+ Prints <code>Catenary</code> line data for time t.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>t</code> (float) </strong>: the time (s)</li>
+<li><strong><code>e</code> (Catenary) </strong>: the line instance with its subobjects to be printed</li>
+</ul>
+<p>|</p>
+<ul>
+<li>__<em>Overload 3__:</em>
+ Prints <code>Fender</code> data for time t.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><strong><code>t</code> (float) </strong>: the time (s)</li>
+<li><strong><code>e</code> (Fender) </strong>: the line instance with its subobjects to be printed</li>
+</ul>
+<h2 id="pydyna.pydyna_7_2_3.get_version">get_version</h2>
+
+<pre><code class="python">get_version()
+</code></pre>
+
+<p>Retrives the API version.</p>
+<p><strong>Returns</strong></p>
+<p><code>string</code></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

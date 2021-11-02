@@ -1,0 +1,1 @@
+# theta of the craft is given in radians, starts at west and spans [0, 2pi]
