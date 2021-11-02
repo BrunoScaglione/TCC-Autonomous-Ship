@@ -25,8 +25,10 @@ class YawController(Node):
         #  to waypoints and inital conditions actually, use a fucntion to set
         # this value
         self.desired_yaw_angle = 1.334889326 # radians
-
         self.desired_yaw_angle_old = 0
+
+        self.t_current_desired_yaw_angle = 0.1
+        self.t_last_desired_yaw_angle = 0
 
         # for the integral action (acumulates error)
         self.theta_bar_int = 0
@@ -61,6 +63,7 @@ class YawController(Node):
         
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered yaw angle: %f' % msg.position.theta)
+        self.t = msg.time
         rudder_msg = self.yaw_control(msg.position.theta, msg.velocity.r)
         self.publisher_rudder_angle.publish(rudder_msg)
         self.get_logger().info('published rudder angle: %f' % rudder_msg.data)
@@ -68,8 +71,12 @@ class YawController(Node):
     def callback_desired_yaw_angle(self, msg):
         self.get_logger().info('listened desired yaw angle: %f' % msg.data)
         self.desired_yaw_angle_old = self.desired_yaw_angle
+
+        self.t_last_desired_yaw_angle = self.t_current_desired_yaw_angle
+        self.t_current_desired_yaw_angle = self.t
+
         self.desired_yaw_angle = msg.data
-    
+
     def yaw_control(self, theta, r):
         # desired theta
         theta_des = self.desired_yaw_angle
@@ -77,15 +84,17 @@ class YawController(Node):
         theta_des_old = self.desired_yaw_angle_old
         # error
         theta_bar = theta - theta_des
-        # derivative of the error (derivative action)
-        theta_bar_dot = r - (theta_des - theta_des_old)/0.1
+        self.get_logger().info('theta_bar: %f' % theta_bar)
+        theta_bar_dot = r - (theta_des - theta_des_old)/ \
+            (self.t_current_desired_yaw_angle - self.t_last_desired_yaw_angle)
         # cumulative of the error (integral action)
         self.theta_bar_int = self.theta_bar_int + theta_bar*0.1
         # anti windup for the integral action
         self.theta_bar_int = max(-0.5,min(self.theta_bar_int,0.5))
+        self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
 
         # control action 
-        rudder_angle = -self.Kp * theta_bar - self.Kd - theta_bar_dot - self.Ki * self.theta_bar_int
+        rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * self.theta_bar_int
         # rudder saturation
         rudder_angle = max(-self.rudder_sat, min(rudder_angle, self.rudder_sat))
         self.rudder_msg.data = rudder_angle
