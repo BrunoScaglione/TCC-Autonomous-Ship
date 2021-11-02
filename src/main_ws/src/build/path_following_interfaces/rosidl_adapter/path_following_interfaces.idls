@@ -1,0 +1,6 @@
+C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/Position.idl
+C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/Velocity.idl
+C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/State.idl
+C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/PositionsXY.idl
+C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/Waypoints.idl
+C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:srv/StartEndSimul.idl

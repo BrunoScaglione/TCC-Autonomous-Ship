@@ -1,0 +1,20 @@
+^C:\TCC-AUTONOMOUS-SHIP\SRC\MAIN_WS\SRC\BUILD\PATH_FOLLOWING_INTERFACES\CMAKEFILES\01EF413188AE99691AAB570FB62603E5\POSITION__ROSIDL_TYPESUPPORT_FASTRTPS_C.H.RULE
+setlocal
+C:\Users\phmar\AppData\Local\Programs\Python\Python36\python.exe C:/dev/ros2_galactic/install/lib/rosidl_typesupport_fastrtps_c/rosidl_typesupport_fastrtps_c --generator-arguments-file C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_typesupport_fastrtps_c__arguments.json
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\TCC-AUTONOMOUS-SHIP\SRC\MAIN_WS\SRC\PATH_FOLLOWING_INTERFACES\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/TCC-Autonomous-Ship/src/main_ws/src/path_following_interfaces -BC:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces --check-stamp-file C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
