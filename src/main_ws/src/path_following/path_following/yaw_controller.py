@@ -24,7 +24,8 @@ class YawController(Node):
         # TODO: it is hardcoded now, this would need to be set according
         #  to waypoints and inital conditions actually, use a fucntion to set
         # this value
-        self.desired_yaw_angle = 1.334889326 # radians
+        # self.desired_yaw_angle = 1.334889326 # for u initial = 0
+        self.desired_yaw_angle = 0.786152 # for u initial = 1
         self.desired_yaw_angle_old = 0
 
         self.t_current_desired_yaw_angle = 0.1
@@ -75,6 +76,11 @@ class YawController(Node):
         self.t_last_desired_yaw_angle = self.t_current_desired_yaw_angle
         self.t_current_desired_yaw_angle = self.t
 
+        # fixes async issues
+        # sometimes receives 2 desired yaw angles in sequence, without receiving filtered yaw angle
+        if self.t_last_desired_yaw_angle == self.t_current_desired_yaw_angle:
+           self.t_current_desired_yaw_angle += 0.1  
+
         self.desired_yaw_angle = msg.data
 
     def yaw_control(self, theta, r):
@@ -110,8 +116,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
-    except:
-        raise
+    except Exception as e:
+        print(e)
     finally:
         yaw_controller_node.destroy_node()
         rclpy.shutdown()
