@@ -27,10 +27,10 @@ class ControlAllocation(Node):
             self.callback_shutdown,
             1)
 
-        self.subscription_filtered_state = self.create_subscription(
+        self.subscription_state = self.create_subscription(
             State,
-            '/filtered_state',
-            self.callback_filtered_state,
+            '/state',
+            self.callback_state,
             1)
 
         self.subscription_propeller_thrust = self.create_subscription(
@@ -47,8 +47,8 @@ class ControlAllocation(Node):
     def callback_shutdown():
         sys.exit()
 
-    def callback_filtered_state(self, msg):
-        self.get_logger().info('listened filtered surge velocity: %f' % msg.velocity.u)
+    def callback_state(self, msg):
+        self.get_logger().info('listened surge velocity: %f' % msg.velocity.u)
         self.surge_velocity = msg.velocity.u
         
     def callback_propeller_thrust(self, msg):

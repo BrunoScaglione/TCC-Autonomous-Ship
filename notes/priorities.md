@@ -17,7 +17,8 @@
 - change Kalman Filter part a little, we will be using EKF
 - update code in appendix
 - make a section (in methods) to show the development each block
-- yaw controller: intead of tau it's rudder angle
+- yaw controller: intead of tau it's rudder angle0
+- control allocation receives surge velocity from \state topic, not \filtered_state
 
 # TODOS
 - service for getting the updated waypoints from venus server

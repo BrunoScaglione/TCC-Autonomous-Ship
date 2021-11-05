@@ -110,6 +110,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
+    except:
+        raise
     finally:
         yaw_controller_node.destroy_node()
         rclpy.shutdown()
