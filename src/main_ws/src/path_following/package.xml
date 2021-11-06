@@ -10,12 +10,12 @@
   <exec_depend>os</exec_depend>
   <exec_depend>sys</exec_depend>
   <exec_depend>datetime</exec_depend>
-  <exec_depend>collections</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>flask</exec_depend>
   <exec_depend>json</exec_depend>
-  <exec_depend>venus</exec_depend>
+  <exec_depend>numpy</exec_depend>
   <exec_depend>sympy</exec_depend>
+  <exec_depend>venus</exec_depend>
 
   <depend>path_following_interfaces</depend>
   <depend>rclpy</depend>

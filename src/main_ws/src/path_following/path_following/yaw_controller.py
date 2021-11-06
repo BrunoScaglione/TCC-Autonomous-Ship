@@ -20,13 +20,10 @@ class YawController(Node):
 
         self.rudder_sat = 0.610865
 
-        # desired yaw angle
-        # TODO: it is hardcoded now, this would need to be set according
-        #  to waypoints and inital conditions actually, use a fucntion to set
-        # this value
-        # self.desired_yaw_angle = 1.334889326 # for u initial = 0
+        # TODO: it is hardcoded now, los_guidance needs to commpute this value and send it here
+        # at start time
         self.desired_yaw_angle = 0.786152 # for u initial = 1
-        self.desired_yaw_angle_old = 0
+        self.desired_yaw_angle_old = 1.57079632679 # inital yaw angle 
 
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0

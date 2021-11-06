@@ -1,8 +1,7 @@
 import sys
-import collections
 
 import matplotlib.pyplot as plt
-
+import numpy as np
 from scipy import signal
  
 import rclpy
@@ -28,12 +27,13 @@ class WaveFilter(Node):
         # sampled at 10Hz (can only work with <5Hz)
         # aproximating Fossen's 3 2order cascades at [0.4rad/s, 0.63rad/s, 1rad/s]) didnt work (large bias)
         # p23 wave period is 4 seconds -> freq is 0.25 Hz
-        self.sos = signal.butter(6, [0.24, 0.26], 'bandstop', fs=10, output='sos')
+        # self.sos = signal.butter(6, [0.2, 0.3], 'bandstop', fs=10, output='sos')
+        self.sos = np.array(signal.butter(6, 0.2, fs=10, output='sos'))
         self.zi = signal.sosfilt_zi(self.sos)
 
         # for 6 order filter
         # TODO: hardcoded now, but needs to recceive from initial condition
-        self.last_seven_states = collections.deque([], maxlen=7) 
+        self.state_history = [[],[],[],[],[],[]] 
 
         self.xf_msg = State()
 
@@ -59,35 +59,30 @@ class WaveFilter(Node):
         
     def callback_estimated_state(self, msg):
         self.log_state(msg, 'subscriber')
-        self.last_seven_states.append(msg)
-        self.u_history.append(msg.velocity.u) # debugging
-        self.theta_history.append(msg.position.theta) # debugging
-        self.y_history.append(msg.position.y) # debugging
-        filtered_state_msg = self.state_filter(msg)
+
+        self.state_history[0].append(msg.position.x)
+        self.state_history[1].append(msg.position.y)
+        self.state_history[2].append(msg.position.theta)
+        self.state_history[3].append(msg.velocity.u)
+        self.state_history[4].append(msg.velocity.v)
+        self.state_history[5].append(msg.velocity.r)
+
+        # debugging
+        self.u_history.append(msg.velocity.u) 
+        self.theta_history.append(msg.position.theta) 
+        self.y_history.append(msg.position.y) 
+
+        filtered_state_msg = self.state_filter(msg.time)
         self.publisher_filtered_state.publish(filtered_state_msg)
         self.log_state(filtered_state_msg, 'publisher')
     
-    def state_filter(self, x):
+    def state_filter(self, t):
         # filters entire state
         # debugging
 
-        x_last_seven = [state.position.x for state in list(self.last_seven_states)]
-        y_last_seven = [state.position.y for state in list(self.last_seven_states)]
-        theta_last_seven = [state.position.theta for state in list(self.last_seven_states)]
-        u_last_seven = [state.velocity.u for state in list(self.last_seven_states)]
-        v_last_seven = [state.velocity.v for state in list(self.last_seven_states)]
-        r_last_seven = [state.velocity.r for state in list(self.last_seven_states)]
-        state_last_seven = [
-            x_last_seven, 
-            y_last_seven, 
-            theta_last_seven, 
-            u_last_seven, 
-            v_last_seven,
-            r_last_seven
-        ]
+        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], self.state_history)
+        state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
-        state_last_seven_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], state_last_seven)
-        state_current_filtered = [sig[-1] for sig in state_last_seven_filtered]
         self.xf_msg.position.x = state_current_filtered[0]
         self.xf_msg.position.y = state_current_filtered[1]
         self.y_filtered_history.append(self.xf_msg.position.y) # debugging
@@ -100,7 +95,7 @@ class WaveFilter(Node):
         self.xf_msg.velocity.v = state_current_filtered[4]
         self.xf_msg.velocity.r = state_current_filtered[5]
 
-        self.xf_msg.time = x.time
+        self.xf_msg.time = t
 
         return self.xf_msg
 

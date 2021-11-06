@@ -15,13 +15,15 @@ class SurgeController(Node):
         # controller parameters
         self.X_added_mass = -3375
         self.m = 40415
-        self.kf = 13
+        #self.kf = 13
+        # TODO: TUNE kf to be as low as possible. When its too low, craft
+        # cant win wave forces at the beggining
+        self.kf = 200
 
-        # TODO: it is hardcoded now, this would need to be set according 
-        # to waypoints actually 
-        # (desired surge velocity of the first waypoint), use a fucntion to set
-        # this value
-        self.desired_surge_velocity = 3
+        # TODO: it is hardcoded now, los_guidance needs to commpute this value and send it here
+        # at start time
+        self.desired_surge_velocity = 3 # first waypoint
+        self.desired_surge_velocity_old = 1 # initial surge velocity
 
         self.thrust_msg = Float32()
 
@@ -59,20 +61,30 @@ class SurgeController(Node):
     
     def callback_desired_surge_velocity(self, msg):
         self.get_logger().info('listened desired surge velocity: %f' % msg.data)
-        self.desired_surge_velocity = msg.data
+        if self.desired_surge_velocity != msg.data:
+            self.desired_surge_velocity_old = self.desired_surge_velocity
+            self.desired_surge_velocity = msg.data
     
     def surge_control(self, xf): # x is surge velocity
         xf_d = self.desired_surge_velocity
+        self.get_logger().info('xf_d: %f' % xf_d)
+        xf_dold = self.desired_surge_velocity_old
+        self.get_logger().info('xf_dold: %f' % xf_dold)
         # sliping variable
         s = xf - xf_d
+        self.get_logger().info('s: %f' % s)
         # phi (6.4% of desired velocity, based on phi = 0.32 for desired veloicty of 5m/s)
-        phi = 0.064*xf_d
+        phi = 0.064*(abs(xf_d-xf_dold))
         # sat function
         sats = max(-1,min(s/phi,1))
+        self.get_logger().info('sats: %f' % sats)
         # input as function of x (control action)
-        u = xf*abs(xf)*(1.9091*(10**-4) - self.kf*5.18*(10**-5)*sats) - 0.01*sats 
+        u = xf*abs(xf)*(1.9091*(10**-4) - self.kf*5.18*(10**-5)*sats) - (abs(xf_dold-xf_d)/500)*sats
+        self.get_logger().info('u: %f' % u) 
         # thrust
         tau = u*(self.m - self.X_added_mass)
+        # saturation of the propeller
+        tau = max(-2363.0,min(tau,2363.0))
         self.thrust_msg.data = tau 
         return self.thrust_msg 
 
@@ -85,6 +97,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
+    except Exception as e:
+        print(e)
     finally:
         surge_controller_node.destroy_node()
         rclpy.shutdown()

@@ -102,7 +102,7 @@ WAVES
         DIRECTION = 0.00000,
         ANGLE = 225.00000,
         GAMA = 3.24018,
-        ALFA = 3.75747677239e-03,
+        ALFA = 1,
         SEED = 1234,
         SPECTRUM = "JONSWAP",
     }

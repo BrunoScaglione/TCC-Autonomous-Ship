@@ -1,7 +1,6 @@
 import sys
 
 import math
-import numpy as np
 from sympy import symbols, Eq, solve
 # import stackprinter
 
@@ -129,11 +128,11 @@ class LosGuidance(Node):
         num_waypoints = len(self.waypoints.position.x)
         self.get_logger().info('num_waypoints: %d' % num_waypoints)
 
-        if self.current_waypoint < num_waypoints:
-            if self.reached_next_waypoint(xf):
-                self.current_waypoint += 1
-                self.get_logger().info('changed waypoint at time: %f' % xf.time)
+        if self.reached_next_waypoint(xf):
+            self.current_waypoint += 1
+            self.get_logger().info('changed waypoint at time: %f' % xf.time)
 
+        if self.current_waypoint < num_waypoints:
             idx = self.current_waypoint
             x, y = xf.position.x, xf.position.y
             u, v = xf.velocity.u, xf.velocity.v
@@ -155,9 +154,6 @@ class LosGuidance(Node):
             beta = math.asin(v/U)
             chi_d = math.atan2(x_los - x, y_los - y)
             psi_d = chi_d + beta
-            # debugging
-            self.get_logger().info('chi_d: %f' % chi_d)
-            self.get_logger().info('beta: %f' % beta)
             # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
             self.des_yaw_msg.data = 1.57079632679 - psi_d # psi to theta (radians)
             self.des_velocity_msg.data = wv_next
@@ -165,7 +161,7 @@ class LosGuidance(Node):
             return (self.des_yaw_msg, self.des_velocity_msg)
         else:
             self.get_logger().info('Reached final waypoint Uhulll')
-            self.des_yaw_msg.data = 0.0
+            self.des_yaw_msg.data = 0.0 # finishes pointing west
             self.des_velocity_msg.data = 0.0
 
             return (self.des_yaw_msg, self.des_velocity_msg)
