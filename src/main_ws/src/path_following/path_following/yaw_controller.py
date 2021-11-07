@@ -24,7 +24,7 @@ class YawController(Node):
         # for the integral action (acumulates error)
         self.theta_bar_int = 0
 
-        # # TODO: it is hardcoded now, los_guidance needs to commpute this value and send it here
+        # # it is hardcoded now, los_guidance needs to commpute this value and send it here
         # # at start time
         # self.desired_yaw_angle = 0.786152 # for u initial = 1
         # self.desired_yaw_angle_old = 1.57079632679 # inital yaw angle

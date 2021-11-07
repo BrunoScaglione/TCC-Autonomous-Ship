@@ -155,33 +155,37 @@ def start_system():
 
         backend_node.publisher_waypoints.publish(backend_node.waypoints_msg)
 
+        # get initial setpoints
         backend_node.future_init_setpoints = backend_node.client_init_setpoints. \
             call_async(backend_node.init_values_srv)
         res_setpoints, timeout_setpoints = wait_future(backend_node, "future_init_setpoints")
-        service_failed = False if timeout_setpoints else True
         delattr(backend_node, "future_init_setpoints")
+        service_failed = False if timeout_setpoints else True
 
+        # set initial setpoints and get initial control actions
         backend_node.init_values_srv.surge = res_setpoints.surge
         backend_node.future_init_surge_control = backend_node.client_init_surge_control. \
             call_async(backend_node.init_values_srv)
         res_surge_control, timeout_surge_control = wait_future(backend_node, "future_init_surge_control")
-        service_failed = False if not service_failed and not timeout_surge_control else True
         delattr(backend_node, "future_init_surge_control")
+        service_failed = False if not service_failed and not timeout_surge_control else True
+
 
         backend_node.init_values_srv.yaw = res_setpoints.yaw
         backend_node.future_init_yaw_control = backend_node.client_init_yaw_control. \
             call_async(backend_node.init_values_srv)
         res_yaw_control, timeout_yaw_control = wait_future(backend_node, "future_init_yaw_control")
-        service_failed = False if not service_failed and not timeout_yaw_control else True
         delattr(backend_node, "future_init_yaw_control")
+        service_failed = False if not service_failed and not timeout_yaw_control else True
 
+        # set inital state and control action of the simulation
         backend_node.init_values_srv.surge = res_surge_control.surge
         backend_node.init_values_srv.yaw = res_yaw_control.yaw
         backend_node.future_init_simul = backend_node.client_init_simul. \
             call_async(backend_node.init_values_srv)
         _, timeout_simul = wait_future(backend_node, "future_start_simul")
-        service_failed = False if not service_failed and not timeout_simul else True
         delattr(backend_node, "future_start_simul")
+        service_failed = False if not service_failed and not timeout_simul else True
 
         backend_node.get_logger().info('returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}

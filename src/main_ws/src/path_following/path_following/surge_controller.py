@@ -21,7 +21,7 @@ class SurgeController(Node):
         self.kf = 200
         #self.kf = 13
         
-        # # TODO: it is hardcoded now, los_guidance needs to commpute this value and send it here
+        # # it is hardcoded now, los_guidance needs to commpute this value and send it here
         # # at start time
         # self.desired_surge_velocity = 3 # first waypoint
         # self.desired_surge_velocity_old = 1 # initial surge velocity

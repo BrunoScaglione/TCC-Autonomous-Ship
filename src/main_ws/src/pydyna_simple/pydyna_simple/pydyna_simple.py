@@ -71,6 +71,7 @@ class PydynaSimpleNode(Node):
             pydyna.destroy_report(self.rpt)
 
         self.get_logger().info('Initializing Simulation')
+        
         # self.propeller_rotation = 0
         # self.rudder_angle = 0
         self.propeller_rotation = req.surge
