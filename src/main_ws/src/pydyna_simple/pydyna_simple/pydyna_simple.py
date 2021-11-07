@@ -12,7 +12,7 @@ from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
 #custom service
-from path_following_interfaces.srv import StartEndSimul
+from path_following_interfaces.srv import InitValues
 
 class PydynaSimpleNode(Node):
 
@@ -30,13 +30,19 @@ class PydynaSimpleNode(Node):
         self.num_simul = 0
         self.end_simul = 0
 
+        self.subscription_end = self.create_subscription(
+            Bool,
+            '/end',
+            self.callback_end,
+            1)
+
         self.subscription_shutdown = self.create_subscription(
             Bool,
             '/shutdown',
             self.callback_shutdown,
             1)
 
-        self.server = self.create_service(StartEndSimul, '/start_end_simul', self.callback_start_end_simul)
+        self.server_init_simul = self.create_service(InitValues, '/init_simul', self.callback_init_simul)
 
         self.subscription_propeller = self.create_subscription(
             Float32,
@@ -52,44 +58,44 @@ class PydynaSimpleNode(Node):
 
         self.publisher_state = self.create_publisher(State, 'state', 1)
     
-    def callback_shutdown():
+    def callback_end(self):
+        self.get_logger().info('User requested simulation to end')
+        sys.exit()
+    
+    def callback_shutdown(self):
+        self.get_logger().info('User requested total shutdown')
         sys.exit()
 
-    def callback_start_end_simul(self, req, res):
-
+    def callback_init_simul(self, req, res):
         if self.num_simul != 0:
             pydyna.destroy_report(self.rpt)
 
-        if req.end_simul:
-            self.end_simul = req.end_simul
-            res.reporting = 'Ending simulation'
-            return res
-        else:
-            self.get_logger().info('Initialized Simulation')
-            self.propeller_rotation = 0
-            self.rudder_angle = 0
-            self.subscriptions_synced = False
+        self.get_logger().info('Initializing Simulation')
+        # self.propeller_rotation = 0
+        # self.rudder_angle = 0
+        self.propeller_rotation = req.surge
+        self.rudder_angle = req.yaw
+        self.subscriptions_synced = False
 
-            self.rpt = pydyna.create_text_report(os.path.join(self.pkg_share_dir, f'logs/pydynalogs/pydyna_log_{self.num_simul}'))
-            self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config/{self.p3d}'))
-            
-            self.ship = self.sim.vessels['104']
-            x, y, theta = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.theta
-            u, v, r = req.initial_state.velocity.u, req.initial_state.velocity.v, req.initial_state.velocity.r
-            self.ship.linear_position = [x, y, 0]
-            self.ship.angular_position = [0, 0, theta]
-            self.ship.linear_velocity = [u, v, 0]
-            self.ship.angular_velocity = [0, 0, r]
-            self.proppeler_counter = 0
-            self.rudder_counter = 0
+        self.rpt = pydyna.create_text_report(os.path.join(self.pkg_share_dir, f'logs/pydynalogs/pydyna_log_{self.num_simul}'))
+        self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config/{self.p3d}'))
+        
+        self.ship = self.sim.vessels['104']
+        x, y, theta = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.theta
+        u, v, r = req.initial_state.velocity.u, req.initial_state.velocity.v, req.initial_state.velocity.r
+        self.ship.linear_position = [x, y, 0]
+        self.ship.angular_position = [0, 0, theta]
+        self.ship.linear_velocity = [u, v, 0]
+        self.ship.angular_velocity = [0, 0, r]
+        self.proppeler_counter = 0
+        self.rudder_counter = 0
 
-            self.num_simul += 1
+        self.num_simul += 1
 
-            self.state = req.initial_state
-            self.log_state('server')
+        self.state = req.initial_state
+        self.log_state('server')
 
-            res.reporting = 'Initialized simulation'
-            return res
+        return res
     
     def callback_propeller(self, msg):
         self.get_logger().info('listened propeller rotation: %f' % msg.data)
@@ -147,8 +153,6 @@ def main(args=None):
         while rclpy.ok():
             my_pydyna_node.get_logger().info('entered rclpy.ok loop')
             rclpy.spin_once(my_pydyna_node)
-            if my_pydyna_node.end_simul == 1:
-                break
             if my_pydyna_node.proppeler_counter == my_pydyna_node.rudder_counter:
                 if not my_pydyna_node.subscriptions_synced:
                     my_pydyna_node.extrapolate_state()

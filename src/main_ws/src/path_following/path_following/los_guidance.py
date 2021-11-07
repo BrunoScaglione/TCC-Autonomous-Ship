@@ -11,6 +11,7 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 #custom service
 from path_following_interfaces.msg import Waypoints, State
+from path_following_interfaces.srv import InitValues
 
 class LosGuidance(Node):
     def __init__(self):
@@ -23,7 +24,11 @@ class LosGuidance(Node):
         self.des_velocity_msg = Float32()
 
         # index of waypoint the ship has to reach next (first waypoint is starting position)
-        self.current_waypoint = 1 
+        self.current_waypoint = 1
+
+        self.server_init_setpoints = self.create_service(
+            InitValues, '/init_setpoints', self.callback_init_setpoints
+        )
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -67,7 +72,13 @@ class LosGuidance(Node):
             )
         )
 
-    def callback_shutdown():
+    def callback_init_setpoints(self, req, res):
+        des_velocity_msg, des_yaw_msg = self.los(req.initial_state)
+        res.surge, res.yaw = des_velocity_msg.data, des_yaw_msg.data
+        return res
+
+    def callback_shutdown(self):
+        self.get_logger().info('User requested total shutdown')
         sys.exit()
 
     def callback_waypoints(self, msg):
@@ -84,7 +95,7 @@ class LosGuidance(Node):
     def callback_filtered_state(self, msg):
         try: # need have received waypoints first
             self.log_state(msg)
-            des_yaw_msg, des_velocity_msg = self.los(msg)
+            des_velocity_msg, des_yaw_msg = self.los(msg)
             self.publisher_desired_yaw_angle.publish(des_yaw_msg)
             self.get_logger().info('published desired yaw angle: %f' % des_yaw_msg.data)
             self.publisher_desired_surge_velocity.publish(des_velocity_msg)
@@ -158,13 +169,12 @@ class LosGuidance(Node):
             self.des_yaw_msg.data = 1.57079632679 - psi_d # psi to theta (radians)
             self.des_velocity_msg.data = wv_next
 
-            return (self.des_yaw_msg, self.des_velocity_msg)
         else:
             self.get_logger().info('Reached final waypoint Uhulll')
             self.des_yaw_msg.data = 0.0 # finishes pointing west
             self.des_velocity_msg.data = 0.0
 
-            return (self.des_yaw_msg, self.des_velocity_msg)
+        return (self.des_velocity_msg, self.des_yaw_msg)
 
 def main(args=None):
     try:
@@ -175,8 +185,6 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
-    except Exception as e:
-        print(e)
     finally:
         los_guidance_node.destroy_node()
         rclpy.shutdown()

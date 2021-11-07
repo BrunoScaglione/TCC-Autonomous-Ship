@@ -7,6 +7,7 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
+from path_following_interfaces.srv import InitValues
 
 class SurgeController(Node):
     def __init__(self):
@@ -15,17 +16,19 @@ class SurgeController(Node):
         # controller parameters
         self.X_added_mass = -3375
         self.m = 40415
-        #self.kf = 13
         # TODO: TUNE kf to be as low as possible. When its too low, craft
         # cant win wave forces at the beggining
         self.kf = 200
+        #self.kf = 13
+        
+        # # TODO: it is hardcoded now, los_guidance needs to commpute this value and send it here
+        # # at start time
+        # self.desired_surge_velocity = 3 # first waypoint
+        # self.desired_surge_velocity_old = 1 # initial surge velocity
 
-        # TODO: it is hardcoded now, los_guidance needs to commpute this value and send it here
-        # at start time
-        self.desired_surge_velocity = 3 # first waypoint
-        self.desired_surge_velocity_old = 1 # initial surge velocity
-
-        self.thrust_msg = Float32()
+        self.server_init_control = self.create_service(
+            InitValues, '/init_surge_control', self.callback_init_control
+        )
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -50,7 +53,17 @@ class SurgeController(Node):
             '/propeller_thrust',
             1)
 
-    def callback_shutdown():
+        self.thrust_msg = Float32()
+
+    def callback_init_control(self, req, res):
+        self.desired_surge_velocity = req.surge
+        self.self.desired_surge_velocity_old = req.initial_state.velocity.u
+        thrust_msg = self.surge_control(req.initial_state)
+        res.surge = thrust_msg.data
+        return res
+
+    def callback_shutdown(self):
+        self.get_logger().info('User requested total shutdown')
         sys.exit()
          
     def callback_filtered_state(self, msg):

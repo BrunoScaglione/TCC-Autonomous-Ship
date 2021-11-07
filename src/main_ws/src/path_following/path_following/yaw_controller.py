@@ -8,6 +8,7 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
+from path_following_interfaces.srv import InitValues
 
 class YawController(Node):
     def __init__(self):
@@ -17,21 +18,20 @@ class YawController(Node):
         self.Kp = 1.34
         self.Kd = 49.684
         self.Ki = 0.00583
-
         self.rudder_sat = 0.610865
-
-        # TODO: it is hardcoded now, los_guidance needs to commpute this value and send it here
-        # at start time
-        self.desired_yaw_angle = 0.786152 # for u initial = 1
-        self.desired_yaw_angle_old = 1.57079632679 # inital yaw angle 
-
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
-
         # for the integral action (acumulates error)
         self.theta_bar_int = 0
 
-        self.rudder_msg = Float32()
+        # # TODO: it is hardcoded now, los_guidance needs to commpute this value and send it here
+        # # at start time
+        # self.desired_yaw_angle = 0.786152 # for u initial = 1
+        # self.desired_yaw_angle_old = 1.57079632679 # inital yaw angle
+
+        self.server_init_control = self.create_service(
+            InitValues, '/init_yaw_control', self.callback_init_control
+        )
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -56,7 +56,17 @@ class YawController(Node):
             '/rudder_angle',
             1)
 
-    def callback_shutdown():
+        self.rudder_msg = Float32()
+
+    def callback_init_control(self, req, res):
+        self.desired_yaw_angle = req.yaw
+        self.self.desired_yaw_angle_old = req.initial_state.position.theta
+        rudder_msg = self.yaw_control(req.initial_state)
+        res.yaw = rudder_msg.data
+        return res
+
+    def callback_shutdown(self):
+        self.get_logger().info('User requested total shutdown')
         sys.exit()
         
     def callback_filtered_state(self, msg):
