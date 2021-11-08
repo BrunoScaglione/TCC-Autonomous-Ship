@@ -28,8 +28,10 @@ class WaveFilter(Node):
         # aproximating Fossen's 3 2order cascades at [0.4rad/s, 0.63rad/s, 1rad/s]) didnt work (large bias)
         # p23 wave period is 4 seconds -> freq is 0.25 Hz
         # self.sos = signal.butter(6, [0.2, 0.3], 'bandstop', fs=10, output='sos')
-        self.sos = np.array(signal.butter(6, 0.2, fs=10, output='sos'))
+        self.sos = signal.butter(6, 0.2, fs=10, output='sos')
         self.zi = signal.sosfilt_zi(self.sos)
+        # self.sos2 = signal.butter(6, [0.016, 0.025], 'bandstop', fs=10, output='sos')
+        # self.zi2 = signal.sosfilt_zi(self.sos2)
 
         # for 6 order filter
         # TODO: hardcoded now, but needs to recceive from initial condition
@@ -82,6 +84,7 @@ class WaveFilter(Node):
         # debugging
 
         state_history_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], self.state_history)
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
         self.xf_msg.position.x = state_current_filtered[0]
@@ -124,28 +127,28 @@ def main(args=None):
         rclpy.spin(wave_filter_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        plt.plot(wave_filter_node.u_history) # debugging
-        plt.plot(wave_filter_node.u_filtered_history) # debugging
-        plt.plot(wave_filter_node.theta_history) # debugging
-        plt.plot(wave_filter_node.theta_filtered_history) # debugging
-        plt.legend([
-            "Real surge velocity", 
-            "Filtered surge velocity",
-            "Real yaw angle", 
-            "Filtered yaw angle"
-        ]) # debugging
-        plt.show()
-        plt.plot(wave_filter_node.y_history) # debugging
-        plt.plot(wave_filter_node.y_filtered_history) # debugging
-        plt.legend([
-            "Real y",
-            "Filtered y"
-        ]) # debugging
-        plt.show() # debugging
+        # plt.plot(wave_filter_node.u_history) # debugging
+        # plt.plot(wave_filter_node.u_filtered_history) # debugging
+        # plt.plot(wave_filter_node.theta_history) # debugging
+        # plt.plot(wave_filter_node.theta_filtered_history) # debugging
+        # plt.legend([
+        #     "Real surge velocity", 
+        #     "Filtered surge velocity",
+        #     "Real yaw angle", 
+        #     "Filtered yaw angle"
+        # ]) # debugging
+        # plt.show()
+        # plt.plot(wave_filter_node.y_history) # debugging
+        # plt.plot(wave_filter_node.y_filtered_history) # debugging
+        # plt.legend([
+        #     "Real y",
+        #     "Filtered y"
+        # ]) # debugging
+        # plt.show() # debugging
     except SystemExit:
         print('Stopped with user shutdown request')
-    except Exception as e:
-        print(e)
+    # except Exception as e:
+    #     print(e)
     finally:
         wave_filter_node.destroy_node()
         rclpy.shutdown()

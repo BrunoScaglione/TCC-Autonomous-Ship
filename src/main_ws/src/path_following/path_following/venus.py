@@ -1,4 +1,6 @@
 import sys
+import traceback
+
 import math
 
 import venus.viewer
@@ -26,6 +28,8 @@ class Venus(Node):
 
         self.venus_init()
 
+        self.propeller_rotation = 0
+
         self.subscription_shutdown = self.create_subscription(
             Bool,
             '/shutdown',
@@ -36,6 +40,12 @@ class Venus(Node):
             State,
             '/state',
             self.callback_state,
+            1)
+
+        self.subscription_propeller = self.create_subscription(
+            Float32,
+            '/propeller_rotation',
+            self.callback_propeller_rotation,
             1)
 
         self.subscription_rudder = self.create_subscription(
@@ -74,11 +84,20 @@ class Venus(Node):
                 "fillOpacity": 0.2,
                 "fillRule": "evenodd",
             },
-            data_panel=[
-                KeyValue("ID", "0"),
-                KeyValue("Width", "32"),
-                KeyValue("Height", "186"),
-            ],
+            data_panel= [
+                KeyValue("ID", "104"),
+                KeyValue("Width", "32 m"),
+                KeyValue("Height", "186 m"),
+                KeyValue("Linear Position X", "Waiting simul init"),
+                KeyValue("Linear Position Y", "Waiting simul init"),
+                KeyValue("Angular Position Theta", "Waiting simul init"),
+                KeyValue("Linear Velocity U", "Waiting simul init"),
+                KeyValue("Linear Velocity V", "Waiting simul init"),
+                KeyValue("Angular Velocity R", "Waiting simul init"),
+                KeyValue("Time", "Waiting simul init"),
+                KeyValue("Rudder angle", "Waiting simul init"),
+                KeyValue("Propeller rotation", "Waiting simul init")
+            ]
         )
         self.vessel = self.viewer.add(vessel_config)
         self.viewer.on_object_drag_end = self.on_object_drag_end
@@ -101,7 +120,18 @@ class Venus(Node):
         self.vessel.position = self.initial_position.relative(state.position.x, state.position.y)
         # measured from north clockwise (normal convention)
         self.vessel.angle = 90 - math.degrees(state.position.theta) # theta to psi
-    
+
+        # slice indexing was throwing error
+        self.vessel.data_panel[3] = KeyValue("Linear Position X", str(round(state.position.x, 2)) + " m")
+        self.vessel.data_panel[4] = KeyValue("Linear Position Y", str(round(state.position.y, 2)) + " m")
+        self.vessel.data_panel[5] = KeyValue("Angular Position Theta", str(round(state.position.theta, 2)) + " rad (from east counterclockwise )")
+        self.vessel.data_panel[6] = KeyValue("Linear Velocity U", str(round(state.velocity.u, 2)) + " m/s")
+        self.vessel.data_panel[7] = KeyValue("Linear Velocity V", str(round(state.velocity.v, 2)) + " m/s")
+        self.vessel.data_panel[8] = KeyValue("Angular Velocity R", str(round(state.velocity.r, 4)) + " rad/s (counter clockwise)")
+        self.vessel.data_panel[9] = KeyValue("Time", str(round(state.time, 2)) + " s")
+        self.vessel.data_panel[10] = KeyValue("Rudder angle", str(round(self.vessel.rudders[0].angle, 2)) + " deg (from south clockwise)")
+        self.vessel.data_panel[11] = KeyValue("Propeller rotation", str(round(self.propeller_rotation, 2)) + " Hz")
+                
     def callback_shutdown(self):
         self.get_logger().info('User requested total shutdown')
         sys.exit()
@@ -110,6 +140,10 @@ class Venus(Node):
         self.get_logger().info('listened rudder angle: %f' % msg.data)
         # measured from south clockwise (normal convention )
         self.vessel.rudders[0].angle = math.degrees(msg.data)
+
+    def callback_propeller_rotation(self, msg):
+        self.get_logger().info('listened propeller rotation: %f' % msg.data)
+        self.propeller_rotation = msg.data
 
     def callback_waypoints(self, msg):
         # initial x,y,u
@@ -249,6 +283,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
+    except:
+        print(traceback.format_exc())
     finally:
         venus_node.viewer.stop()
         venus_node.destroy_node()

@@ -1,4 +1,5 @@
 import sys
+# import traceback
 
 import rclpy
 from rclpy.node import Node
@@ -16,15 +17,9 @@ class SurgeController(Node):
         # controller parameters
         self.X_added_mass = -3375
         self.m = 40415
-        # TODO: TUNE kf to be as low as possible. When its too low, craft
-        # cant win wave forces at the beggining
-        self.kf = 200
-        #self.kf = 13
-        
-        # # it is hardcoded now, los_guidance needs to commpute this value and send it here
-        # # at start time
-        # self.desired_surge_velocity = 3 # first waypoint
-        # self.desired_surge_velocity_old = 1 # initial surge velocity
+        self.phi_tuning_factor = 40
+        self.kf_tuning_factor = 20 
+        self.kf = 13*self.kf_tuning_factor
 
         self.server_init_control = self.create_service(
             InitValues, '/init_surge_control', self.callback_init_control
@@ -57,8 +52,8 @@ class SurgeController(Node):
 
     def callback_init_control(self, req, res):
         self.desired_surge_velocity = req.surge
-        self.self.desired_surge_velocity_old = req.initial_state.velocity.u
-        thrust_msg = self.surge_control(req.initial_state)
+        self.desired_surge_velocity_old = req.initial_state.velocity.u
+        thrust_msg = self.surge_control(req.initial_state.velocity.u)
         res.surge = thrust_msg.data
         return res
 
@@ -87,7 +82,7 @@ class SurgeController(Node):
         s = xf - xf_d
         self.get_logger().info('s: %f' % s)
         # phi (6.4% of desired velocity, based on phi = 0.32 for desired veloicty of 5m/s)
-        phi = 0.064*(abs(xf_d-xf_dold))
+        phi = self.phi_tuning_factor*0.064*(abs(xf_d-xf_dold))
         # sat function
         sats = max(-1,min(s/phi,1))
         self.get_logger().info('sats: %f' % sats)
@@ -96,8 +91,6 @@ class SurgeController(Node):
         self.get_logger().info('u: %f' % u) 
         # thrust
         tau = u*(self.m - self.X_added_mass)
-        # saturation of the propeller
-        tau = max(-2363.0,min(tau,2363.0))
         self.thrust_msg.data = tau 
         return self.thrust_msg 
 
@@ -110,8 +103,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
-    except Exception as e:
-        print(e)
+    # except:
+    #     print(traceback.format_exc())
     finally:
         surge_controller_node.destroy_node()
         rclpy.shutdown()

@@ -1,6 +1,7 @@
 import os
 import json
 from datetime import datetime
+# import traceback
 
 from flask import Flask, request
 
@@ -69,7 +70,7 @@ class Backend(Node):
 
 def wait_future(node, future_str):
     my_future = getattr(node, future_str)
-    rclpy.spin_until_future_complete(node, my_future, timeout_sec=5)
+    rclpy.spin_until_future_complete(node, my_future, timeout_sec=8)
     if my_future.done():
         try:
             return my_future.result(), 0
@@ -183,13 +184,14 @@ def start_system():
         backend_node.init_values_srv.yaw = res_yaw_control.yaw
         backend_node.future_init_simul = backend_node.client_init_simul. \
             call_async(backend_node.init_values_srv)
-        _, timeout_simul = wait_future(backend_node, "future_start_simul")
-        delattr(backend_node, "future_start_simul")
+        _, timeout_simul = wait_future(backend_node, "future_init_simul")
+        delattr(backend_node, "future_init_simul")
         service_failed = False if not service_failed and not timeout_simul else True
 
         backend_node.get_logger().info('returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
+        # print(traceback.format_exc())
         if not service_failed:
             backend_node.get_logger().info('returning HTTP Gateaway timedout to client')
             return json.dumps({'success':False}), 504, {'ContentType':'application/json'}

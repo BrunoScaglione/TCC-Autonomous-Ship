@@ -1,5 +1,7 @@
 import sys
+import traceback
 
+import numpy as np
 import math
 from sympy import symbols, Eq, solve
 # import stackprinter
@@ -18,7 +20,10 @@ class LosGuidance(Node):
         super().__init__('los_guidance_node')
 
         # los parameters
-        self.R = 186*2 # leght*2, hardcoded for our ship
+        self.ship_lenght = 186
+        self.R = self.ship_lenght*2 
+        self.R_acceptance = 50 # debugging
+        
 
         self.des_yaw_msg = Float32()
         self.des_velocity_msg = Float32()
@@ -107,9 +112,9 @@ class LosGuidance(Node):
         x, y = xf.position.x, xf.position.y
         idx = self.current_waypoint
         wx_next , wy_next  = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
-        return 1 if (x-wx_next)**2 + (y-wy_next)**2 < self.R**2 else 0
+        return 1 if (x-wx_next)**2 + (y-wy_next)**2 < self.R_acceptance**2 else 0
 
-    def solve_system_of_equations(self, x, y, wx_next, wy_next, wx, wy):
+    def get_xy_los(self, x, y, wx_next, wy_next, wx, wy):
         x_los, y_los = symbols('x_los, y_los')
         eq1 = Eq((x_los-x)**2 + (y_los-y)**2, self.R**2)
         eq2 = Eq(((wy_next - wy)/(wx_next - wx)), (y_los - wy)/(x_los - wx))
@@ -117,21 +122,18 @@ class LosGuidance(Node):
         sol = solve([eq1, eq2], [x_los, y_los])
         soln = [tuple(v.evalf() for v in s) for s in sol] # evaluated numerically
 
-        # choose right solution (closest to next waypoint)
         x_los1, y_los1 = soln[0]
-        x_distance1 = abs(wx_next - x_los1)
+        self.get_logger().info('x_los1: %f, y_los1: %f' % (x_los1, y_los1))
         x_los2, y_los2 = soln[1]
-        x_distance2 = abs(wx_next - x_los2)
+        self.get_logger().info('x_los2: %f, y_los2: %f' % (x_los2, y_los2))
 
+        (x_los, y_los) = (x_los1, y_los1) if (wx_next-x)*(x_los1-x) > 0 else (x_los2, y_los2)
+        
         #debugging
         self.get_logger().info('wx_next: %f' % wx_next)
+        self.get_logger().info('x_los: %f, y_los: %f' % (x_los, y_los))
 
-        if x_distance1 < x_distance2:
-            self.get_logger().info('x_los: %f, y_los: %f' % (x_los1, y_los1))
-        else:
-            self.get_logger().info('x_los: %f, y_los: %f' % (x_los2, y_los2))
-
-        return (x_los1, y_los1) if x_distance1 < x_distance2 else (x_los2, y_los2)
+        return (x_los, y_los)
     
     def los(self, xf):
         # use waypoints stored in self.waypoints
@@ -139,11 +141,11 @@ class LosGuidance(Node):
         num_waypoints = len(self.waypoints.position.x)
         self.get_logger().info('num_waypoints: %d' % num_waypoints)
 
-        if self.reached_next_waypoint(xf):
-            self.current_waypoint += 1
-            self.get_logger().info('changed waypoint at time: %f' % xf.time)
+        if self.current_waypoint < num_waypoints-1:
+            if self.reached_next_waypoint(xf):
+                self.current_waypoint += 1
+                self.get_logger().info('changed waypoint at time: %f' % xf.time)
 
-        if self.current_waypoint < num_waypoints:
             idx = self.current_waypoint
             x, y = xf.position.x, xf.position.y
             u, v = xf.velocity.u, xf.velocity.v
@@ -161,7 +163,7 @@ class LosGuidance(Node):
             # 3.  get x_los
             # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
 
-            x_los, y_los = self.solve_system_of_equations(x, y, wx_next, wy_next, wx, wy)
+            x_los, y_los = self.get_xy_los(x, y, wx_next, wy_next, wx, wy)
             beta = math.asin(v/U)
             chi_d = math.atan2(x_los - x, y_los - y)
             psi_d = chi_d + beta
@@ -169,7 +171,7 @@ class LosGuidance(Node):
             self.des_yaw_msg.data = 1.57079632679 - psi_d # psi to theta (radians)
             self.des_velocity_msg.data = wv_next
 
-        else:
+        elif self.reached_next_waypoint(xf):
             self.get_logger().info('Reached final waypoint Uhulll')
             self.des_yaw_msg.data = 0.0 # finishes pointing west
             self.des_velocity_msg.data = 0.0
@@ -185,6 +187,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
+    except:
+        print(traceback.format_exc())
     finally:
         los_guidance_node.destroy_node()
         rclpy.shutdown()

@@ -1,5 +1,4 @@
 import sys
-import math
 
 import rclpy
 from rclpy.node import Node
@@ -23,11 +22,6 @@ class YawController(Node):
         self.t_last_desired_yaw_angle = 0
         # for the integral action (acumulates error)
         self.theta_bar_int = 0
-
-        # # it is hardcoded now, los_guidance needs to commpute this value and send it here
-        # # at start time
-        # self.desired_yaw_angle = 0.786152 # for u initial = 1
-        # self.desired_yaw_angle_old = 1.57079632679 # inital yaw angle
 
         self.server_init_control = self.create_service(
             InitValues, '/init_yaw_control', self.callback_init_control
@@ -60,8 +54,8 @@ class YawController(Node):
 
     def callback_init_control(self, req, res):
         self.desired_yaw_angle = req.yaw
-        self.self.desired_yaw_angle_old = req.initial_state.position.theta
-        rudder_msg = self.yaw_control(req.initial_state)
+        self.desired_yaw_angle_old = req.initial_state.position.theta
+        rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)
         res.yaw = rudder_msg.data
         return res
 

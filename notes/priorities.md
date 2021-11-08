@@ -19,7 +19,8 @@
 - make a section (in methods) to show the development each block
 - yaw controller: intead of tau it's rudder angle0
 - control allocation receives surge velocity from \state topic, not \filtered_state
-
+- The value of LOS paramater R is not clear
+  
 # TODOS
 - service for getting the updated waypoints from venus server
 - desired surge velocity and yaw angle must be set at the beggining by receiving from initial conditions. Will to add some topics or change from service to topic

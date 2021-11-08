@@ -17,18 +17,37 @@
         SPECTRUM = "JONSWAP",
     }
 },
+(Correct version, but without apparent waves) 
 + WAVES
 {
     WAVE
     {
         NAME = "Wave_SimOff2",
         WAVE_ID = 2,
-        HEIGHT = 2.00000000000e+00,
+        HEIGHT = 9.00000000000e+00,
         PERIOD = 4.00000,
         DIRECTION = 0.00000,
         ANGLE = 225.00000,
         GAMA = 3.24018,
-        ALFA = 0.0525031,
+        ALFA = 1.02635,
+        SEED = 1234,
+        SPECTRUM = "JONSWAP",
+    }
+
+},
+(Trying to get some waves) 
++ WAVES
+{
+    WAVE
+    {
+        NAME = "Wave_SimOff2",
+        WAVE_ID = 2,
+        HEIGHT = 3.00000000000e+00,
+        PERIOD = 4.00000,
+        DIRECTION = 0.00000,
+        ANGLE = 225.00000,
+        GAMA = 0.0000000000000001,
+        ALFA = 2.06340,
         SEED = 1234,
         SPECTRUM = "JONSWAP",
     }
