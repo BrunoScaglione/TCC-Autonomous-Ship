@@ -12,7 +12,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 #custom service
-from path_following_interfaces.msg import Waypoints, State
+from path_following_interfaces.msg import Waypoints, State, SurgeControl
 from path_following_interfaces.srv import InitValues
 
 class LosGuidance(Node):
@@ -26,7 +26,8 @@ class LosGuidance(Node):
         
 
         self.des_yaw_msg = Float32()
-        self.des_velocity_msg = Float32()
+        # self.des_velocity_msg = Float32()
+        self.des_velocity_msg = SurgeControl()
 
         # index of waypoint the ship has to reach next (first waypoint is starting position)
         self.current_waypoint = 1
@@ -59,7 +60,7 @@ class LosGuidance(Node):
             1)
 
         self.publisher_desired_surge_velocity = self.create_publisher(
-            Float32,
+            SurgeControl,
             '/desired_surge_velocity',
             1)
 
@@ -169,12 +170,14 @@ class LosGuidance(Node):
             psi_d = chi_d + beta
             # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
             self.des_yaw_msg.data = 1.57079632679 - psi_d # psi to theta (radians)
-            self.des_velocity_msg.data = wv_next
+            self.des_velocity_msg.desired_velocity = wv_next
+            self.des_velocity_msg.delta_waypoints = ((wx_next - x)**2 + (wy_next - y)**2)**0.5
 
         elif self.reached_next_waypoint(xf):
             self.get_logger().info('Reached final waypoint Uhulll')
             self.des_yaw_msg.data = 0.0 # finishes pointing west
-            self.des_velocity_msg.data = 0.0
+            self.des_velocity_msg.desired_velocity = 0.0
+            self.des_velocity_msg.delta_waypoints = 0.0
 
         return (self.des_velocity_msg, self.des_yaw_msg)
 

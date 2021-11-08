@@ -16,7 +16,7 @@ class ControlAllocation(Node):
     def __init__(self):
         super().__init__('control_allocation_node')
 
-        self.propeller_history = []
+        self.propeller_history = [] #debugging
 
         # controller parameters
         self.c1 = 0.036
@@ -68,7 +68,7 @@ class ControlAllocation(Node):
         else:
             Np = -(self.c1*(math.sqrt(self.c2*(u**2) - tau)) + self.c3*u)
         # saturation of the propeller
-        Np = max(-1.75, min(Np,1.75))
+        Np = max(-1.75, min(Np, 1.75))
         self.propeller_history.append(Np)
         self.rotation_msg.data = Np
         return self.rotation_msg 
@@ -80,7 +80,6 @@ def main(args=None):
         rclpy.spin(control_allocation_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        plt.title("Propeller rotation in time")
         plt.plot(control_allocation_node.propeller_history)
         plt.show()
     except SystemExit:
