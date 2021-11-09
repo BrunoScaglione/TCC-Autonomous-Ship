@@ -1,6 +1,8 @@
 import sys
 import math
 
+import matplotlib as plt
+
 import rclpy
 from rclpy.node import Node
 
@@ -13,6 +15,8 @@ from path_following_interfaces.msg import State
 class ControlAllocation(Node):
     def __init__(self):
         super().__init__('control_allocation_node')
+
+        self.propeller_history = [] #debugging
 
         # controller parameters
         self.c1 = 0.036
@@ -27,10 +31,10 @@ class ControlAllocation(Node):
             self.callback_shutdown,
             1)
 
-        self.subscription_filtered_state = self.create_subscription(
+        self.subscription_state = self.create_subscription(
             State,
-            '/filtered_state',
-            self.callback_filtered_state,
+            '/state',
+            self.callback_state,
             1)
 
         self.subscription_propeller_thrust = self.create_subscription(
@@ -44,11 +48,12 @@ class ControlAllocation(Node):
             '/propeller_rotation',
             1)
     
-    def callback_shutdown():
+    def callback_shutdown(self):
+        self.get_logger().info('User requested total shutdown')
         sys.exit()
 
-    def callback_filtered_state(self, msg):
-        self.get_logger().info('listened filtered surge velocity: %f' % msg.velocity.u)
+    def callback_state(self, msg):
+        self.get_logger().info('listened surge velocity: %f' % msg.velocity.u)
         self.surge_velocity = msg.velocity.u
         
     def callback_propeller_thrust(self, msg):
@@ -62,6 +67,9 @@ class ControlAllocation(Node):
             Np = self.c1*(math.sqrt(self.c2*(u**2) + tau)) + self.c3*u
         else:
             Np = -(self.c1*(math.sqrt(self.c2*(u**2) - tau)) + self.c3*u)
+        # saturation of the propeller
+        Np = max(-1.75, min(Np, 1.75))
+        self.propeller_history.append(Np)
         self.rotation_msg.data = Np
         return self.rotation_msg 
 
@@ -72,6 +80,8 @@ def main(args=None):
         rclpy.spin(control_allocation_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+        plt.plot(control_allocation_node.propeller_history)
+        plt.show()
     except SystemExit:
         print('Stopped with user shutdown request')
     finally:

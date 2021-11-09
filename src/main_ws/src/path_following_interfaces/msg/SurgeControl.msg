@@ -1,0 +1,2 @@
+float32 desired_velocity
+float32 delta_waypoints

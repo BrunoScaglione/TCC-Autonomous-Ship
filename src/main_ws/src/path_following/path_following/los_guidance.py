@@ -1,7 +1,8 @@
 import sys
+import traceback
 
-import math
 import numpy as np
+import math
 from sympy import symbols, Eq, solve
 # import stackprinter
 
@@ -11,20 +12,29 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 #custom service
-from path_following_interfaces.msg import Waypoints, State
+from path_following_interfaces.msg import Waypoints, State, SurgeControl
+from path_following_interfaces.srv import InitValues
 
 class LosGuidance(Node):
     def __init__(self):
         super().__init__('los_guidance_node')
 
         # los parameters
-        self.R = 186*2 # leght*2, hardcoded for our ship
+        self.ship_lenght = 186
+        self.R = self.ship_lenght*2 
+        self.R_acceptance = 50 # debugging
+        
 
         self.des_yaw_msg = Float32()
-        self.des_velocity_msg = Float32()
+        # self.des_velocity_msg = Float32()
+        self.des_velocity_msg = SurgeControl()
 
         # index of waypoint the ship has to reach next (first waypoint is starting position)
-        self.current_waypoint = 1 
+        self.current_waypoint = 1
+
+        self.server_init_setpoints = self.create_service(
+            InitValues, '/init_setpoints', self.callback_init_setpoints
+        )
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -50,7 +60,7 @@ class LosGuidance(Node):
             1)
 
         self.publisher_desired_surge_velocity = self.create_publisher(
-            Float32,
+            SurgeControl,
             '/desired_surge_velocity',
             1)
 
@@ -68,7 +78,13 @@ class LosGuidance(Node):
             )
         )
 
-    def callback_shutdown():
+    def callback_init_setpoints(self, req, res):
+        des_velocity_msg, des_yaw_msg = self.los(req.initial_state)
+        res.surge, res.yaw = des_velocity_msg.data, des_yaw_msg.data
+        return res
+
+    def callback_shutdown(self):
+        self.get_logger().info('User requested total shutdown')
         sys.exit()
 
     def callback_waypoints(self, msg):
@@ -85,7 +101,7 @@ class LosGuidance(Node):
     def callback_filtered_state(self, msg):
         try: # need have received waypoints first
             self.log_state(msg)
-            des_yaw_msg, des_velocity_msg = self.los(msg)
+            des_velocity_msg, des_yaw_msg = self.los(msg)
             self.publisher_desired_yaw_angle.publish(des_yaw_msg)
             self.get_logger().info('published desired yaw angle: %f' % des_yaw_msg.data)
             self.publisher_desired_surge_velocity.publish(des_velocity_msg)
@@ -97,9 +113,9 @@ class LosGuidance(Node):
         x, y = xf.position.x, xf.position.y
         idx = self.current_waypoint
         wx_next , wy_next  = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
-        return 1 if (x-wx_next)**2 + (y-wy_next)**2 < self.R**2 else 0
+        return 1 if (x-wx_next)**2 + (y-wy_next)**2 < self.R_acceptance**2 else 0
 
-    def solve_system_of_equations(self, x, y, wx_next, wy_next, wx, wy):
+    def get_xy_los(self, x, y, wx_next, wy_next, wx, wy):
         x_los, y_los = symbols('x_los, y_los')
         eq1 = Eq((x_los-x)**2 + (y_los-y)**2, self.R**2)
         eq2 = Eq(((wy_next - wy)/(wx_next - wx)), (y_los - wy)/(x_los - wx))
@@ -107,21 +123,18 @@ class LosGuidance(Node):
         sol = solve([eq1, eq2], [x_los, y_los])
         soln = [tuple(v.evalf() for v in s) for s in sol] # evaluated numerically
 
-        # choose right solution (closest to next waypoint)
         x_los1, y_los1 = soln[0]
-        x_distance1 = abs(wx_next - x_los1)
+        self.get_logger().info('x_los1: %f, y_los1: %f' % (x_los1, y_los1))
         x_los2, y_los2 = soln[1]
-        x_distance2 = abs(wx_next - x_los2)
+        self.get_logger().info('x_los2: %f, y_los2: %f' % (x_los2, y_los2))
 
+        (x_los, y_los) = (x_los1, y_los1) if (wx_next-x)*(x_los1-x) > 0 else (x_los2, y_los2)
+        
         #debugging
         self.get_logger().info('wx_next: %f' % wx_next)
+        self.get_logger().info('x_los: %f, y_los: %f' % (x_los, y_los))
 
-        if x_distance1 < x_distance2:
-            self.get_logger().info('x_los: %f, y_los: %f' % (x_los1, y_los1))
-        else:
-            self.get_logger().info('x_los: %f, y_los: %f' % (x_los2, y_los2))
-
-        return (x_los1, y_los1) if x_distance1 < x_distance2 else (x_los2, y_los2)
+        return (x_los, y_los)
     
     def los(self, xf):
         # use waypoints stored in self.waypoints
@@ -129,7 +142,7 @@ class LosGuidance(Node):
         num_waypoints = len(self.waypoints.position.x)
         self.get_logger().info('num_waypoints: %d' % num_waypoints)
 
-        if self.current_waypoint < num_waypoints:
+        if self.current_waypoint < num_waypoints-1:
             if self.reached_next_waypoint(xf):
                 self.current_waypoint += 1
                 self.get_logger().info('changed waypoint at time: %f' % xf.time)
@@ -151,24 +164,22 @@ class LosGuidance(Node):
             # 3.  get x_los
             # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
 
-            x_los, y_los = self.solve_system_of_equations(x, y, wx_next, wy_next, wx, wy)
+            x_los, y_los = self.get_xy_los(x, y, wx_next, wy_next, wx, wy)
             beta = math.asin(v/U)
             chi_d = math.atan2(x_los - x, y_los - y)
             psi_d = chi_d + beta
-            # debugging
-            self.get_logger().info('chi_d: %f' % chi_d)
-            self.get_logger().info('beta: %f' % beta)
             # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
             self.des_yaw_msg.data = 1.57079632679 - psi_d # psi to theta (radians)
-            self.des_velocity_msg.data = wv_next
+            self.des_velocity_msg.desired_velocity = wv_next
+            self.des_velocity_msg.delta_waypoints = ((wx_next - x)**2 + (wy_next - y)**2)**0.5
 
-            return (self.des_yaw_msg, self.des_velocity_msg)
-        else:
+        elif self.reached_next_waypoint(xf):
             self.get_logger().info('Reached final waypoint Uhulll')
-            self.des_yaw_msg.data = 0.0
-            self.des_velocity_msg.data = 0.0
+            self.des_yaw_msg.data = 0.0 # finishes pointing west
+            self.des_velocity_msg.desired_velocity = 0.0
+            self.des_velocity_msg.delta_waypoints = 0.0
 
-            return (self.des_yaw_msg, self.des_velocity_msg)
+        return (self.des_velocity_msg, self.des_yaw_msg)
 
 def main(args=None):
     try:
@@ -179,8 +190,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
-    except Exception as e:
-        print(e)
+    except:
+        print(traceback.format_exc())
     finally:
         los_guidance_node.destroy_node()
         rclpy.shutdown()

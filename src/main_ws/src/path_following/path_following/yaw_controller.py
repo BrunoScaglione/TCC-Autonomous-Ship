@@ -1,5 +1,4 @@
 import sys
-import math
 
 import rclpy
 from rclpy.node import Node
@@ -8,6 +7,7 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 # custom interface
 from path_following_interfaces.msg import State
+from path_following_interfaces.srv import InitValues
 
 class YawController(Node):
     def __init__(self):
@@ -17,23 +17,15 @@ class YawController(Node):
         self.Kp = 1.34
         self.Kd = 49.684
         self.Ki = 0.00583
-
         self.rudder_sat = 0.610865
-
-        # desired yaw angle
-        # TODO: it is hardcoded now, this would need to be set according
-        #  to waypoints and inital conditions actually, use a fucntion to set
-        # this value
-        self.desired_yaw_angle = 1.334889326 # radians
-        self.desired_yaw_angle_old = 0
-
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
-
         # for the integral action (acumulates error)
         self.theta_bar_int = 0
 
-        self.rudder_msg = Float32()
+        self.server_init_control = self.create_service(
+            InitValues, '/init_yaw_control', self.callback_init_control
+        )
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -58,7 +50,17 @@ class YawController(Node):
             '/rudder_angle',
             1)
 
-    def callback_shutdown():
+        self.rudder_msg = Float32()
+
+    def callback_init_control(self, req, res):
+        self.desired_yaw_angle = req.yaw
+        self.desired_yaw_angle_old = req.initial_state.position.theta
+        rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)
+        res.yaw = rudder_msg.data
+        return res
+
+    def callback_shutdown(self):
+        self.get_logger().info('User requested total shutdown')
         sys.exit()
         
     def callback_filtered_state(self, msg):
@@ -74,6 +76,11 @@ class YawController(Node):
 
         self.t_last_desired_yaw_angle = self.t_current_desired_yaw_angle
         self.t_current_desired_yaw_angle = self.t
+
+        # fixes async issues
+        # sometimes receives 2 desired yaw angles in sequence, without receiving filtered yaw angle
+        if self.t_last_desired_yaw_angle == self.t_current_desired_yaw_angle:
+           self.t_current_desired_yaw_angle += 0.1  
 
         self.desired_yaw_angle = msg.data
 
@@ -110,6 +117,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
+    except Exception as e:
+        print(e)
     finally:
         yaw_controller_node.destroy_node()
         rclpy.shutdown()

@@ -1,8 +1,7 @@
 import sys
-import collections
 
 import matplotlib.pyplot as plt
-
+import numpy as np
 from scipy import signal
  
 import rclpy
@@ -16,6 +15,11 @@ class WaveFilter(Node):
     def __init__(self):
         super().__init__('wave_filter_node')
 
+        # debugging
+        self.u_history = []
+        self.u_filtered_history = []
+        self.theta_history = []
+        self.theta_filtered_history = []
         self.y_history = []
         self.y_filtered_history = []
 
@@ -23,10 +27,15 @@ class WaveFilter(Node):
         # sampled at 10Hz (can only work with <5Hz)
         # aproximating Fossen's 3 2order cascades at [0.4rad/s, 0.63rad/s, 1rad/s]) didnt work (large bias)
         # p23 wave period is 4 seconds -> freq is 0.25 Hz
-        self.sos = signal.butter(6, [0.20, 0.3], 'bandstop', fs=10, output='sos')
+        # self.sos = signal.butter(6, [0.2, 0.3], 'bandstop', fs=10, output='sos')
+        self.sos = signal.butter(6, 0.2, fs=10, output='sos')
+        self.zi = signal.sosfilt_zi(self.sos)
+        # self.sos2 = signal.butter(6, [0.016, 0.025], 'bandstop', fs=10, output='sos')
+        # self.zi2 = signal.sosfilt_zi(self.sos2)
 
         # for 6 order filter
-        self.last_seven_states = collections.deque([], maxlen=7) 
+        # TODO: hardcoded now, but needs to recceive from initial condition
+        self.state_history = [[],[],[],[],[],[]] 
 
         self.xf_msg = State()
 
@@ -47,53 +56,53 @@ class WaveFilter(Node):
             '/filtered_state',
             1)
 
-    def callback_shutdown():
+    def callback_shutdown(self):
+        self.get_logger().info('User requested total shutdown')
         sys.exit()
         
     def callback_estimated_state(self, msg):
         self.log_state(msg, 'subscriber')
-        self.last_seven_states.append(msg)
-        self.y_history.append(msg.position.y) # debugging
-        filtered_state_msg = self.state_filter(msg)
+
+        self.state_history[0].append(msg.position.x)
+        self.state_history[1].append(msg.position.y)
+        self.state_history[2].append(msg.position.theta)
+        self.state_history[3].append(msg.velocity.u)
+        self.state_history[4].append(msg.velocity.v)
+        self.state_history[5].append(msg.velocity.r)
+
+        # debugging
+        self.u_history.append(msg.velocity.u) 
+        self.theta_history.append(msg.position.theta) 
+        self.y_history.append(msg.position.y) 
+
+        filtered_state_msg = self.state_filter(msg.time)
         self.publisher_filtered_state.publish(filtered_state_msg)
         self.log_state(filtered_state_msg, 'publisher')
     
-    def state_filter(self, x):
+    def state_filter(self, t):
         # filters entire state
         # debugging
 
-        # x_last_seven = [state.position.x for state in list(self.last_seven_states)]
-        # y_last_seven = [state.position.y for state in list(self.last_seven_states)]
-        # theta_last_seven = [state.position.theta for state in list(self.last_seven_states)]
-        # u_last_seven = [state.velocity.u for state in list(self.last_seven_states)]
-        # v_last_seven = [state.velocity.v for state in list(self.last_seven_states)]
-        # r_last_seven = [state.velocity.r for state in list(self.last_seven_states)]
-        # state_last_seven = [
-        #     x_last_seven, 
-        #     y_last_seven, 
-        #     theta_last_seven, 
-        #     u_last_seven, 
-        #     v_last_seven,
-        #     r_last_seven
-        # ]
+        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], self.state_history)
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
+        state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
-        # state_last_seven_filtered = map(lambda sig: signal.sosfilt(self.sos, sig), state_last_seven)
-        # state_current_filtered = [sig[-1] for sig in state_last_seven_filtered]
-            
-        # self.xf_msg.position.x = state_current_filtered[0]
-        # self.xf_msg.position.y = state_current_filtered[1]
-        # self.y_filtered_history.append(self.xf_msg.position.y) # debugging
-        # self.xf_msg.position.theta = state_current_filtered[2]
+        self.xf_msg.position.x = state_current_filtered[0]
+        self.xf_msg.position.y = state_current_filtered[1]
+        self.y_filtered_history.append(self.xf_msg.position.y) # debugging
+        self.xf_msg.position.theta = state_current_filtered[2]
+        self.theta_filtered_history.append(self.xf_msg.position.theta) # debugging
 
-        # self.xf_msg.velocity.u = state_current_filtered[3]
-        # self.xf_msg.velocity.v = state_current_filtered[4]
-        # self.xf_msg.velocity.r = state_current_filtered[5]
 
-        # self.xf_msg.time = x.time
+        self.xf_msg.velocity.u = state_current_filtered[3]
+        self.u_filtered_history.append(self.xf_msg.velocity.u) # debugging
+        self.xf_msg.velocity.v = state_current_filtered[4]
+        self.xf_msg.velocity.r = state_current_filtered[5]
 
-        # return self.xf_msg 
+        self.xf_msg.time = t
 
-        return x
+        return self.xf_msg
+
 
     def log_state(self, state, communicator):
         log_str = 'listened estimated' if communicator == 'subscriber' else 'published filtered'
@@ -118,12 +127,28 @@ def main(args=None):
         rclpy.spin(wave_filter_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+        # plt.plot(wave_filter_node.u_history) # debugging
+        # plt.plot(wave_filter_node.u_filtered_history) # debugging
+        # plt.plot(wave_filter_node.theta_history) # debugging
+        # plt.plot(wave_filter_node.theta_filtered_history) # debugging
+        # plt.legend([
+        #     "Real surge velocity", 
+        #     "Filtered surge velocity",
+        #     "Real yaw angle", 
+        #     "Filtered yaw angle"
+        # ]) # debugging
+        # plt.show()
         # plt.plot(wave_filter_node.y_history) # debugging
         # plt.plot(wave_filter_node.y_filtered_history) # debugging
-        # plt.legend([" Real 'y' signal", "Filtered 'y' signal"]) # debugging
+        # plt.legend([
+        #     "Real y",
+        #     "Filtered y"
+        # ]) # debugging
         # plt.show() # debugging
     except SystemExit:
         print('Stopped with user shutdown request')
+    # except Exception as e:
+    #     print(e)
     finally:
         wave_filter_node.destroy_node()
         rclpy.shutdown()
