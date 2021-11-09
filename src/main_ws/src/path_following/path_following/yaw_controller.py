@@ -33,10 +33,10 @@ class YawController(Node):
             self.callback_shutdown,
             1)
 
-        self.subscription_filtered_state = self.create_subscription(
+        self.subscription_estimated_state = self.create_subscription(
             State,
-            '/filtered_state',
-            self.callback_filtered_state,
+            '/estimated_state',
+            self.callback_estimated_state,
             1)
 
         self.subscription_desired_yaw_angle = self.create_subscription(
@@ -63,8 +63,8 @@ class YawController(Node):
         self.get_logger().info('User requested total shutdown')
         sys.exit()
         
-    def callback_filtered_state(self, msg):
-        self.get_logger().info('listened filtered yaw angle: %f' % msg.position.theta)
+    def callback_estimated_state(self, msg):
+        self.get_logger().info('listened estimated yaw angle: %f' % msg.position.theta)
         self.t = msg.time
         rudder_msg = self.yaw_control(msg.position.theta, msg.velocity.r)
         self.publisher_rudder_angle.publish(rudder_msg)
@@ -78,7 +78,7 @@ class YawController(Node):
         self.t_current_desired_yaw_angle = self.t
 
         # fixes async issues
-        # sometimes receives 2 desired yaw angles in sequence, without receiving filtered yaw angle
+        # sometimes receives 2 desired yaw angles in sequence, without receiving estimated yaw angle
         if self.t_last_desired_yaw_angle == self.t_current_desired_yaw_angle:
            self.t_current_desired_yaw_angle += 0.1  
 

@@ -1,7 +1,6 @@
 import sys
 
-import matplotlib.pyplot as plt
-import numpy as np
+# import matplotlib.pyplot as plt
 from scipy import signal
  
 import rclpy
@@ -45,10 +44,10 @@ class WaveFilter(Node):
             self.callback_shutdown,
             1)
 
-        self.subscription_estimated_state = self.create_subscription(
+        self.subscription_simulated_state = self.create_subscription(
             State,
-            '/estimated_state',
-            self.callback_estimated_state,
+            '/simulated_state',
+            self.callback_simulated_state,
             1)
 
         self.publisher_filtered_state = self.create_publisher(
@@ -60,7 +59,7 @@ class WaveFilter(Node):
         self.get_logger().info('User requested total shutdown')
         sys.exit()
         
-    def callback_estimated_state(self, msg):
+    def callback_simulated_state(self, msg):
         self.log_state(msg, 'subscriber')
 
         self.state_history[0].append(msg.position.x)
@@ -105,7 +104,7 @@ class WaveFilter(Node):
 
 
     def log_state(self, state, communicator):
-        log_str = 'listened estimated' if communicator == 'subscriber' else 'published filtered'
+        log_str = 'listened simulated' if communicator == 'subscriber' else 'published filtered'
         self.get_logger().info(
             '%s state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (

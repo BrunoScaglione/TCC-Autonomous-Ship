@@ -29,10 +29,10 @@ class KalmanFilter(Node):
             self.callback_shutdown,
             1)
 
-        self.subscription_simulated_state = self.create_subscription(
+        self.subscription_filtered_state = self.create_subscription(
             State,
-            '/simulated_state',
-            self.callback_simulated_state,
+            '/filtered_state',
+            self.callback_filtered_state,
             1)
 
         self.publisher_estimated_state = self.create_publisher(
@@ -44,7 +44,7 @@ class KalmanFilter(Node):
         self.get_logger().info('User requested total shutdown')
         sys.exit()
         
-    def callback_simulated_state(self, msg):
+    def callback_filtered_state(self, msg):
         self.log_state(msg, 'subscriber')
         self.last_two_states.appendleft(msg)
         estimated_state_msg = self.state_estimate(msg)
@@ -52,7 +52,7 @@ class KalmanFilter(Node):
         self.log_state(estimated_state_msg, 'publisher')
     
     def log_state(self, state, communicator):
-        log_str = 'listened simulated' if communicator == 'subscriber' else 'published estimated'
+        log_str = 'listened filtered' if communicator == 'subscriber' else 'published estimated'
         self.get_logger().info(
             '%s state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
@@ -68,9 +68,6 @@ class KalmanFilter(Node):
         )
 
     def state_estimate(self, xs):
-
-
-
         return xs # FILLER
 
 def main(args=None):

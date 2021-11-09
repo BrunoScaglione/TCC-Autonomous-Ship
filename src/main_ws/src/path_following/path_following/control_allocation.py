@@ -1,7 +1,7 @@
 import sys
 import math
 
-import matplotlib as plt
+import matplotlib as plt #debugging
 
 import rclpy
 from rclpy.node import Node
@@ -31,10 +31,10 @@ class ControlAllocation(Node):
             self.callback_shutdown,
             1)
 
-        self.subscription_state = self.create_subscription(
+        self.subscription_estimated_state = self.create_subscription(
             State,
-            '/state',
-            self.callback_state,
+            '/estimated_state',
+            self.callback_estimated_state,
             1)
 
         self.subscription_propeller_thrust = self.create_subscription(
@@ -52,8 +52,8 @@ class ControlAllocation(Node):
         self.get_logger().info('User requested total shutdown')
         sys.exit()
 
-    def callback_state(self, msg):
-        self.get_logger().info('listened surge velocity: %f' % msg.velocity.u)
+    def callback_estimated_state(self, msg):
+        self.get_logger().info('listened estimated surge velocity: %f' % msg.velocity.u)
         self.surge_velocity = msg.velocity.u
         
     def callback_propeller_thrust(self, msg):
@@ -80,6 +80,7 @@ def main(args=None):
         rclpy.spin(control_allocation_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+        # debugging
         plt.plot(control_allocation_node.propeller_history)
         plt.show()
     except SystemExit:

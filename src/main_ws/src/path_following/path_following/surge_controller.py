@@ -1,9 +1,6 @@
 import sys
 # import traceback
 
-import scipy
-import numpy as np
-
 import rclpy
 from rclpy.node import Node
 
@@ -20,6 +17,7 @@ class SurgeController(Node):
         # controller parameters
         self.X_added_mass = -3375
         self.m = 40415
+        # TODO: tune these
         self.phi_tuning_factor = 40
         self.kf_tuning_factor = 17.5 
         self.kf = self.kf_tuning_factor*13
@@ -34,10 +32,10 @@ class SurgeController(Node):
             self.callback_shutdown,
             1)
 
-        self.subscription_filtered_state = self.create_subscription(
+        self.subscription_estimated_state = self.create_subscription(
             State,
-            '/filtered_state',
-            self.callback_filtered_state,
+            '/estimated_state',
+            self.callback_estimated_state,
             1)
 
         self.subscription_desired_surge_velocity = self.create_subscription(
@@ -64,8 +62,8 @@ class SurgeController(Node):
         self.get_logger().info('User requested total shutdown')
         sys.exit()
          
-    def callback_filtered_state(self, msg):
-        self.get_logger().info('listened filtered surge velocity: %f' % msg.velocity.u)
+    def callback_estimated_state(self, msg):
+        self.get_logger().info('listened estimated surge velocity: %f' % msg.velocity.u)
         thrust_msg = self.surge_control(msg.velocity.u)
         self.publisher_propeller_thrust.publish(thrust_msg)
         self.get_logger().info('published thrust force: %f' % thrust_msg.data)

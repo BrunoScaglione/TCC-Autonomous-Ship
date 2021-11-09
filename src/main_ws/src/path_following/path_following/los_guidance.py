@@ -1,7 +1,6 @@
 import sys
 import traceback
 
-import numpy as np
 import math
 from sympy import symbols, Eq, solve
 # import stackprinter
@@ -24,7 +23,6 @@ class LosGuidance(Node):
         self.R = self.ship_lenght*2 
         self.R_acceptance = 50 # debugging
         
-
         self.des_yaw_msg = Float32()
         # self.des_velocity_msg = Float32()
         self.des_velocity_msg = SurgeControl()
@@ -48,10 +46,10 @@ class LosGuidance(Node):
             self.callback_waypoints,
             1)
 
-        self.subscription_filtered_state = self.create_subscription(
+        self.subscription_estimated_state = self.create_subscription(
             State,
-            '/filtered_state',
-            self.callback_filtered_state,
+            '/estimated_state',
+            self.callback_estimated_state,
             1)
 
         self.publisher_desired_yaw_angle = self.create_publisher(
@@ -66,7 +64,7 @@ class LosGuidance(Node):
 
     def log_state(self, msg):
         self.get_logger().info(
-            'listened filtered state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            'listened estimated state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 msg.position.x, 
                 msg.position.y, 
@@ -98,7 +96,7 @@ class LosGuidance(Node):
         for i in range(num_waypoints):
             self.get_logger().info('listened waypoint %d: %f %f %f' % (i, msg.position.x[i], msg.position.y[i], msg.velocity[i]))
         
-    def callback_filtered_state(self, msg):
+    def callback_estimated_state(self, msg):
         try: # need have received waypoints first
             self.log_state(msg)
             des_velocity_msg, des_yaw_msg = self.los(msg)

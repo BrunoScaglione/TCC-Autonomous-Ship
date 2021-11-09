@@ -31,7 +31,7 @@ class GpsImuSimulator(Node):
         # GPS_rate == 10 # [Hz] 
         # IMU_rate == 2000 # [Hz]
         # both rates are faster than the simulation 
-        # (10 - e Hz where e is due to the time do do 1 step of computations)
+        # (which is 10-e Hz where e is due to the time do do 1 step of computations)
         # therefore wont have sampling effect
 
         # assuming sensors are already calibrated (no bias)
@@ -39,8 +39,8 @@ class GpsImuSimulator(Node):
         self.sigma_x = 5.46112744197 # GPS 1: from horizontal acc
         self.sigma_y = 5.46112744197 # GPS 1: from horizontal acc
         self.sigma_theta = 0.0523599 # GPS 1: from heading acc
-        self.sigma_u = None # is calculated dynamically 
-        self.sigma_v = None # is calculated dynamically
+        # self.sigma_u = None # is calculated dynamically 
+        # self.sigma_v = None # is calculated dynamically
         self.sigma_r = 0.0005 # IMU: from bias-in-run
 
         self.sigma_xdot = 0.1 # GPS 2: from velocity acc
