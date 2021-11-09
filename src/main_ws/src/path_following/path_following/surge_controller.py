@@ -21,7 +21,7 @@ class SurgeController(Node):
         self.X_added_mass = -3375
         self.m = 40415
         self.phi_tuning_factor = 40
-        self.kf_tuning_factor = 25 
+        self.kf_tuning_factor = 17.5 
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(
@@ -85,14 +85,17 @@ class SurgeController(Node):
         # sliping variable
         s = xf - xf_d
         self.get_logger().info('s: %f' % s)
-        # phi (6.4% of desired velocity, based on phi = 0.32 for desired veloicty of 5m/s)
-        phi = self.phi_tuning_factor*0.064*(abs(xf_d-xf_dold))
+        # distace between waypoints
+        distance = self.delta_waypoints
+        # estimated time to get from the old waypoint to the next
+        est_time = (abs(xf_dold-xf_d)/2)*distance
+        # based on phi = 0.32 and kf = 13 of controller imade for surge control project (from 0 to 5m/s)
+        phi_as_percentage_of_k = 0.32/(13*5.18*(10**-5) + 0.01)
+        phi = self.phi_tuning_factor*phi_as_percentage_of_k*(self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
         # sat function
         sats = max(-1,min(s/phi,1))
         self.get_logger().info('sats: %f' % sats)
         # input as function of x (control action)
-        distance = self.delta_waypoints
-        est_time = (abs(xf_dold-xf_d)/2)*distance
         u = xf*abs(xf)*(1.9091*(10**-4) - self.kf*5.18*(10**-5)*sats) - (abs(xf_dold-xf_d)/est_time)*sats
         self.get_logger().info('u: %f' % u) 
         # thrust
