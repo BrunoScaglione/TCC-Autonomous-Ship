@@ -1,4 +1,0 @@
-geographiclib==1.50
-tornado==6.1
-typing==3.7.4.3
-gdal
