@@ -1,7 +1,6 @@
 import sys
 
 import collections
-import numpy as np
 
 import rclpy
 from rclpy.node import Node
@@ -14,14 +13,6 @@ class KalmanFilter(Node):
     def __init__(self):
         super().__init__('kalman_filter_simulator_node')
 
-        #last two states necessary in order to obtain predicted state and compare to current state
-        self.last_two_states = collections.deque([State()], maxlen=2) 
-        self.xe_msg = State()
-
-        #initial state of cov matrix
-        self.P = np.array([[5,0,0,0,0,0],[0,5,0,0,0,0],[0,0,5,0,0,0],[0,0,0,5,0,0],[0,0,0,0,5,0],[0,0,0,0,0,5]])
-        self.Pcov = np.cov(self.P)
-        self.dt = 0.1
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -46,7 +37,6 @@ class KalmanFilter(Node):
         
     def callback_filtered_state(self, msg):
         self.log_state(msg, 'subscriber')
-        self.last_two_states.appendleft(msg)
         estimated_state_msg = self.state_estimate(msg)
         self.publisher_estimated_state.publish(estimated_state_msg)
         self.log_state(estimated_state_msg, 'publisher')
