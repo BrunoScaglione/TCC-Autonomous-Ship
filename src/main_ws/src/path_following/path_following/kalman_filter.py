@@ -1,7 +1,5 @@
 import sys
 
-import collections
-
 import rclpy
 from rclpy.node import Node
 

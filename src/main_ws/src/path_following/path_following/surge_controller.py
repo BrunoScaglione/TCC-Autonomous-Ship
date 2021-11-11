@@ -1,5 +1,5 @@
 import sys
-# import traceback
+import traceback
 
 import rclpy
 from rclpy.node import Node
@@ -54,6 +54,10 @@ class SurgeController(Node):
     def callback_init_control(self, req, res):
         self.desired_surge_velocity = req.surge
         self.desired_surge_velocity_old = req.initial_state.velocity.u
+        self.delta_waypoints = (
+            (req.waypoints.position.x[0] - req.initial_state.position.x)**2 +
+            (req.waypoints.position.y[0] - req.initial_state.position.y)**2
+        )**0.5
         thrust_msg = self.surge_control(req.initial_state.velocity.u)
         res.surge = thrust_msg.data
         return res
@@ -110,8 +114,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
-    # except:
-    #     print(traceback.format_exc())
+    except:
+        print(traceback.format_exc())
     finally:
         surge_controller_node.destroy_node()
         rclpy.shutdown()

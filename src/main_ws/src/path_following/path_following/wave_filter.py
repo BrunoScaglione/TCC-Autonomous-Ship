@@ -1,6 +1,6 @@
 import sys
 
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from scipy import signal
  
 import rclpy
@@ -126,24 +126,24 @@ def main(args=None):
         rclpy.spin(wave_filter_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        # plt.plot(wave_filter_node.u_history) # debugging
-        # plt.plot(wave_filter_node.u_filtered_history) # debugging
-        # plt.plot(wave_filter_node.theta_history) # debugging
-        # plt.plot(wave_filter_node.theta_filtered_history) # debugging
-        # plt.legend([
-        #     "Real surge velocity", 
-        #     "Filtered surge velocity",
-        #     "Real yaw angle", 
-        #     "Filtered yaw angle"
-        # ]) # debugging
-        # plt.show()
-        # plt.plot(wave_filter_node.y_history) # debugging
-        # plt.plot(wave_filter_node.y_filtered_history) # debugging
-        # plt.legend([
-        #     "Real y",
-        #     "Filtered y"
-        # ]) # debugging
-        # plt.show() # debugging
+        plt.plot(wave_filter_node.u_history) # debugging
+        plt.plot(wave_filter_node.u_filtered_history) # debugging
+        plt.plot(wave_filter_node.theta_history) # debugging
+        plt.plot(wave_filter_node.theta_filtered_history) # debugging
+        plt.legend([
+            "Real surge velocity", 
+            "Filtered surge velocity",
+            "Real yaw angle", 
+            "Filtered yaw angle"
+        ]) # debugging
+        plt.show()
+        plt.plot(wave_filter_node.y_history) # debugging
+        plt.plot(wave_filter_node.y_filtered_history) # debugging
+        plt.legend([
+            "Real y",
+            "Filtered y"
+        ]) # debugging
+        plt.show() # debugging
     except SystemExit:
         print('Stopped with user shutdown request')
     # except Exception as e:

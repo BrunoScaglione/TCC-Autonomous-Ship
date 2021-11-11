@@ -1,7 +1,7 @@
 import os
 import json
 from datetime import datetime
-# import traceback
+import traceback
 
 from flask import Flask, request
 
@@ -102,10 +102,14 @@ def receive_waypoints():
                     'Received waypoint %d: %f %f %f' % 
                     (i, waypoints['position']['x'][i], waypoints['position']['y'][i], waypoints['velocity'][i])
                 )
-            
+
             backend_node.waypoints_msg.position.x = waypoints['position']['x']
             backend_node.waypoints_msg.position.y = waypoints['position']['y']
             backend_node.waypoints_msg.velocity = waypoints['velocity']
+
+            backend_node.init_values_srv.waypoints.position.x = waypoints['position']['x']
+            backend_node.init_values_srv.waypoints.position.y = waypoints['position']['y']
+            backend_node.init_values_srv.waypoints.velocity = waypoints['velocity']
 
             backend_node.get_logger().info('Returning HTTP OK to client')
             return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
@@ -152,6 +156,7 @@ def receive_initial_condition():
 @app.route("/start")
 def start_system():
     try:
+        print("aaaaaaaaaaaa")
         backend_node.get_logger().info("Starting system")
 
         backend_node.publisher_waypoints.publish(backend_node.waypoints_msg)
@@ -191,7 +196,6 @@ def start_system():
         backend_node.get_logger().info('returning HTTP OK to client')
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     except:
-        # print(traceback.format_exc())
         if not service_failed:
             backend_node.get_logger().info('returning HTTP Gateaway timedout to client')
             return json.dumps({'success':False}), 504, {'ContentType':'application/json'}

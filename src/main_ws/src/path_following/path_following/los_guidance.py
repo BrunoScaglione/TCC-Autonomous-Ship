@@ -11,7 +11,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 #custom service
-from path_following_interfaces.msg import Waypoints, State, SurgeControl
+from path_following_interfaces.msg import State, SurgeControl
 from path_following_interfaces.srv import InitValues
 
 class LosGuidance(Node):
@@ -40,16 +40,10 @@ class LosGuidance(Node):
             self.callback_shutdown,
             1)
 
-        self.subscription_waypoints = self.create_subscription(
-            Waypoints,
-            '/waypoints',
-            self.callback_waypoints,
-            1)
-
-        self.subscription_estimated_state = self.create_subscription(
+        self.subscription_filtered_state = self.create_subscription(
             State,
-            '/estimated_state',
-            self.callback_estimated_state,
+            '/filtered_state',
+            self.callback_filtered_state,
             1)
 
         self.publisher_desired_yaw_angle = self.create_publisher(
@@ -64,7 +58,7 @@ class LosGuidance(Node):
 
     def log_state(self, msg):
         self.get_logger().info(
-            'listened estimated state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            'listened filtered state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
             % (
                 msg.position.x, 
                 msg.position.y, 
@@ -77,26 +71,25 @@ class LosGuidance(Node):
         )
 
     def callback_init_setpoints(self, req, res):
+        req.waypoints.position.x.insert(0, 0)
+        req.waypoints.position.y.insert(0, 0)
+        req.waypoints.velocity.insert(0, 0) # FILLER (just to maintain same lenght of the lists)
+        self.waypoints = req.waypoints # {position: {x: [...], y: [...]} velocity: [...]}
+        
+        num_waypoints = len(req.waypoints.position.x)
+        self.get_logger().info('initial waypoint + listened %d waypoints' % (num_waypoints-1))
+        for i in range(num_waypoints):
+            self.get_logger().info('listened waypoint %d: %f %f %f' % (i, req.waypoints.position.x[i], req.waypoints.position.y[i], req.waypoints.velocity[i]))
+        
         des_velocity_msg, des_yaw_msg = self.los(req.initial_state)
-        res.surge, res.yaw = des_velocity_msg.data, des_yaw_msg.data
+        res.surge, res.yaw = des_velocity_msg.desired_velocity, des_yaw_msg.data
         return res
 
     def callback_shutdown(self):
         self.get_logger().info('User requested total shutdown')
         sys.exit()
-
-    def callback_waypoints(self, msg):
-        msg.position.x.insert(0, 0)
-        msg.position.y.insert(0, 0)
-        msg.velocity.insert(0, 0) # FILLER (just to maintain same lenght of the lists)
-        self.waypoints = msg # {position: {x: [...], y: [...]} velocity: [...]}
         
-        num_waypoints = len(msg.position.x)
-        self.get_logger().info('initial waypoint + listened %d waypoints' % (num_waypoints-1))
-        for i in range(num_waypoints):
-            self.get_logger().info('listened waypoint %d: %f %f %f' % (i, msg.position.x[i], msg.position.y[i], msg.velocity[i]))
-        
-    def callback_estimated_state(self, msg):
+    def callback_filtered_state(self, msg):
         try: # need have received waypoints first
             self.log_state(msg)
             des_velocity_msg, des_yaw_msg = self.los(msg)
