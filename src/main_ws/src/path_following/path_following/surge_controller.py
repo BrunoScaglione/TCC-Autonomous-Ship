@@ -1,6 +1,9 @@
 import sys
 import traceback
 
+import numpy as np
+from scipy.optimize import fsolve
+
 import rclpy
 from rclpy.node import Node
 
@@ -19,7 +22,7 @@ class SurgeController(Node):
         self.m = 40415
         # TODO: tune these
         self.phi_tuning_factor = 40
-        self.kf_tuning_factor = 17.5 
+        self.kf_tuning_factor = 15 
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(
@@ -89,11 +92,20 @@ class SurgeController(Node):
         self.get_logger().info('s: %f' % s)
         # distace between waypoints
         distance = self.delta_waypoints
+        self.get_logger().info('delta_waypoints: %f' % self.delta_waypoints)
+        k = (self.kf*5.18*(10**-5) + 0.01)
         # estimated time to get from the old waypoint to the next
-        est_time = (abs(xf_dold-xf_d)/2)*distance
-        # based on phi = 0.32 and kf = 13 of controller imade for surge control project (from 0 to 5m/s)
-        phi_as_percentage_of_k = 0.32/(13*5.18*(10**-5) + 0.01)
+        # soltion of following equation
+        # distance(t) = integral of velocity(t) from 0 to est_time (xf_dold*est_time + (xf_d - xf_dold)*(est_time + (1/k)*exp(-est_time*k)))
+        # velocity(t) = xf_dold + (xf_d - xf_dold)*(1 - exp(-t*k))
+        # distance(t) = (xf_dold*est_time + (xf_d - xf_dold)*(est_time + (1/k)*exp(-est_time*k)) -(1/k)*(xf_d - xf_dold))
+        # distance = distance(t)
+        est_time = self.get_est_time(distance, k, xf_dold, xf_d)[0]
+        self.get_logger().info('est_time: %f' % est_time)
+        # based on phi = 0.32 and k = 13*5.18*(10**-5) + 0.01 of controller i made for surge control project (from 0 to 5m/s)
+        phi_as_percentage_of_k = 29.9810744468*k
         phi = self.phi_tuning_factor*phi_as_percentage_of_k*(self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
+        self.get_logger().info('phi: %f' % phi)
         # sat function
         sats = max(-1,min(s/phi,1))
         self.get_logger().info('sats: %f' % sats)
@@ -104,6 +116,18 @@ class SurgeController(Node):
         tau = u*(self.m - self.X_added_mass)
         self.thrust_msg.data = tau 
         return self.thrust_msg
+    
+    def get_est_time(self, distance, k, initial_velocity, final_velocity):
+        data = (distance, k, initial_velocity, final_velocity)
+        est_time = fsolve(self.func, (2*final_velocity + initial_velocity)/3, args=data)
+        return est_time
+
+    @staticmethod
+    def func(t, *data):
+        distance, k, initial_velocity, final_velocity = data
+        return ( # expression == 0
+            -distance + (initial_velocity*t + (final_velocity - initial_velocity)*(t + (1/k)*np.exp(-t*k)) - (1/k)*(final_velocity - initial_velocity))
+        )
     
 def main(args=None):
     try:
