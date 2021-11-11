@@ -71,9 +71,9 @@ class LosGuidance(Node):
         )
 
     def callback_init_setpoints(self, req, res):
-        req.waypoints.position.x.insert(0, 0)
-        req.waypoints.position.y.insert(0, 0)
-        req.waypoints.velocity.insert(0, 0) # FILLER (just to maintain same lenght of the lists)
+        req.waypoints.position.x.insert(0, req.initial_state.position.x)
+        req.waypoints.position.y.insert(0, req.initial_state.position.y)
+        req.waypoints.velocity.insert(0, req.initial_state.velocity.u)
         self.waypoints = req.waypoints # {position: {x: [...], y: [...]} velocity: [...]}
         
         num_waypoints = len(req.waypoints.position.x)

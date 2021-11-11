@@ -1,5 +1,7 @@
 import sys
 
+import math
+
 import rclpy
 from rclpy.node import Node
 
@@ -14,9 +16,10 @@ class YawController(Node):
         super().__init__('yaw_controller_node')
 
         #parameters
-        self.Kp = 1.34
-        self.Kd = 49.684
-        self.Ki = 0.00583
+        self.K_tuning_factor = 1
+        self.Kp = self.K_tuning_factor*1.34
+        self.Kd = self.K_tuning_factor*49.684
+        self.Ki = self.K_tuning_factor*0.00583
         self.rudder_sat = 0.610865
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
@@ -51,8 +54,38 @@ class YawController(Node):
             1)
 
         self.rudder_msg = Float32()
+    
+    def tune_controller(self, waypoints, initial_state):
+        waypoints.position.x.insert(0, initial_state.position.x)
+        waypoints.position.y.insert(0, initial_state.position.y)
+        waypoints.velocity.insert(0, initial_state.velocity.u)
+        cases = []
+        for i in range(1, len(waypoints.velocity)):
+            distance = (
+                (waypoints.position.x[i] - waypoints.position.x[i-1])**2 +
+                (waypoints.position.y[i] - waypoints.position.y[i-1])**2
+            )**0.5
+            desired_steady_state_yaw_angle = math.atan2(
+                waypoints.position.y[i]-waypoints.position.y[i-1],
+                waypoints.position.x[i]-waypoints.position.x[i-1]
+            )
+            try:
+                last_desired_steady_state_yaw_angle = math.atan2(
+                    waypoints.position.y[i-1]-waypoints.position.y[i-2],
+                    waypoints.position.x[i-1]-waypoints.position.x[i-2]
+                )
+            except IndexError:
+                last_desired_steady_state_yaw_angle = initial_state.position.theta
+            delta_yaw_angle = (
+                desired_steady_state_yaw_angle - last_desired_steady_state_yaw_angle
+            )
+            cases.append(delta_yaw_angle/distance)
+        worst_case = max(cases)
+        # 0.0011107205 = math.radians(90 - 45)/sqrt(500^2 + 500^2)
+        self.K_tuning_factor = self.K_tuning_factor*(worst_case/0.0011107205)
 
     def callback_init_control(self, req, res):
+        self.tune_controller(req.waypoints, req.initial_state)
         self.desired_yaw_angle = req.yaw
         self.desired_yaw_angle_old = req.initial_state.position.theta
         rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)
