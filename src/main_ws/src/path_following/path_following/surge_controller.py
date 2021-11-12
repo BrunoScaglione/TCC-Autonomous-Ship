@@ -21,7 +21,7 @@ class SurgeController(Node):
         self.X_added_mass = -3375
         self.m = 40415
         # TODO: tune these
-        self.phi_tuning_factor = 150
+        self.phi_tuning_factor = 300
         self.kf_tuning_factor = 17 
         self.kf = self.kf_tuning_factor*13
 
@@ -132,7 +132,7 @@ class SurgeController(Node):
         phi = self.phi_tuning_factor*phi_as_percentage_of_k*k
         self.get_logger().info('phi: %f' % phi)
         # sat function
-        sats = max(-1,min(s/phi,1))
+        sats = max(-1, min(s/phi, 1))
         self.get_logger().info('sats: %f' % sats)
         # input as function of x (control action)
         u = xf*abs(xf)*(1.9091*(10**-4) - self.kf*5.18*(10**-5)*sats) - (abs(xf_dold-xf_d)/est_time)*sats
