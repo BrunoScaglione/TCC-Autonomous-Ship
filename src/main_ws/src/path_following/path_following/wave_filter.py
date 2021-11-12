@@ -1,4 +1,5 @@
 import sys
+import os
 
 import matplotlib.pyplot as plt
 from scipy import signal
@@ -14,13 +15,10 @@ class WaveFilter(Node):
     def __init__(self):
         super().__init__('wave_filter_node')
 
-        # debugging
-        self.u_history = []
-        self.u_filtered_history = []
-        self.theta_history = []
-        self.theta_filtered_history = []
-        self.y_history = []
-        self.y_filtered_history = []
+        self.declare_parameter('plots_dir', './')
+        self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
+
+        self.filtered_state_history = [[],[],[],[],[],[]] 
 
         # obs: low pass at 10Hz (like Fossen) is not even possible because the state is
         # sampled at 10Hz (can only work with <5Hz)
@@ -31,8 +29,6 @@ class WaveFilter(Node):
         self.zi = signal.sosfilt_zi(self.sos)
         # self.sos2 = signal.butter(6, [0.016, 0.025], 'bandstop', fs=10, output='sos')
         # self.zi2 = signal.sosfilt_zi(self.sos2)
-
-        self.state_history = [[],[],[],[],[],[]] 
 
         self.xf_msg = State()
 
@@ -60,43 +56,30 @@ class WaveFilter(Node):
     def callback_simulated_state(self, msg):
         self.log_state(msg, 'subscriber')
 
-        self.state_history[0].append(msg.position.x)
-        self.state_history[1].append(msg.position.y)
-        self.state_history[2].append(msg.position.theta)
-        self.state_history[3].append(msg.velocity.u)
-        self.state_history[4].append(msg.velocity.v)
-        self.state_history[5].append(msg.velocity.r)
-
-        # debugging
-        self.u_history.append(msg.velocity.u) 
-        self.theta_history.append(msg.position.theta) 
-        self.y_history.append(msg.position.y) 
-
         filtered_state_msg = self.state_filter(msg.time)
         self.publisher_filtered_state.publish(filtered_state_msg)
         self.log_state(filtered_state_msg, 'publisher')
     
     def state_filter(self, t):
         # filters entire state
-        # debugging
-
         state_history_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], self.state_history)
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
         self.xf_msg.position.x = state_current_filtered[0]
         self.xf_msg.position.y = state_current_filtered[1]
-        self.y_filtered_history.append(self.xf_msg.position.y) # debugging
         self.xf_msg.position.theta = state_current_filtered[2]
-        self.theta_filtered_history.append(self.xf_msg.position.theta) # debugging
-
-
         self.xf_msg.velocity.u = state_current_filtered[3]
-        self.u_filtered_history.append(self.xf_msg.velocity.u) # debugging
         self.xf_msg.velocity.v = state_current_filtered[4]
         self.xf_msg.velocity.r = state_current_filtered[5]
-
         self.xf_msg.time = t
+
+        self.filtered_state_history[0].append(self.xf_msg.position.x)
+        self.filtered_state_history[1].append(self.xf_msg.position.y)
+        self.filtered_state_history[2].append(self.xf_msg.position.theta)
+        self.filtered_state_history[3].append(self.xf_msg.velocity.u)
+        self.filtered_state_history[4].append(self.xf_msg.velocity.v)
+        self.filtered_state_history[5].append(self.xf_msg.velocity.r)
 
         return self.xf_msg
 
@@ -116,6 +99,55 @@ class WaveFilter(Node):
                 state.time 
             )
         )
+
+    def generate_plots(self):
+        params = {'mathtext.default': 'regular'}
+        plt.rcParams.update(params)
+
+        t = [0.1*i for i in range(len(self.filtered_state_history[0]))]
+        ss_dir = "filteredState"
+        state_props = [
+            {
+                "title": "Filtered Linear Position X",
+                "ylabel": r"x [m]",
+                "file": "filteredLinearPositionX.png"
+            },
+            {
+                "title": "Filtered Linear Position Y",
+                "ylabel": r"y [m]",
+                "file": "filteredLinearPositionY.png"
+            },
+            {
+                "title": "Filtered Angular Position Theta",
+                "ylabel": r"theta [rad (from east counterclockwise)] ",
+                "file": "filteredAngularPositionTheta.png"
+            },
+            {
+                "title": "Filtered Linear Velocity U",
+                "ylabel": r"u [m/s]",
+                "file": "filteredLinearVelocityU.png"
+            },
+            {
+                "title": "Filtered Linear Position V",
+                "ylabel": r"v [m/s (port)]",
+                "file": "filteredLinearVelocityV.png"
+            },
+            {
+                "title": "Filtered Angular Velocity R",
+                "ylabel": r"r [rad/s (counterclockwise)]",
+                "file": "filteredAngularVelocityR.png"
+            },
+        ]
+
+        for i in range(len(self.filtered_state_history)):
+            fig, ax = plt.subplots(1)
+            ax.set_title(state_props[i]["title"])
+            ax.plot(t, self.filtered_state_history[i])
+            ax.set_xlabel(r"t [s]")
+            ax.set_ylabel(state_props[i]["ylabel"])
+            ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
+
+            fig.savefig(os.path.join(self.plots_dir, ss_dir, state_props[i]["file"]))
 
 def main(args=None):
     try:
@@ -144,9 +176,8 @@ def main(args=None):
         plt.show() # debugging
     except SystemExit:
         print('Stopped with user shutdown request')
-    # except Exception as e:
-    #     print(e)
     finally:
+        wave_filter_node.generate_plots()
         wave_filter_node.destroy_node()
         rclpy.shutdown()
 

@@ -1,6 +1,8 @@
 import sys
+import os
 import traceback
 
+import matplotlib.pyplot as plt
 import math
 from sympy import symbols, Eq, solve
 # import stackprinter
@@ -17,6 +19,11 @@ from path_following_interfaces.srv import InitValues
 class LosGuidance(Node):
     def __init__(self):
         super().__init__('los_guidance_node')
+
+        self.declare_parameter('plots_dir', './')
+        self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
+
+        self.desired_values_history = [[],[]]
 
         # los parameters
         self.SHIP_LENGHT = 186
@@ -192,7 +199,40 @@ class LosGuidance(Node):
             self.des_yaw_msg.distance_waypoints = self.R_STOP
             self.des_velocity_msg.distance_waypoints = self.R_STOP
 
+        
+        self.desired_values_history[0].append(self.des_velocity_msg.desired_value)
+        self.desired_values_history[1].append(self.des_yaw_msg.desired_value)
+
         return (self.des_velocity_msg, self.des_yaw_msg)
+    
+    def generate_plots(self):
+        params = {'mathtext.default': 'regular'}
+        plt.rcParams.update(params)
+
+        t = [0.1*i for i in range(len(self.desired_values_history[0]))]
+        ss_dir = "setpoints"
+        desired_values_props = [
+            {
+                "title": "Linear Veloicity U Setpoint",
+                "ylabel": r"u [m/s]",
+                "file": "linearvelocityUSetpoint.png"
+            },
+            {
+                "title": "Angular Position Theta Setpoint",
+                "ylabel": r"theta [rad]",
+                "file": "angularpositionThetaSetpoint.png"
+            },
+        ]
+
+        for i in range(len(self.desired_values_history)):
+            fig, ax = plt.subplots(1)
+            ax.set_title(desired_values_props[i]["title"])
+            ax.plot(t, self.desired_values_history[i])
+            ax.set_xlabel(r"t [s]")
+            ax.set_ylabel(desired_values_props[i]["ylabel"])
+            ax.set_ylim([min(self.desired_values_history[i]), max(self.desired_values_history[i])])
+
+            fig.savefig(os.path.join(self.plots_dir, ss_dir, desired_values_props[i]["file"]))
 
 def main(args=None):
     try:
@@ -206,6 +246,7 @@ def main(args=None):
     except:
         print(traceback.format_exc())
     finally:
+        los_guidance_node.generate_plots()
         los_guidance_node.destroy_node()
         rclpy.shutdown()
 

@@ -1,4 +1,7 @@
 import sys
+import os
+
+import matplotlib.pyplot as plt
 
 import rclpy
 from rclpy.node import Node
@@ -10,6 +13,11 @@ from path_following_interfaces.msg import State
 class KalmanFilter(Node):
     def __init__(self):
         super().__init__('kalman_filter_simulator_node')
+
+        self.declare_parameter('plots_dir', './')
+        self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
+
+        self.estimated_state_history = [[],[],[],[],[],[]]
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -37,7 +45,19 @@ class KalmanFilter(Node):
         estimated_state_msg = self.state_estimate(msg)
         self.publisher_estimated_state.publish(estimated_state_msg)
         self.log_state(estimated_state_msg, 'publisher')
-    
+
+    def state_estimate(self, xs):
+
+        # must change xs for xe_msg when this node is functioning
+        self.estimated_state_history[0].append(xs.position.x)
+        self.estimated_state_history[1].append(xs.position.y)
+        self.estimated_state_history[2].append(xs.position.theta)
+        self.estimated_state_history[3].append(xs.velocity.u)
+        self.estimated_state_history[4].append(xs.velocity.v)
+        self.estimated_state_history[5].append(xs.velocity.r)
+
+        return xs # FILLER
+
     def log_state(self, state, communicator):
         log_str = 'listened filtered' if communicator == 'subscriber' else 'published estimated'
         self.get_logger().info(
@@ -54,8 +74,54 @@ class KalmanFilter(Node):
             )
         )
 
-    def state_estimate(self, xs):
-        return xs # FILLER
+    def generate_plots(self):
+        params = {'mathtext.default': 'regular'}
+        plt.rcParams.update(params)
+
+        t = [0.1*i for i in range(len(self.simulated_state_history[0]))]
+        ss_dir = "simulatedState"
+        state_props = [
+            {
+                "title": "Estimated Linear Position X",
+                "ylabel": r"x [m]",
+                "file": "estimatedLinearPositionX.png"
+            },
+            {
+                "title": "Estimated Linear Position Y",
+                "ylabel": r"y [m]",
+                "file": "estimatedLinearPositionY.png"
+            },
+            {
+                "title": "Estimated Angular Position Theta",
+                "ylabel": r"theta [rad (from east counterclockwise)]",
+                "file": "estimatedAngularPositionTheta.png"
+            },
+            {
+                "title": "Estimated Linear Velocity U",
+                "ylabel": r"u [m/s]",
+                "file": "estimatedLinearVelocityU.png"
+            },
+            {
+                "title": "Estimated Linear Position V",
+                "ylabel": r"v [m/s (port)]",
+                "file": "estimatedLinearVelocityV.png"
+            },
+            {
+                "title": "Estimated Angular Velocity R",
+                "ylabel": r"r [rad/s (counterclockwise)]",
+                "file": "estimatedAngularVelocityR.png"
+            },
+        ]
+
+        for i in range(len(self.simulated_state_history)):
+            fig, ax = plt.subplots(1)
+            ax.set_title(state_props[i]["title"])
+            ax.plot(t, self.simulated_state_history[i])
+            ax.set_xlabel(r"t [s]")
+            ax.set_ylabel(state_props[i]["ylabel"])
+            ax.set_ylim([min(self.simulated_state_history[i]), max(self.simulated_state_history[i])])
+
+            fig.savefig(os.path.join(self.plots_dir, ss_dir, state_props[i]["file"]))
 
 def main(args=None):
     try:
@@ -67,6 +133,7 @@ def main(args=None):
     except SystemExit:
         print('Stopped with user shutdown request')
     finally:
+        kalman_filter_node.generate_plots()
         kalman_filter_node.destroy_node()
         rclpy.shutdown()
 

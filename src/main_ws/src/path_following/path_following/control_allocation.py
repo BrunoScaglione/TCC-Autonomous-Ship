@@ -1,7 +1,8 @@
 import sys
+import os
 import math
 
-import matplotlib as plt #debugging
+import matplotlib.pyplot as plt
 
 import rclpy
 from rclpy.node import Node
@@ -15,6 +16,9 @@ from path_following_interfaces.msg import State
 class ControlAllocation(Node):
     def __init__(self):
         super().__init__('control_allocation_node')
+
+        self.declare_parameter('plots_dir', './')
+        self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
 
         # controller parameters
         self.C1 = 0.036
@@ -74,7 +78,22 @@ class ControlAllocation(Node):
         Np = max(-self.PROPELLER_SAT*0.99, min(Np, self.PROPELLER_SAT*0.99))
         self.propeller_history.append(Np)
         self.rotation_msg.data = Np
-        return self.rotation_msg 
+        return self.rotation_msg
+
+    def generate_plots(self):
+        params = {'mathtext.default': 'regular'}
+        plt.rcParams.update(params)
+
+        t = [0.1*i for i in range(len(self.propeller_history))]
+        fig, ax = plt.subplots(1)
+        ax.set_title("Proppeler rotation")
+        ax.plot(t, self.propeller_history)
+        ax.set_xlabel(r"t [s]")
+        ax.set_ylabel(r"$n_p [Hz]$")
+        ax.set_ylim([-1.75,1.75])
+
+        graphics_file = "propellerRotation.png"
+        fig.savefig(os.path.join(self.plots_dir, graphics_file))
 
 def main(args=None):
     try:
@@ -83,12 +102,10 @@ def main(args=None):
         rclpy.spin(control_allocation_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        # debugging
-        plt.plot(control_allocation_node.propeller_history)
-        plt.show()
     except SystemExit:
         print('Stopped with user shutdown request')
     finally:
+        control_allocation_node.generate_plots()
         control_allocation_node.destroy_node()
         rclpy.shutdown()
 

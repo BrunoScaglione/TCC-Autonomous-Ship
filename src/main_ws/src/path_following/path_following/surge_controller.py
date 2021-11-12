@@ -1,6 +1,8 @@
 import sys
+import os
 import traceback
 
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import fsolve
 
@@ -16,6 +18,11 @@ from path_following_interfaces.srv import InitValues
 class SurgeController(Node):
     def __init__(self):
         super().__init__('surge_controller_node')
+
+        self.declare_parameter('plots_dir', './')
+        self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
+
+        self.thrust_history = [] #debugging
 
         self.X_ADDED_MASS = -3375
         self.M = 40415
@@ -125,8 +132,8 @@ class SurgeController(Node):
         # distance = distance(t)
         est_time = self.get_est_time(distance, self.kf, xf_dold, xf_d)[0]
         self.get_logger().info('est_time: %f' % est_time)
-        # based on phi = 0.32 and k = 13*5.18*(10**-5) + 0.01 of controller i made for surge control project (from 0 to 5m/s)
         k = (self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
+        # based on phi = 0.32 and k = 13*5.18*(10**-5) + 0.01 of controller i made for surge control project (from 0 to 5m/s)
         phi_as_percentage_of_k = 29.9810744468*k
         phi = self.phi_tuning_factor*phi_as_percentage_of_k*k
         self.get_logger().info('phi: %f' % phi)
@@ -139,12 +146,30 @@ class SurgeController(Node):
         # thrust
         tau = u*(self.M - self.X_ADDED_MASS)
         self.thrust_msg.data = tau 
+
+        self.thrust_history.append(tau)
+
         return self.thrust_msg
     
     def get_est_time(self, distance, kf, initial_velocity, final_velocity):
         data = (distance, kf, initial_velocity, final_velocity)
         est_time = fsolve(self.func, (2*final_velocity + initial_velocity)/3, args=data)
         return est_time
+
+    def generate_plots(self):
+        params = {'mathtext.default': 'regular'}
+        plt.rcParams.update(params)
+
+        t = [0.1*i for i in range(len(self.thrust_history))]
+        fig, ax = plt.subplots(1)
+        ax.set_title("Thrust force")
+        ax.plot(t, self.thrust_history)
+        ax.set_xlabel(r"t [s]")
+        ax.set_ylabel(r"$tau_1 [N]$")
+        ax.set_ylim([min(self.thrust_history), max(self.thrust_history)])
+
+        graphics_file = "thrustForce.png"
+        fig.savefig(os.path.join(self.plots_dir, graphics_file))
 
     @staticmethod
     def func(t, *data):
@@ -156,6 +181,7 @@ class SurgeController(Node):
             - (1/(kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/t)))
             *(final_velocity - initial_velocity))
         )
+
     
 def main(args=None):
     try:
@@ -169,6 +195,7 @@ def main(args=None):
     except:
         print(traceback.format_exc())
     finally:
+        surge_controller_node.generate_plots()
         surge_controller_node.destroy_node()
         rclpy.shutdown()
 

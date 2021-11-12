@@ -1,6 +1,8 @@
 import sys
+import os
 
 import math
+import matplotlib.pyplot as plt
 
 import rclpy
 from rclpy.node import Node
@@ -14,6 +16,11 @@ from path_following_interfaces.srv import InitValues
 class YawController(Node):
     def __init__(self):
         super().__init__('yaw_controller_node')
+
+        self.declare_parameter('plots_dir', './')
+        self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
+
+        self.rudder_angle_history = []
 
         self.RUDDER_SAT = 0.610865
 
@@ -143,7 +150,24 @@ class YawController(Node):
         rudder_angle = max(-self.RUDDER_SAT*0.99, min(rudder_angle, self.RUDDER_SAT*0.99))
         self.rudder_msg.data = rudder_angle
 
-        return self.rudder_msg 
+        self.rudder_angle_history.append(rudder_angle)
+
+        return self.rudder_msg
+    
+    def generate_plots(self):
+        params = {'mathtext.default': 'regular'}
+        plt.rcParams.update(params)
+
+        t = [0.1*i for i in range(len(self.rudder_angle_history))]
+        fig, ax = plt.subplots(1)
+        ax.set_title("Rudder angle")
+        ax.plot(t, self.rudder_angle_history)
+        ax.set_xlabel(r"t [s]")
+        ax.set_ylabel(r"$delta [rad (from south clockwise)]$")
+        ax.set_ylim([-35,35])
+
+        graphics_file = "rudderAngle.png"
+        fig.savefig(os.path.join(self.plots_dir, graphics_file))
 
 def main(args=None):
     try:
@@ -154,9 +178,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
-    except Exception as e:
-        print(e)
     finally:
+        yaw_controller_node.generate_plots()
         yaw_controller_node.destroy_node()
         rclpy.shutdown()
 

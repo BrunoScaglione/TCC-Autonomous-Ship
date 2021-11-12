@@ -11,9 +11,11 @@ Datasheets used:
 '''
  
 import sys
-import collections
+import os
 
+import collections
 import numpy as np
+import matplotlib.pyplot as plt
 
 import rclpy
 from rclpy.node import Node
@@ -25,6 +27,11 @@ from path_following_interfaces.msg import State
 class GpsImuSimulator(Node):
     def __init__(self):
         super().__init__('gps_imu_simulator_node')
+
+        self.declare_parameter('plots_dir', './')
+        self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
+
+        self.simulated_state_history = [[],[],[],[],[],[]]
 
         # GPS_rate == 10 # [Hz] 
         # IMU_rate == 2000 # [Hz]
@@ -102,6 +109,14 @@ class GpsImuSimulator(Node):
 
         # return self.xs_msg
 
+        # must change x for xs_msg when this node is functioning
+        self.simulated_state_history[0].append(x.position.x)
+        self.simulated_state_history[1].append(x.position.y)
+        self.simulated_state_history[2].append(x.position.theta)
+        self.simulated_state_history[3].append(x.velocity.u)
+        self.simulated_state_history[4].append(x.velocity.v)
+        self.simulated_state_history[5].append(x.velocity.r)
+
         return x # debugging wave filter
 
     def log_state(self, state, communicator):
@@ -120,6 +135,55 @@ class GpsImuSimulator(Node):
             )
         )
 
+    def generate_plots(self):
+        params = {'mathtext.default': 'regular'}
+        plt.rcParams.update(params)
+
+        t = [0.1*i for i in range(len(self.simulated_state_history[0]))]
+        ss_dir = "simulatedState"
+        state_props = [
+            {
+                "title": "Simulated Linear Position X",
+                "ylabel": r"x [m]",
+                "file": "simulatedLinearPositionX.png"
+            },
+            {
+                "title": "Simulated Linear Position Y",
+                "ylabel": r"y [m]",
+                "file": "simulatedLinearPositionY.png"
+            },
+            {
+                "title": "Simulated Angular Position Theta",
+                "ylabel": r"theta [rad (from east counterclockwise)]",
+                "file": "simulatedAngularPositionTheta.png"
+            },
+            {
+                "title": "Simulated Linear Velocity U",
+                "ylabel": r"u [m/s]",
+                "file": "simulatedLinearVelocityU.png"
+            },
+            {
+                "title": "Simulated Linear Position V",
+                "ylabel": r"v [m/s (port)]",
+                "file": "simulatedLinearVelocityV.png"
+            },
+            {
+                "title": "Simulated Angular Velocity R",
+                "ylabel": r"r [rad/s (counterclockwise)]",
+                "file": "simulatedAngularVelocityR.png"
+            },
+        ]
+
+        for i in range(len(self.simulated_state_history)):
+            fig, ax = plt.subplots(1)
+            ax.set_title(state_props[i]["title"])
+            ax.plot(t, self.simulated_state_history[i])
+            ax.set_xlabel(r"t [s]")
+            ax.set_ylabel(state_props[i]["ylabel"])
+            ax.set_ylim([min(self.simulated_state_history[i]), max(self.simulated_state_history[i])])
+
+            fig.savefig(os.path.join(self.plots_dir, ss_dir, state_props[i]["file"]))
+
 def main(args=None):
     try:
         rclpy.init(args=args)
@@ -130,6 +194,7 @@ def main(args=None):
     except SystemExit:
         print('Stopped with user shutdown request')
     finally:
+        gps_imu_simulator_node.generate_plots()
         gps_imu_simulator_node.destroy_node()
         rclpy.shutdown()
 

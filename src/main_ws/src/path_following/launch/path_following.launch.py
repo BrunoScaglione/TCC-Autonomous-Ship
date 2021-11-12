@@ -13,6 +13,7 @@ def generate_launch_description():
     pkg_install_dir = get_package_prefix('path_following')
     pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
+    plots_dir = os.path.join(pkg_share_dir, 'plots')
     p3d = 'TankerL186B32_T085.p3d'
     db_dir = os.path.join(pkg_share_dir, 'db')
 
@@ -43,49 +44,70 @@ def generate_launch_description():
         package='path_following',
         executable='los_guidance',
         name='los_guidance_node',
-        output='screen'
+        output='screen',
+        parameters=[
+                {'plots_dir': plots_dir}
+        ]
     ) 
 
     start_surge_controller_node = Node(
         package='path_following',
         executable='surge_controller',
         name='surge_controller_node',
-        output='screen'
+        output='screen',
+        parameters=[
+                {'plots_dir': plots_dir}
+        ]
     ) 
 
     start_yaw_controller_node = Node(
         package='path_following',
         executable='yaw_controller',
         name='yaw_controller_node',
-        output='screen'
+        output='screen',
+        parameters=[
+                {'plots_dir': plots_dir}
+        ]
     )
 
     start_control_allocation_node = Node(
         package='path_following',
         executable='control_allocation',
         name='control_allocation_node',
-        output='screen'
+        output='screen',
+        parameters=[
+                {'plots_dir': plots_dir}
+        ]
     )
 
     start_gps_imu_simul_node = Node(
         package='path_following',
         executable='gps_imu_simul',
         name='gps_imu_simul_node',
-        output='screen'
+        output='screen',
+        parameters=[
+                {'plots_dir': plots_dir}
+        ]
     )
 
     start_kalman_filter_node = Node(
         package='path_following',
         executable='kalman_filter',
         name='kalman_filter_node',
-        output='screen'
+        output='screen',
+        parameters=[
+                {'plots_dir': plots_dir}
+        ]
     ) 
 
     start_wave_filter_node = Node(
         package='path_following',
         executable='wave_filter',
         name='wave_filter_node',
-        output='screen'
+        output='screen',
+        parameters=[
+                {'plots_dir': plots_dir}
+        ]
     ) 
 
     start_venus_node = Node(
