@@ -20,8 +20,14 @@ class LosGuidance(Node):
 
         # los parameters
         self.ship_lenght = 186
+        # los radius
         self.R = self.ship_lenght*2 
-        self.R_acceptance = 50 # debugging
+        # When craft is inside acceptance radius for a waypoint that
+        # it considers waypoint was reached
+        self.R_acceptance = 50 
+        # Size of radius around last waypoint. 
+        # When craft is outside this radius it should have stopped
+        self.R_stop = 100
         
         self.des_yaw_msg = Control()
         # self.des_velocity_msg = Float32()
@@ -145,8 +151,8 @@ class LosGuidance(Node):
             wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
             wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
 
-            # find x_los and y_los by solving 2 eq
-            # analytic solution:
+            # Find x_los and y_los by solving 2 eq.
+            # Analytic solution:
             # 1. isolating x_los
             # ((wy - wy_past)/(wx - wx_past))*(x_los - wx) == (y_los - wy)
             # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
@@ -164,6 +170,9 @@ class LosGuidance(Node):
             self.des_velocity_msg.desired_value = wv_next
 
             distance_waypoints = ((wx_next - wx)**2 + (wy_next - wy)**2)**0.5
+            self.get_logger().info('wx_next: %f' % wx_next)
+            self.get_logger().info('wx: %f' % wx)
+            self.get_logger().info('distance_waypoints: %f' % distance_waypoints)
             self.des_yaw_msg.distance_waypoints = distance_waypoints
             self.des_velocity_msg.distance_waypoints = distance_waypoints
 
@@ -172,8 +181,8 @@ class LosGuidance(Node):
             self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
             self.des_velocity_msg.desired_value = 0.0
 
-            self.des_yaw_msg.distance_waypoints = 0.0
-            self.des_velocity_msg.distance_waypoints = 0.0
+            self.des_yaw_msg.distance_waypoints = self.R_stop
+            self.des_velocity_msg.distance_waypoints = self.R_stop
 
         return (self.des_velocity_msg, self.des_yaw_msg)
 

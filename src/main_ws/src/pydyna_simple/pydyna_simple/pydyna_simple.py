@@ -2,6 +2,8 @@ import sys
 import os
 import numpy as np
 
+import traceback
+
 import pydyna
 
 import rclpy
@@ -163,6 +165,8 @@ def main(args=None):
                 my_pydyna_node.subscriptions_synced = False
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+    except:
+        print(traceback.format_exc())
     finally:       
         my_pydyna_node.get_logger().info('Ended Simulation')
         my_pydyna_node.destroy_node()

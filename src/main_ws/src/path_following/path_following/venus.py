@@ -127,7 +127,7 @@ class Venus(Node):
         self.vessel.data_panel[5] = KeyValue("Angular Position Theta", str(round(state.position.theta, 2)) + " rad (from east counterclockwise )")
         self.vessel.data_panel[6] = KeyValue("Linear Velocity U", str(round(state.velocity.u, 2)) + " m/s")
         self.vessel.data_panel[7] = KeyValue("Linear Velocity V", str(round(state.velocity.v, 2)) + " m/s")
-        self.vessel.data_panel[8] = KeyValue("Angular Velocity R", str(round(state.velocity.r, 4)) + " rad/s (counter clockwise)")
+        self.vessel.data_panel[8] = KeyValue("Angular Velocity R", str(round(state.velocity.r, 4)) + " rad/s (counterclockwise)")
         self.vessel.data_panel[9] = KeyValue("Time", str(round(state.time, 2)) + " s")
         self.vessel.data_panel[10] = KeyValue("Rudder angle", str(round(self.vessel.rudders[0].angle, 2)) + " deg (from south clockwise)")
         self.vessel.data_panel[11] = KeyValue("Propeller rotation", str(round(self.propeller_rotation, 2)) + " Hz")

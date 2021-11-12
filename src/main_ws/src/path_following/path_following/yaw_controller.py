@@ -18,8 +18,8 @@ class YawController(Node):
         #parameters
         self.K_tuning_factor = 1
         self.Kp = self.K_tuning_factor*1.34
-        self.Kd = self.K_tuning_factor*49.684
-        self.Ki = self.K_tuning_factor*0.00583
+        self.Kd = 49.684
+        self.Ki = 0.00583
         self.rudder_sat = 0.610865
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
@@ -90,10 +90,6 @@ class YawController(Node):
         self.tune_controller(req.waypoints, req.initial_state)
         self.desired_yaw_angle = req.yaw
         self.desired_yaw_angle_old = req.initial_state.position.theta
-        self.distance_waypoints = (
-            (req.waypoints.position.x[0] - req.initial_state.position.x)**2 +
-            (req.waypoints.position.y[0] - req.initial_state.position.y)**2
-        )**0.5
         rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)
         res.yaw = rudder_msg.data
         return res
@@ -123,8 +119,6 @@ class YawController(Node):
         if self.desired_yaw_angle != msg.desired_value:
             self.desired_yaw_angle_old = self.desired_yaw_angle
             self.desired_yaw_angle = msg.desired_value
-
-        self.distance_waypoints = msg.distance_waypoints 
 
     def yaw_control(self, theta, r):
         # desired theta

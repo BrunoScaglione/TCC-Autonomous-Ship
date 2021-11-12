@@ -21,8 +21,8 @@ class SurgeController(Node):
         self.X_added_mass = -3375
         self.m = 40415
         # TODO: tune these
-        self.phi_tuning_factor = 60
-        self.kf_tuning_factor = 15 
+        self.phi_tuning_factor = 70
+        self.kf_tuning_factor = 17 
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(
@@ -77,10 +77,12 @@ class SurgeController(Node):
         self.desired_surge_velocity = req.surge
         self.desired_surge_velocity_old = req.initial_state.velocity.u
         self.distance_waypoints = (
-            (req.waypoints.position.x[0] - req.initial_state.position.x)**2 +
-            (req.waypoints.position.y[0] - req.initial_state.position.y)**2
+            # index 1 instead of 0 because inserted initial condition as first waypoint 
+            # in function "tune_controller"
+            (req.waypoints.position.x[1] - req.initial_state.position.x)**2 +
+            (req.waypoints.position.y[1] - req.initial_state.position.y)**2
         )**0.5
-        self.waypoint_index = 0
+        self.get_logger().info('initial distance_waypoints: %f' % self.distance_waypoints)
         thrust_msg = self.surge_control(req.initial_state.velocity.u)
         res.surge = thrust_msg.data
         return res
@@ -102,6 +104,7 @@ class SurgeController(Node):
             self.desired_surge_velocity = msg.desired_value
 
         self.distance_waypoints = msg.distance_waypoints
+        self.get_logger().info('updated distance_waypoints: %f' % self.distance_waypoints)
     
     def surge_control(self, xf): # x is surge velocity
         xf_d = self.desired_surge_velocity
@@ -114,18 +117,19 @@ class SurgeController(Node):
         # distace between waypoints
         distance = self.distance_waypoints
         self.get_logger().info('distance_waypoints: %f' % self.distance_waypoints)
-        k = (self.kf*5.18*(10**-5) + 0.01)
         # estimated time to get from the old waypoint to the next
         # soltion of following equation
         # distance(t) = integral of velocity(t) from 0 to est_time (xf_dold*est_time + (xf_d - xf_dold)*(est_time + (1/k)*exp(-est_time*k)))
         # velocity(t) = xf_dold + (xf_d - xf_dold)*(1 - exp(-t*k))
         # distance(t) = (xf_dold*est_time + (xf_d - xf_dold)*(est_time + (1/k)*exp(-est_time*k)) -(1/k)*(xf_d - xf_dold))
+        # k = (self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
         # distance = distance(t)
-        est_time = self.get_est_time(distance, k, xf_dold, xf_d)[0]
+        est_time = self.get_est_time(distance, self.kf, xf_dold, xf_d)[0]
         self.get_logger().info('est_time: %f' % est_time)
         # based on phi = 0.32 and k = 13*5.18*(10**-5) + 0.01 of controller i made for surge control project (from 0 to 5m/s)
+        k = (self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
         phi_as_percentage_of_k = 29.9810744468*k
-        phi = self.phi_tuning_factor*phi_as_percentage_of_k*(self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
+        phi = self.phi_tuning_factor*phi_as_percentage_of_k*k
         self.get_logger().info('phi: %f' % phi)
         # sat function
         sats = max(-1,min(s/phi,1))
@@ -138,16 +142,20 @@ class SurgeController(Node):
         self.thrust_msg.data = tau 
         return self.thrust_msg
     
-    def get_est_time(self, distance, k, initial_velocity, final_velocity):
-        data = (distance, k, initial_velocity, final_velocity)
+    def get_est_time(self, distance, kf, initial_velocity, final_velocity):
+        data = (distance, kf, initial_velocity, final_velocity)
         est_time = fsolve(self.func, (2*final_velocity + initial_velocity)/3, args=data)
         return est_time
 
     @staticmethod
     def func(t, *data):
-        distance, k, initial_velocity, final_velocity = data
+        distance, kf, initial_velocity, final_velocity = data
         return ( # expression == 0
-            -distance + (initial_velocity*t + (final_velocity - initial_velocity)*(t + (1/k)*np.exp(-t*k)) - (1/k)*(final_velocity - initial_velocity))
+            - distance + (initial_velocity*t + (final_velocity - initial_velocity)
+            *(t + (1/(kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/t)))
+            *np.exp(-t*(kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/t))))
+            - (1/(kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/t)))
+            *(final_velocity - initial_velocity))
         )
     
 def main(args=None):
