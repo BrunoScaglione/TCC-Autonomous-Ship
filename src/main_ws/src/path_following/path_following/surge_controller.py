@@ -21,7 +21,7 @@ class SurgeController(Node):
         self.X_added_mass = -3375
         self.m = 40415
         # TODO: tune these
-        self.phi_tuning_factor = 70
+        self.phi_tuning_factor = 150
         self.kf_tuning_factor = 17 
         self.kf = self.kf_tuning_factor*13
 

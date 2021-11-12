@@ -27,7 +27,10 @@ class LosGuidance(Node):
         self.R_acceptance = 50 
         # Size of radius around last waypoint. 
         # When craft is outside this radius it should have stopped
-        self.R_stop = 100
+        self.R_stop = 100.0
+
+        # When true, completed all waypoints
+        self.finished = False
         
         self.des_yaw_msg = Control()
         # self.des_velocity_msg = Float32()
@@ -82,9 +85,9 @@ class LosGuidance(Node):
         req.waypoints.velocity.insert(0, req.initial_state.velocity.u)
         self.waypoints = req.waypoints # {position: {x: [...], y: [...]} velocity: [...]}
         
-        num_waypoints = len(req.waypoints.position.x)
-        self.get_logger().info('initial waypoint + listened %d waypoints' % (num_waypoints-1))
-        for i in range(num_waypoints):
+        self.num_waypoints = len(req.waypoints.position.x)
+        self.get_logger().info('initial waypoint + listened %d waypoints' % (self.num_waypoints-1))
+        for i in range(self.num_waypoints):
             self.get_logger().info('listened waypoint %d: %f %f %f' % (i, req.waypoints.position.x[i], req.waypoints.position.y[i], req.waypoints.velocity[i]))
         
         des_velocity_msg, des_yaw_msg = self.los(req.initial_state)
@@ -134,49 +137,54 @@ class LosGuidance(Node):
         return (x_los, y_los)
     
     def los(self, xf):
-        # use waypoints stored in self.waypoints
-        # these contain desired position x and y, and velocity u
-        num_waypoints = len(self.waypoints.position.x)
-        self.get_logger().info('num_waypoints: %d' % num_waypoints)
-
-        if self.current_waypoint < num_waypoints-1:
+        if not self.finished:
             if self.reached_next_waypoint(xf):
-                self.current_waypoint += 1
-                self.get_logger().info('changed waypoint at time: %f' % xf.time)
+                if self.current_waypoint == self.num_waypoints - 1:
+                    self.finished = True
+                else:
+                    self.current_waypoint += 1
+                    self.get_logger().info('changed waypoint at time: %f' % xf.time)
+            
+            if not self.finished:
+                idx = self.current_waypoint
+                x, y = xf.position.x, xf.position.y
+                u, v = xf.velocity.u, xf.velocity.v
+                U = (u**2 + v**2)**0.5
+                wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
+                wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
 
-            idx = self.current_waypoint
-            x, y = xf.position.x, xf.position.y
-            u, v = xf.velocity.u, xf.velocity.v
-            U = (u**2 + v**2)**0.5
-            wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
-            wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
+                # Find x_los and y_los by solving 2 eq.
+                # Analytic solution:
+                # 1. isolating x_los
+                # ((wy - wy_past)/(wx - wx_past))*(x_los - wx) == (y_los - wy)
+                # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
+                # 2.  substitute and solve for y_los
+                # (x_los-wx)**2 + (y_los-wy)**2 == self.R**2
+                # 3.  get x_los
+                # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
 
-            # Find x_los and y_los by solving 2 eq.
-            # Analytic solution:
-            # 1. isolating x_los
-            # ((wy - wy_past)/(wx - wx_past))*(x_los - wx) == (y_los - wy)
-            # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
-            # 2.  substitute and solve for y_los
-            # (x_los-wx)**2 + (y_los-wy)**2 == self.R**2
-            # 3.  get x_los
-            # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
+                x_los, y_los = self.get_xy_los(x, y, wx_next, wy_next, wx, wy)
+                beta = math.asin(v/U)
+                chi_d = math.atan2(x_los - x, y_los - y)
+                psi_d = chi_d + beta
+                # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
+                self.des_yaw_msg.desired_value = 1.57079632679 - psi_d # psi to theta (radians)
+                self.des_velocity_msg.desired_value = wv_next
 
-            x_los, y_los = self.get_xy_los(x, y, wx_next, wy_next, wx, wy)
-            beta = math.asin(v/U)
-            chi_d = math.atan2(x_los - x, y_los - y)
-            psi_d = chi_d + beta
-            # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
-            self.des_yaw_msg.desired_value = 1.57079632679 - psi_d # psi to theta (radians)
-            self.des_velocity_msg.desired_value = wv_next
+                distance_waypoints = ((wx_next - wx)**2 + (wy_next - wy)**2)**0.5
+                self.get_logger().info('wx_next: %f' % wx_next)
+                self.get_logger().info('wx: %f' % wx)
+                self.get_logger().info('distance_waypoints: %f' % distance_waypoints)
+                self.des_yaw_msg.distance_waypoints = distance_waypoints
+                self.des_velocity_msg.distance_waypoints = distance_waypoints
+            else:
+                self.get_logger().info('Reached final waypoint Uhulll')
+                self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
+                self.des_velocity_msg.desired_value = 0.0
 
-            distance_waypoints = ((wx_next - wx)**2 + (wy_next - wy)**2)**0.5
-            self.get_logger().info('wx_next: %f' % wx_next)
-            self.get_logger().info('wx: %f' % wx)
-            self.get_logger().info('distance_waypoints: %f' % distance_waypoints)
-            self.des_yaw_msg.distance_waypoints = distance_waypoints
-            self.des_velocity_msg.distance_waypoints = distance_waypoints
-
-        elif self.reached_next_waypoint(xf):
+                self.des_yaw_msg.distance_waypoints = self.R_stop
+                self.des_velocity_msg.distance_waypoints = self.R_stop
+        else:
             self.get_logger().info('Reached final waypoint Uhulll')
             self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
             self.des_velocity_msg.desired_value = 0.0
