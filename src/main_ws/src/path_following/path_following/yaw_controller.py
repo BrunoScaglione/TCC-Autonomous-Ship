@@ -8,7 +8,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 # custom interface
-from path_following_interfaces.msg import State
+from path_following_interfaces.msg import Control, State
 from path_following_interfaces.srv import InitValues
 
 class YawController(Node):
@@ -43,7 +43,7 @@ class YawController(Node):
             1)
 
         self.subscription_desired_yaw_angle = self.create_subscription(
-            Float32,
+            Control,
             '/desired_yaw_angle',
             self.callback_desired_yaw_angle,
             1)
@@ -60,6 +60,7 @@ class YawController(Node):
         waypoints.position.y.insert(0, initial_state.position.y)
         waypoints.velocity.insert(0, initial_state.velocity.u)
         cases = []
+        self.desired_steady_state_yaw_angles = []
         for i in range(1, len(waypoints.velocity)):
             distance = (
                 (waypoints.position.x[i] - waypoints.position.x[i-1])**2 +
@@ -69,6 +70,7 @@ class YawController(Node):
                 waypoints.position.y[i]-waypoints.position.y[i-1],
                 waypoints.position.x[i]-waypoints.position.x[i-1]
             )
+            self.desired_steady_state_yaw_angles.append(desired_steady_state_yaw_angle)
             try:
                 last_desired_steady_state_yaw_angle = math.atan2(
                     waypoints.position.y[i-1]-waypoints.position.y[i-2],
@@ -88,6 +90,10 @@ class YawController(Node):
         self.tune_controller(req.waypoints, req.initial_state)
         self.desired_yaw_angle = req.yaw
         self.desired_yaw_angle_old = req.initial_state.position.theta
+        self.distance_waypoints = (
+            (req.waypoints.position.x[0] - req.initial_state.position.x)**2 +
+            (req.waypoints.position.y[0] - req.initial_state.position.y)**2
+        )**0.5
         rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)
         res.yaw = rudder_msg.data
         return res
@@ -104,8 +110,7 @@ class YawController(Node):
         self.get_logger().info('published rudder angle: %f' % rudder_msg.data)
     
     def callback_desired_yaw_angle(self, msg):
-        self.get_logger().info('listened desired yaw angle: %f' % msg.data)
-        self.desired_yaw_angle_old = self.desired_yaw_angle
+        self.get_logger().info('listened desired yaw angle: %f' % msg.desired_value)
 
         self.t_last_desired_yaw_angle = self.t_current_desired_yaw_angle
         self.t_current_desired_yaw_angle = self.t
@@ -113,9 +118,13 @@ class YawController(Node):
         # fixes async issues
         # sometimes receives 2 desired yaw angles in sequence, without receiving estimated yaw angle
         if self.t_last_desired_yaw_angle == self.t_current_desired_yaw_angle:
-           self.t_current_desired_yaw_angle += 0.1  
+           self.t_current_desired_yaw_angle += 0.1
+        
+        if self.desired_yaw_angle != msg.desired_value:
+            self.desired_yaw_angle_old = self.desired_yaw_angle
+            self.desired_yaw_angle = msg.desired_value
 
-        self.desired_yaw_angle = msg.data
+        self.distance_waypoints = msg.distance_waypoints 
 
     def yaw_control(self, theta, r):
         # desired theta

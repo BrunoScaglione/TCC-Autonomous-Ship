@@ -10,7 +10,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 # custom interface
-from path_following_interfaces.msg import State, SurgeControl
+from path_following_interfaces.msg import State, Control
 from path_following_interfaces.srv import InitValues
 
 class SurgeController(Node):
@@ -22,7 +22,7 @@ class SurgeController(Node):
         self.m = 40415
         # TODO: tune these
         self.phi_tuning_factor = 60
-        self.kf_tuning_factor = 17 
+        self.kf_tuning_factor = 15 
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(
@@ -42,7 +42,7 @@ class SurgeController(Node):
             1)
 
         self.subscription_desired_surge_velocity = self.create_subscription(
-            SurgeControl,
+            Control,
             '/desired_surge_velocity',
             self.callback_desired_surge_velocity,
             1)
@@ -76,10 +76,11 @@ class SurgeController(Node):
         self.tune_controller(req.waypoints, req.initial_state)
         self.desired_surge_velocity = req.surge
         self.desired_surge_velocity_old = req.initial_state.velocity.u
-        self.delta_waypoints = (
+        self.distance_waypoints = (
             (req.waypoints.position.x[0] - req.initial_state.position.x)**2 +
             (req.waypoints.position.y[0] - req.initial_state.position.y)**2
         )**0.5
+        self.waypoint_index = 0
         thrust_msg = self.surge_control(req.initial_state.velocity.u)
         res.surge = thrust_msg.data
         return res
@@ -95,11 +96,12 @@ class SurgeController(Node):
         self.get_logger().info('published thrust force: %f' % thrust_msg.data)
     
     def callback_desired_surge_velocity(self, msg):
-        self.get_logger().info('listened desired surge velocity: %f' % msg.desired_velocity)
-        if self.desired_surge_velocity != msg.desired_velocity:
+        self.get_logger().info('listened desired surge velocity: %f' % msg.desired_value)
+        if self.desired_surge_velocity != msg.desired_value:
             self.desired_surge_velocity_old = self.desired_surge_velocity
-            self.desired_surge_velocity = msg.desired_velocity
-        self.delta_waypoints = msg.delta_waypoints
+            self.desired_surge_velocity = msg.desired_value
+
+        self.distance_waypoints = msg.distance_waypoints
     
     def surge_control(self, xf): # x is surge velocity
         xf_d = self.desired_surge_velocity
@@ -110,8 +112,8 @@ class SurgeController(Node):
         s = xf - xf_d
         self.get_logger().info('s: %f' % s)
         # distace between waypoints
-        distance = self.delta_waypoints
-        self.get_logger().info('delta_waypoints: %f' % self.delta_waypoints)
+        distance = self.distance_waypoints
+        self.get_logger().info('distance_waypoints: %f' % self.distance_waypoints)
         k = (self.kf*5.18*(10**-5) + 0.01)
         # estimated time to get from the old waypoint to the next
         # soltion of following equation

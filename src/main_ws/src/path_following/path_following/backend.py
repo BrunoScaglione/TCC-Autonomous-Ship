@@ -156,7 +156,6 @@ def receive_initial_condition():
 @app.route("/start")
 def start_system():
     try:
-        print("aaaaaaaaaaaa")
         backend_node.get_logger().info("Starting system")
 
         backend_node.publisher_waypoints.publish(backend_node.waypoints_msg)

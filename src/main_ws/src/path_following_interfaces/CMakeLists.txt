@@ -19,7 +19,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/State.msg"
   "msg/PositionsXY.msg"
   "msg/Waypoints.msg"
-  "msg/SurgeControl.msg"
+  "msg/Control.msg"
   "srv/InitValues.srv"
 )
 

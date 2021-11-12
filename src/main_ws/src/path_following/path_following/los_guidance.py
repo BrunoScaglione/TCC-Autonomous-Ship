@@ -11,7 +11,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 #custom service
-from path_following_interfaces.msg import State, SurgeControl
+from path_following_interfaces.msg import State, Control
 from path_following_interfaces.srv import InitValues
 
 class LosGuidance(Node):
@@ -23,9 +23,9 @@ class LosGuidance(Node):
         self.R = self.ship_lenght*2 
         self.R_acceptance = 50 # debugging
         
-        self.des_yaw_msg = Float32()
+        self.des_yaw_msg = Control()
         # self.des_velocity_msg = Float32()
-        self.des_velocity_msg = SurgeControl()
+        self.des_velocity_msg = Control()
 
         # index of waypoint the ship has to reach next (first waypoint is starting position)
         self.current_waypoint = 1
@@ -47,12 +47,12 @@ class LosGuidance(Node):
             1)
 
         self.publisher_desired_yaw_angle = self.create_publisher(
-            Float32,
+            Control,
             '/desired_yaw_angle',
             1)
 
         self.publisher_desired_surge_velocity = self.create_publisher(
-            SurgeControl,
+            Control,
             '/desired_surge_velocity',
             1)
 
@@ -82,7 +82,7 @@ class LosGuidance(Node):
             self.get_logger().info('listened waypoint %d: %f %f %f' % (i, req.waypoints.position.x[i], req.waypoints.position.y[i], req.waypoints.velocity[i]))
         
         des_velocity_msg, des_yaw_msg = self.los(req.initial_state)
-        res.surge, res.yaw = des_velocity_msg.desired_velocity, des_yaw_msg.data
+        res.surge, res.yaw = des_velocity_msg.desired_value, des_yaw_msg.desired_value
         return res
 
     def callback_shutdown(self):
@@ -94,9 +94,9 @@ class LosGuidance(Node):
             self.log_state(msg)
             des_velocity_msg, des_yaw_msg = self.los(msg)
             self.publisher_desired_yaw_angle.publish(des_yaw_msg)
-            self.get_logger().info('published desired yaw angle: %f' % des_yaw_msg.data)
+            self.get_logger().info('published desired yaw angle: %f' % des_yaw_msg.desired_value)
             self.publisher_desired_surge_velocity.publish(des_velocity_msg)
-            self.get_logger().info('published desired velocity: %f' % des_velocity_msg.data)
+            self.get_logger().info('published desired velocity: %f' % des_velocity_msg.desired_value)
         except AttributeError:
             self.get_logger().info('Has not received waypoints yet, will ignore listened state')
         
@@ -160,15 +160,20 @@ class LosGuidance(Node):
             chi_d = math.atan2(x_los - x, y_los - y)
             psi_d = chi_d + beta
             # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
-            self.des_yaw_msg.data = 1.57079632679 - psi_d # psi to theta (radians)
-            self.des_velocity_msg.desired_velocity = wv_next
-            self.des_velocity_msg.delta_waypoints = ((wx_next - x)**2 + (wy_next - y)**2)**0.5
+            self.des_yaw_msg.desired_value = 1.57079632679 - psi_d # psi to theta (radians)
+            self.des_velocity_msg.desired_value = wv_next
+
+            distance_waypoints = ((wx_next - wx)**2 + (wy_next - wy)**2)**0.5
+            self.des_yaw_msg.distance_waypoints = distance_waypoints
+            self.des_velocity_msg.distance_waypoints = distance_waypoints
 
         elif self.reached_next_waypoint(xf):
             self.get_logger().info('Reached final waypoint Uhulll')
-            self.des_yaw_msg.data = 0.0 # finishes pointing west
-            self.des_velocity_msg.desired_velocity = 0.0
-            self.des_velocity_msg.delta_waypoints = 0.0
+            self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
+            self.des_velocity_msg.desired_value = 0.0
+
+            self.des_yaw_msg.distance_waypoints = 0.0
+            self.des_velocity_msg.distance_waypoints = 0.0
 
         return (self.des_velocity_msg, self.des_yaw_msg)
 
