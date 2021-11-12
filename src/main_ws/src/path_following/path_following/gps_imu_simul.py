@@ -31,6 +31,7 @@ class GpsImuSimulator(Node):
         self.declare_parameter('plots_dir', './')
         self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
 
+        self.state_history = [[],[],[],[],[],[]]
         self.simulated_state_history = [[],[],[],[],[],[]]
 
         # GPS_rate == 10 # [Hz] 
@@ -84,6 +85,13 @@ class GpsImuSimulator(Node):
         simulated_state_msg = self.state_simul(msg)
         self.publisher_simulated_state.publish(simulated_state_msg)
         self.log_state(simulated_state_msg, 'publisher')
+
+        self.state_history[0].append(msg.position.x)
+        self.state_history[1].append(msg.position.y)
+        self.state_history[2].append(msg.position.theta)
+        self.state_history[3].append(msg.velocity.u)
+        self.state_history[4].append(msg.velocity.v)
+        self.state_history[5].append(msg.velocity.r)
 
     def calculate_velocity_sigmas(self):
         x_dot = ( list(self.last_two_states)[0].position.x - list(self.last_two_states)[1].position.x )/0.1
@@ -141,7 +149,7 @@ class GpsImuSimulator(Node):
 
         t = [0.1*i for i in range(len(self.simulated_state_history[0]))]
         ss_dir = "simulatedState"
-        state_props = [
+        simulated_state_props = [
             {
                 "title": "Simulated Linear Position X",
                 "ylabel": r"x [m]",
@@ -173,16 +181,52 @@ class GpsImuSimulator(Node):
                 "file": "simulatedAngularVelocityR.png"
             },
         ]
+        s_dir = "State"
+        state_props = [
+            {
+                "title": "Linear Position X",
+                "ylabel": r"x [m]",
+                "file": "LinearPositionX.png"
+            },
+            {
+                "title": "Linear Position Y",
+                "ylabel": r"y [m]",
+                "file": "LinearPositionY.png"
+            },
+            {
+                "title": "Angular Position Theta",
+                "ylabel": r"theta [rad (from east counterclockwise)]",
+                "file": "AngularPositionTheta.png"
+            },
+            {
+                "title": "Linear Velocity U",
+                "ylabel": r"u [m/s]",
+                "file": "LinearVelocityU.png"
+            },
+            {
+                "title": "Linear Position V",
+                "ylabel": r"v [m/s (port)]",
+                "file": "LinearVelocityV.png"
+            },
+            {
+                "title": "Angular Velocity R",
+                "ylabel": r"r [rad/s (counterclockwise)]",
+                "file": "AngularVelocityR.png"
+            },
+        ]
+        dirs = [ss_dir, s_dir]
+        propss = [simulated_state_props, state_props]
+        histories = [self.simulated_state_history, self.state_history]
+        for (dir, props, history) in list(zip(dirs, propss, histories)):
+            for j in range(len(history)):
+                fig, ax = plt.subplots(1)
+                ax.set_title(props[j]["title"])
+                ax.plot(t, history[j])
+                ax.set_xlabel(r"t [s]")
+                ax.set_ylabel(props[j]["ylabel"])
+                ax.set_ylim([min(history[j]), max(history[j])])
 
-        for i in range(len(self.simulated_state_history)):
-            fig, ax = plt.subplots(1)
-            ax.set_title(state_props[i]["title"])
-            ax.plot(t, self.simulated_state_history[i])
-            ax.set_xlabel(r"t [s]")
-            ax.set_ylabel(state_props[i]["ylabel"])
-            ax.set_ylim([min(self.simulated_state_history[i]), max(self.simulated_state_history[i])])
-
-            fig.savefig(os.path.join(self.plots_dir, ss_dir, state_props[i]["file"]))
+                fig.savefig(os.path.join(self.plots_dir, dir, props[j]["file"]))
 
 def main(args=None):
     try:

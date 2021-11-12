@@ -79,8 +79,8 @@ class KalmanFilter(Node):
         plt.rcParams.update(params)
 
         t = [0.1*i for i in range(len(self.simulated_state_history[0]))]
-        ss_dir = "simulatedState"
-        state_props = [
+        es_dir = "estimatedState"
+        estimated_state_props = [
             {
                 "title": "Estimated Linear Position X",
                 "ylabel": r"x [m]",
@@ -115,13 +115,13 @@ class KalmanFilter(Node):
 
         for i in range(len(self.simulated_state_history)):
             fig, ax = plt.subplots(1)
-            ax.set_title(state_props[i]["title"])
+            ax.set_title(estimated_state_props[i]["title"])
             ax.plot(t, self.simulated_state_history[i])
             ax.set_xlabel(r"t [s]")
-            ax.set_ylabel(state_props[i]["ylabel"])
+            ax.set_ylabel(estimated_state_props[i]["ylabel"])
             ax.set_ylim([min(self.simulated_state_history[i]), max(self.simulated_state_history[i])])
 
-            fig.savefig(os.path.join(self.plots_dir, ss_dir, state_props[i]["file"]))
+            fig.savefig(os.path.join(self.plots_dir, es_dir, estimated_state_props[i]["file"]))
 
 def main(args=None):
     try:
