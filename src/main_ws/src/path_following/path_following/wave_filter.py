@@ -32,8 +32,6 @@ class WaveFilter(Node):
         # self.sos2 = signal.butter(6, [0.016, 0.025], 'bandstop', fs=10, output='sos')
         # self.zi2 = signal.sosfilt_zi(self.sos2)
 
-        # for 6 order filter
-        # TODO: hardcoded now, but needs to recceive from initial condition
         self.state_history = [[],[],[],[],[],[]] 
 
         self.xf_msg = State()

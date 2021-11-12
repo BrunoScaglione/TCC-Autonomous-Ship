@@ -1,7 +1,6 @@
 import os
 import json
 from datetime import datetime
-import traceback
 
 from flask import Flask, request
 
@@ -19,6 +18,14 @@ class Backend(Node):
 
         self.declare_parameter('db_dir', './')
         self.db_dir = self.get_parameter('db_dir').get_parameter_value().string_value
+
+        self.end_msg = Bool()
+        self.end_msg.data = True
+        self.shutdown_msg = Bool()
+        self.shutdown_msg.data = True
+        
+        self.init_values_srv = InitValues.Request()
+        self.waypoints_msg = Waypoints()
 
         self.client_init_setpoints = \
             self.create_client(InitValues, '/init_setpoints')
@@ -46,14 +53,6 @@ class Backend(Node):
             Bool,
             '/shutdown',
             1)
-
-        self.end_msg = Bool()
-        self.end_msg.data = True
-        self.shutdown_msg = Bool()
-        self.shutdown_msg.data = True
-        
-        self.init_values_srv = InitValues.Request()
-        self.waypoints_msg = Waypoints()
     
     def log_state(self, state):
         self.get_logger().info(

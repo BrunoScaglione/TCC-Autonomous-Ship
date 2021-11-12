@@ -16,12 +16,14 @@ class ControlAllocation(Node):
     def __init__(self):
         super().__init__('control_allocation_node')
 
-        self.propeller_history = [] #debugging
-
         # controller parameters
-        self.c1 = 0.036
-        self.c2 = 3.53
-        self.c3 = 0.06696
+        self.C1 = 0.036
+        self.C2 = 3.53
+        self.C3 = 0.06696
+
+        self.PROPELLER_SAT = 1.75 # Hz
+
+        self.propeller_history = [] #debugging
 
         self.rotation_msg = Float32()
 
@@ -64,11 +66,12 @@ class ControlAllocation(Node):
     
     def control_allocation(self, tau, u):
         if tau > 0:
-            Np = self.c1*(math.sqrt(self.c2*(u**2) + tau)) + self.c3*u
+            Np = self.C1*(math.sqrt(self.C2*(u**2) + tau)) + self.C3*u
         else:
-            Np = -(self.c1*(math.sqrt(self.c2*(u**2) - tau)) + self.c3*u)
-        # saturation of the propeller
-        Np = max(-1.75, min(Np, 1.75))
+            Np = -(self.C1*(math.sqrt(self.C2*(u**2) - tau)) + self.C3*u)
+        # saturation of the propeller (with 1% safety margin)
+        # real sat is 1.75 Hz
+        Np = max(-self.PROPELLER_SAT*0.99, min(Np, self.PROPELLER_SAT*0.99))
         self.propeller_history.append(Np)
         self.rotation_msg.data = Np
         return self.rotation_msg 

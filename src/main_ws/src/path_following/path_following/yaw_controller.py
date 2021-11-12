@@ -15,12 +15,12 @@ class YawController(Node):
     def __init__(self):
         super().__init__('yaw_controller_node')
 
-        #parameters
+        self.RUDDER_SAT = 0.610865
+
         self.K_tuning_factor = 1
         self.Kp = self.K_tuning_factor*1.34
         self.Kd = 49.684
         self.Ki = 0.00583
-        self.rudder_sat = 0.610865
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
         # for the integral action (acumulates error)
@@ -138,8 +138,9 @@ class YawController(Node):
 
         # control action 
         rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * self.theta_bar_int
-        # rudder saturation
-        rudder_angle = max(-self.rudder_sat, min(rudder_angle, self.rudder_sat))
+        # rudder saturation (with 1% safety margin)
+        # real sat is 35 degress
+        rudder_angle = max(-self.RUDDER_SAT*0.99, min(rudder_angle, self.RUDDER_SAT*0.99))
         self.rudder_msg.data = rudder_angle
 
         return self.rudder_msg 

@@ -11,7 +11,6 @@ class KalmanFilter(Node):
     def __init__(self):
         super().__init__('kalman_filter_simulator_node')
 
-
         self.subscription_shutdown = self.create_subscription(
             Bool,
             '/shutdown',

@@ -19,25 +19,25 @@ class LosGuidance(Node):
         super().__init__('los_guidance_node')
 
         # los parameters
-        self.ship_lenght = 186
+        self.SHIP_LENGHT = 186
         # los radius
-        self.R = self.ship_lenght*2 
+        self.R = self.SHIP_LENGHT*2 
         # When craft is inside acceptance radius for a waypoint that
         # it considers waypoint was reached
-        self.R_acceptance = 50 
+        self.R_ACCEPTANCE = 50 
         # Size of radius around last waypoint. 
         # When craft is outside this radius it should have stopped
-        self.R_stop = 100.0
+        self.R_STOP = 100.0
 
         # When true, completed all waypoints
         self.finished = False
+
+        # index of waypoint the ship has to reach next (first waypoint is starting position)
+        self.current_waypoint = 1
         
         self.des_yaw_msg = Control()
         # self.des_velocity_msg = Float32()
         self.des_velocity_msg = Control()
-
-        # index of waypoint the ship has to reach next (first waypoint is starting position)
-        self.current_waypoint = 1
 
         self.server_init_setpoints = self.create_service(
             InitValues, '/init_setpoints', self.callback_init_setpoints
@@ -113,7 +113,7 @@ class LosGuidance(Node):
         x, y = xf.position.x, xf.position.y
         idx = self.current_waypoint
         wx_next , wy_next  = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
-        return 1 if (x-wx_next)**2 + (y-wy_next)**2 < self.R_acceptance**2 else 0
+        return 1 if (x-wx_next)**2 + (y-wy_next)**2 < self.R_ACCEPTANCE**2 else 0
 
     def get_xy_los(self, x, y, wx_next, wy_next, wx, wy):
         x_los, y_los = symbols('x_los, y_los')
@@ -182,15 +182,15 @@ class LosGuidance(Node):
                 self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
                 self.des_velocity_msg.desired_value = 0.0
 
-                self.des_yaw_msg.distance_waypoints = self.R_stop
-                self.des_velocity_msg.distance_waypoints = self.R_stop
+                self.des_yaw_msg.distance_waypoints = self.R_STOP
+                self.des_velocity_msg.distance_waypoints = self.R_STOP
         else:
             self.get_logger().info('Reached final waypoint Uhulll')
             self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
             self.des_velocity_msg.desired_value = 0.0
 
-            self.des_yaw_msg.distance_waypoints = self.R_stop
-            self.des_velocity_msg.distance_waypoints = self.R_stop
+            self.des_yaw_msg.distance_waypoints = self.R_STOP
+            self.des_velocity_msg.distance_waypoints = self.R_STOP
 
         return (self.des_velocity_msg, self.des_yaw_msg)
 

@@ -17,10 +17,9 @@ class SurgeController(Node):
     def __init__(self):
         super().__init__('surge_controller_node')
 
-        # controller parameters
-        self.X_added_mass = -3375
-        self.m = 40415
-        # TODO: tune these
+        self.X_ADDED_MASS = -3375
+        self.M = 40415
+
         self.phi_tuning_factor = 300
         self.kf_tuning_factor = 17 
         self.kf = self.kf_tuning_factor*13
@@ -138,7 +137,7 @@ class SurgeController(Node):
         u = xf*abs(xf)*(1.9091*(10**-4) - self.kf*5.18*(10**-5)*sats) - (abs(xf_dold-xf_d)/est_time)*sats
         self.get_logger().info('u: %f' % u) 
         # thrust
-        tau = u*(self.m - self.X_added_mass)
+        tau = u*(self.M - self.X_ADDED_MASS)
         self.thrust_msg.data = tau 
         return self.thrust_msg
     

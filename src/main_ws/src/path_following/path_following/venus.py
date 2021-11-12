@@ -26,9 +26,11 @@ class Venus(Node):
     def __init__(self):
         super().__init__('venus_node')
 
-        self.venus_init()
-
+        # could receive initial propeller rotation from init_simul msg
+        # but not urgent now, can be done later
         self.propeller_rotation = 0
+
+        self.venus_init()
 
         self.subscription_shutdown = self.create_subscription(
             Bool,
@@ -69,6 +71,8 @@ class Venus(Node):
             position = self.initial_position,
             angle = 0,
             size = Size(32, 186),
+            # could receive initial rudder angle from init_simul msg
+            # but not urgent now, can be done later
             rudders=[Rudder(angle=0, length=0.1, visual_options={"color": "orange"})],
             visual_options={
                 "stroke": True,
