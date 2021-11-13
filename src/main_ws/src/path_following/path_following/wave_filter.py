@@ -198,7 +198,7 @@ class WaveFilter(Node):
         axPhase.set_xlabel("$Frequency [Hz]$")
         axPhase.set_ylabel("Phase [dB]")
 
-        fig.savefig(os.path.join(self.plots_dir, "bode", "bodePlot"))
+        fig.savefig(os.path.join(self.plots_dir, "bodePlot"))
 
 def main(args=None):
     try:
