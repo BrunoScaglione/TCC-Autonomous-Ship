@@ -31,8 +31,10 @@ class SurgeController(Node):
         self.X_ADDED_MASS = -3375
         self.M = 40415
 
-        self.phi_tuning_factor = 300
-        self.kf_tuning_factor = 17 
+        self.PHI_AS_PERCENTAGE_OF_K = 29.9810744468 #2808.95216145 for k**0.5
+
+        self.phi_tuning_factor = 3 # 3 works with shattering
+        self.kf_tuning_factor = 7 #  works with shattering
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(
@@ -134,12 +136,12 @@ class SurgeController(Node):
         # distance(t) = (xf_dold*est_time + (xf_d - xf_dold)*(est_time + (1/k)*exp(-est_time*k)) -(1/k)*(xf_d - xf_dold))
         # k = (self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
         # distance = distance(t)
-        est_time = self.get_est_time(distance, self.kf, xf_dold, xf_d)[0]
+        est_time = self.get_est_time(distance, self.kf, xf_dold, xf_d)
         self.get_logger().info('est_time: %f' % est_time)
         k = (self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
+        self.get_logger().info('k: %f' % k)
         # based on phi = 0.32 and k = 13*5.18*(10**-5) + 0.01 of controller i made for surge control project (from 0 to 5m/s)
-        phi_as_percentage_of_k = 29.9810744468*k
-        phi = self.phi_tuning_factor*phi_as_percentage_of_k*k
+        phi = self.phi_tuning_factor*self.PHI_AS_PERCENTAGE_OF_K*k
         self.get_logger().info('phi: %f' % phi)
         # sat function
         sats = max(-1, min(s/phi, 1))
@@ -157,8 +159,18 @@ class SurgeController(Node):
     
     def get_est_time(self, distance, kf, initial_velocity, final_velocity):
         data = (distance, kf, initial_velocity, final_velocity)
-        est_time = fsolve(self.func, (2*final_velocity + initial_velocity)/3, args=data)
-        return est_time
+        est_time_exp = fsolve(self.func, (2*final_velocity + initial_velocity)/3, args=data)[0]
+        est_time_lin = distance/((initial_velocity+final_velocity)/2)
+        est_time_bootstrap = (est_time_lin + est_time_exp)
+        # ponderates between linear and exponential response
+        # when phi is higher goes from linear to exponential
+        # but the claculation depends on knowing phi, which depend on est_time itself
+        # so, begins with a guess for est_time and runs 5 iterations
+        for _ in range(5):
+            k = (self.kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/(est_time_bootstrap/2)))
+            phi_bootstrap = self.phi_tuning_factor*self.PHI_AS_PERCENTAGE_OF_K*k
+            est_time_bootstrap = (((final_velocity-initial_velocity) - phi_bootstrap)*est_time_lin + phi_bootstrap*est_time_exp)/(final_velocity-initial_velocity)
+        return est_time_bootstrap
 
     def generate_plots(self):
         #clean before

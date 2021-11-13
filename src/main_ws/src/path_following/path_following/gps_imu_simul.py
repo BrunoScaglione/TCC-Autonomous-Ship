@@ -201,32 +201,32 @@ class GpsImuSimulator(Node):
             {
                 "title": "Linear Position X",
                 "ylabel": r"$x\;[m]$",
-                "file": "LinearPositionX.png"
+                "file": "linearPositionX.png"
             },
             {
                 "title": "Linear Position Y",
                 "ylabel": r"$y\;[m]$",
-                "file": "LinearPositionY.png"
+                "file": "linearPositionY.png"
             },
             {
                 "title": "Angular Position Theta",
                 "ylabel": r"$\theta\;[rad\;(from\;east\;counterclockwise)]$",
-                "file": "AngularPositionTheta.png"
+                "file": "angularPositionTheta.png"
             },
             {
                 "title": "Linear Velocity U",
                 "ylabel": r"$u\;[m/s]$",
-                "file": "LinearVelocityU.png"
+                "file": "linearVelocityU.png"
             },
             {
                 "title": "Linear Position V",
                 "ylabel": r"$v\;[m/s\;(port)]$",
-                "file": "LinearVelocityV.png"
+                "file": "linearVelocityV.png"
             },
             {
                 "title": "Angular Velocity R",
                 "ylabel": r"$r\;[rad/s\;(counterclockwise)]$",
-                "file": "AngularVelocityR.png"
+                "file": "angularVelocityR.png"
             },
         ]
         dirs = [ss_dir, s_dir]
