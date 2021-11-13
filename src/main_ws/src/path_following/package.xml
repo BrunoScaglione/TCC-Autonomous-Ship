@@ -8,6 +8,7 @@
   <license>Apache License 2.0</license>
 
   <exec_depend>os</exec_depend>
+  <exec_depend>glob</exec_depend>
   <exec_depend>sys</exec_depend>
   <exec_depend>datetime</exec_depend>
   <exec_depend>std_msgs</exec_depend>

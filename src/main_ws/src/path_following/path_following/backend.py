@@ -1,4 +1,5 @@
 import os
+import glob
 import json
 from datetime import datetime
 
@@ -27,6 +28,13 @@ class Backend(Node):
         self.init_values_srv = InitValues.Request()
         self.waypoints_msg = Waypoints()
 
+        waypoints = {'position': {}}
+        waypoints['position']['x'] = list(self.waypoints_msg.position.x)
+        waypoints['position']['y'] = list(self.waypoints_msg.position.y)
+        waypoints['velocity'] = list(self.waypoints_msg.velocity)
+
+        self.save_waypoints(waypoints)
+
         self.client_init_setpoints = \
             self.create_client(InitValues, '/init_setpoints')
 
@@ -53,6 +61,21 @@ class Backend(Node):
             Bool,
             '/shutdown',
             1)
+    
+    def save_waypoints(self, waypoints):
+        now = datetime.now()
+        time_stamp = now.strftime("%Y_%m_%d-%H_%M_%S")
+
+        waypoints_dir = os.path.join(self.db_dir, 'waypoints')
+        waypoints_path = os.path.join(waypoints_dir, f'waypoints_{time_stamp}.json')
+
+        # clean before
+        files = glob.glob(os.path.join(waypoints_dir, '*'))
+        for f in files:
+            os.remove(f) 
+
+        with open(waypoints_path, 'w', encoding='utf-8') as f:
+            json.dump(waypoints, f, ensure_ascii=False, indent=4)
     
     def log_state(self, state):
         self.get_logger().info(
@@ -88,11 +111,7 @@ def receive_waypoints():
     try:
         waypoints = request.json
         if not waypoints['from_gui']:
-            now = datetime.now()
-            time_stamp = now.strftime("%Y_%m_%d-%H_%M_%S")
-
-            with open(os.path.join(backend_node.db_dir, 'waypoints', f'waypoints_{time_stamp}.json'), 'w', encoding='utf-8') as f:
-                json.dump(waypoints, f, ensure_ascii=False, indent=4)
+            backend_node.save_waypoints(waypoints)
 
             num_waypoints = len(waypoints['position']['x'])
             backend_node.get_logger().info('received from client %d waypoints' % num_waypoints)
