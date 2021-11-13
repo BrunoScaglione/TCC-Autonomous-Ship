@@ -13,6 +13,8 @@ Datasheets used:
 import sys
 import os
 
+import traceback
+
 import collections
 import numpy as np
 import matplotlib.pyplot as plt
@@ -39,6 +41,8 @@ class GpsImuSimulator(Node):
         # both rates are faster than the simulation 
         # (which is 10-e Hz where e is due to the time do do 1 step of computations)
         # therefore wont have sampling effect
+
+        self.TIME_STEP = 0.1
 
         # assuming sensors are already calibrated (no bias)
         # assuming same variance for x and y, and 0 covariance
@@ -80,11 +84,6 @@ class GpsImuSimulator(Node):
         
     def callback_state(self, msg):
         self.log_state(msg, 'subscriber')
-        self.last_two_states.appendleft(msg)
-        self.calculate_velocity_sigmas()
-        simulated_state_msg = self.state_simul(msg)
-        self.publisher_simulated_state.publish(simulated_state_msg)
-        self.log_state(simulated_state_msg, 'publisher')
 
         self.state_history[0].append(msg.position.x)
         self.state_history[1].append(msg.position.y)
@@ -93,9 +92,15 @@ class GpsImuSimulator(Node):
         self.state_history[4].append(msg.velocity.v)
         self.state_history[5].append(msg.velocity.r)
 
+        self.last_two_states.appendleft(msg)
+        self.calculate_velocity_sigmas()
+        simulated_state_msg = self.state_simul(msg)
+        self.publisher_simulated_state.publish(simulated_state_msg)
+        self.log_state(simulated_state_msg, 'publisher')
+
     def calculate_velocity_sigmas(self):
-        x_dot = ( list(self.last_two_states)[0].position.x - list(self.last_two_states)[1].position.x )/0.1
-        y_dot = ( list(self.last_two_states)[0].position.y - list(self.last_two_states)[1].position.y )/0.1
+        x_dot = ( list(self.last_two_states)[0].position.x - list(self.last_two_states)[1].position.x )/self.TIME_STEP
+        y_dot = ( list(self.last_two_states)[0].position.y - list(self.last_two_states)[1].position.y )/self.TIME_STEP
         sigma_theta = self.SIGMA_THETA
         theta = list(self.last_two_states)[0].position.theta
         # error propagation ([u, v].T = R@[xdot, ydot].T linear transformation or rotation matrix)
@@ -147,70 +152,70 @@ class GpsImuSimulator(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [0.1*i for i in range(len(self.simulated_state_history[0]))]
+        t = [self.TIME_STEP*i for i in range(len(self.simulated_state_history[0]))]
         ss_dir = "simulatedState"
         simulated_state_props = [
             {
                 "title": "Simulated Linear Position X",
-                "ylabel": r"x [m]",
+                "ylabel": r"x\;[m]",
                 "file": "simulatedLinearPositionX.png"
             },
             {
                 "title": "Simulated Linear Position Y",
-                "ylabel": r"y [m]",
+                "ylabel": r"y\;[m]",
                 "file": "simulatedLinearPositionY.png"
             },
             {
                 "title": "Simulated Angular Position Theta",
-                "ylabel": r"theta [rad (from east counterclockwise)]",
+                "ylabel": r"theta [rad\;(from\;east\;counterclockwise)]",
                 "file": "simulatedAngularPositionTheta.png"
             },
             {
                 "title": "Simulated Linear Velocity U",
-                "ylabel": r"u [m/s]",
+                "ylabel": r"u\;[m/s]",
                 "file": "simulatedLinearVelocityU.png"
             },
             {
                 "title": "Simulated Linear Position V",
-                "ylabel": r"v [m/s (port)]",
+                "ylabel": r"v\;[m/s\;(port)]",
                 "file": "simulatedLinearVelocityV.png"
             },
             {
                 "title": "Simulated Angular Velocity R",
-                "ylabel": r"r [rad/s (counterclockwise)]",
+                "ylabel": r"r\;[rad/s\;(counterclockwise)]",
                 "file": "simulatedAngularVelocityR.png"
             },
         ]
-        s_dir = "State"
+        s_dir = "state"
         state_props = [
             {
                 "title": "Linear Position X",
-                "ylabel": r"x [m]",
+                "ylabel": r"x\;[m]",
                 "file": "LinearPositionX.png"
             },
             {
                 "title": "Linear Position Y",
-                "ylabel": r"y [m]",
+                "ylabel": r"y\;[m]",
                 "file": "LinearPositionY.png"
             },
             {
                 "title": "Angular Position Theta",
-                "ylabel": r"theta [rad (from east counterclockwise)]",
+                "ylabel": r"\theta\;[rad\;(from\;east\;counterclockwise)]",
                 "file": "AngularPositionTheta.png"
             },
             {
                 "title": "Linear Velocity U",
-                "ylabel": r"u [m/s]",
+                "ylabel": r"u\;[m/s]",
                 "file": "LinearVelocityU.png"
             },
             {
                 "title": "Linear Position V",
-                "ylabel": r"v [m/s (port)]",
+                "ylabel": r"v\;[m/s\;(port)]",
                 "file": "LinearVelocityV.png"
             },
             {
                 "title": "Angular Velocity R",
-                "ylabel": r"r [rad/s (counterclockwise)]",
+                "ylabel": r"r\;[rad/s\;(counterclockwise)]",
                 "file": "AngularVelocityR.png"
             },
         ]
@@ -222,7 +227,7 @@ class GpsImuSimulator(Node):
                 fig, ax = plt.subplots(1)
                 ax.set_title(props[j]["title"])
                 ax.plot(t, history[j])
-                ax.set_xlabel(r"t [s]")
+                ax.set_xlabel(r"t\;[s]")
                 ax.set_ylabel(props[j]["ylabel"])
                 ax.set_ylim([min(history[j]), max(history[j])])
 
@@ -237,6 +242,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
+    except:
+        print(traceback.format_exc())
     finally:
         gps_imu_simulator_node.generate_plots()
         gps_imu_simulator_node.destroy_node()

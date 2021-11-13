@@ -24,6 +24,8 @@ class SurgeController(Node):
 
         self.thrust_history = [] #debugging
 
+        self.TIME_STEP = 0.1
+
         self.X_ADDED_MASS = -3375
         self.M = 40415
 
@@ -160,12 +162,12 @@ class SurgeController(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [0.1*i for i in range(len(self.thrust_history))]
+        t = [self.TIME_STEP*i for i in range(len(self.thrust_history))]
         fig, ax = plt.subplots(1)
         ax.set_title("Thrust force")
         ax.plot(t, self.thrust_history)
-        ax.set_xlabel(r"t [s]")
-        ax.set_ylabel(r"$tau_1 [N]$")
+        ax.set_xlabel(r"t\;[s]")
+        ax.set_ylabel(r"$tau_1\;[N]$")
         ax.set_ylim([min(self.thrust_history), max(self.thrust_history)])
 
         graphics_file = "thrustForce.png"

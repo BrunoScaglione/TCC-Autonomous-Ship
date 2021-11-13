@@ -20,6 +20,8 @@ class ControlAllocation(Node):
         self.declare_parameter('plots_dir', './')
         self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
 
+        self.TIME_STEP = 0.1
+
         # controller parameters
         self.C1 = 0.036
         self.C2 = 3.53
@@ -84,13 +86,13 @@ class ControlAllocation(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [0.1*i for i in range(len(self.propeller_history))]
+        t = [self.TIME_STEP*i for i in range(len(self.propeller_history))]
         fig, ax = plt.subplots(1)
         ax.set_title("Proppeler rotation")
         ax.plot(t, self.propeller_history)
-        ax.set_xlabel(r"t [s]")
-        ax.set_ylabel(r"$n_p [Hz]$")
-        ax.set_ylim([-1.75,1.75])
+        ax.set_xlabel(r"t\;[s]")
+        ax.set_ylabel(r"$n_p\;[Hz]$")
+        ax.set_ylim([min(self.propeller_history),max(self.propeller_history)])
 
         graphics_file = "propellerRotation.png"
         fig.savefig(os.path.join(self.plots_dir, graphics_file))

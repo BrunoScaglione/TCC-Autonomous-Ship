@@ -25,6 +25,8 @@ class LosGuidance(Node):
 
         self.desired_values_history = [[],[]]
 
+        self.TIME_STEP = 0.1
+
         # los parameters
         self.SHIP_LENGHT = 186
         # los radius
@@ -200,6 +202,7 @@ class LosGuidance(Node):
             self.des_velocity_msg.distance_waypoints = self.R_STOP
 
         
+
         self.desired_values_history[0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history[1].append(self.des_yaw_msg.desired_value)
 
@@ -209,17 +212,17 @@ class LosGuidance(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [0.1*i for i in range(len(self.desired_values_history[0]))]
+        t = [self.TIME_STEP*i for i in range(len(self.desired_values_history[0]))]
         ss_dir = "setpoints"
         desired_values_props = [
             {
                 "title": "Linear Veloicity U Setpoint",
-                "ylabel": r"u [m/s]",
+                "ylabel": r"u_{des}\;[m/s]",
                 "file": "linearvelocityUSetpoint.png"
             },
             {
                 "title": "Angular Position Theta Setpoint",
-                "ylabel": r"theta [rad]",
+                "ylabel": r"\theta_{des}\;[rad]",
                 "file": "angularpositionThetaSetpoint.png"
             },
         ]
@@ -228,7 +231,7 @@ class LosGuidance(Node):
             fig, ax = plt.subplots(1)
             ax.set_title(desired_values_props[i]["title"])
             ax.plot(t, self.desired_values_history[i])
-            ax.set_xlabel(r"t [s]")
+            ax.set_xlabel(r"t\;[s]")
             ax.set_ylabel(desired_values_props[i]["ylabel"])
             ax.set_ylim([min(self.desired_values_history[i]), max(self.desired_values_history[i])])
 

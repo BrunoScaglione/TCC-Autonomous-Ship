@@ -1,6 +1,8 @@
 import sys
 import os
 
+import traceback
+
 import matplotlib.pyplot as plt
 from scipy import signal
  
@@ -15,10 +17,14 @@ class WaveFilter(Node):
     def __init__(self):
         super().__init__('wave_filter_node')
 
+        self.TIME_STEP = 0.1
+
         self.declare_parameter('plots_dir', './')
         self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
 
-        self.filtered_state_history = [[],[],[],[],[],[]] 
+        self.filtered_state_history = [[],[],[],[],[],[]]
+        self.simulated_state_history = [[],[],[],[],[],[]]
+
 
         # obs: low pass at 10Hz (like Fossen) is not even possible because the state is
         # sampled at 10Hz (can only work with <5Hz)
@@ -56,13 +62,20 @@ class WaveFilter(Node):
     def callback_simulated_state(self, msg):
         self.log_state(msg, 'subscriber')
 
+        self.simulated_state_history[0].append(msg.position.x)
+        self.simulated_state_history[1].append(msg.position.y)
+        self.simulated_state_history[2].append(msg.position.theta)
+        self.simulated_state_history[3].append(msg.velocity.u)
+        self.simulated_state_history[4].append(msg.velocity.v)
+        self.simulated_state_history[5].append(msg.velocity.r)
+
         filtered_state_msg = self.state_filter(msg.time)
         self.publisher_filtered_state.publish(filtered_state_msg)
         self.log_state(filtered_state_msg, 'publisher')
     
     def state_filter(self, t):
         # filters entire state
-        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], self.state_history)
+        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], self.simulated_state_history)
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
@@ -104,37 +117,37 @@ class WaveFilter(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [0.1*i for i in range(len(self.filtered_state_history[0]))]
+        t = [self.TIME_STEP*i for i in range(len(self.filtered_state_history[0]))]
         fs_dir = "filteredState"
         filtered_state_props = [
             {
                 "title": "Filtered Linear Position X",
-                "ylabel": r"x [m]",
+                "ylabel": r"x\;[m]",
                 "file": "filteredLinearPositionX.png"
             },
             {
                 "title": "Filtered Linear Position Y",
-                "ylabel": r"y [m]",
+                "ylabel": r"y\;[m]",
                 "file": "filteredLinearPositionY.png"
             },
             {
                 "title": "Filtered Angular Position Theta",
-                "ylabel": r"theta [rad (from east counterclockwise)] ",
+                "ylabel": r"\theta\;[rad\;(from\;east\;counterclockwise)] ",
                 "file": "filteredAngularPositionTheta.png"
             },
             {
                 "title": "Filtered Linear Velocity U",
-                "ylabel": r"u [m/s]",
+                "ylabel": r"u\;[m/s]",
                 "file": "filteredLinearVelocityU.png"
             },
             {
                 "title": "Filtered Linear Position V",
-                "ylabel": r"v [m/s (port)]",
+                "ylabel": r"v\;[m/s\;(port)]",
                 "file": "filteredLinearVelocityV.png"
             },
             {
                 "title": "Filtered Angular Velocity R",
-                "ylabel": r"r [rad/s (counterclockwise)]",
+                "ylabel": r"r\;[rad/s (counterclockwise)]",
                 "file": "filteredAngularVelocityR.png"
             },
         ]
@@ -143,7 +156,7 @@ class WaveFilter(Node):
             fig, ax = plt.subplots(1)
             ax.set_title(filtered_state_props[i]["title"])
             ax.plot(t, self.filtered_state_history[i])
-            ax.set_xlabel(r"t [s]")
+            ax.set_xlabel(r"t\;[s]")
             ax.set_ylabel(filtered_state_props[i]["ylabel"])
             ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
 
@@ -156,26 +169,10 @@ def main(args=None):
         rclpy.spin(wave_filter_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
-        plt.plot(wave_filter_node.u_history) # debugging
-        plt.plot(wave_filter_node.u_filtered_history) # debugging
-        plt.plot(wave_filter_node.theta_history) # debugging
-        plt.plot(wave_filter_node.theta_filtered_history) # debugging
-        plt.legend([
-            "Real surge velocity", 
-            "Filtered surge velocity",
-            "Real yaw angle", 
-            "Filtered yaw angle"
-        ]) # debugging
-        plt.show()
-        plt.plot(wave_filter_node.y_history) # debugging
-        plt.plot(wave_filter_node.y_filtered_history) # debugging
-        plt.legend([
-            "Real y",
-            "Filtered y"
-        ]) # debugging
-        plt.show() # debugging
     except SystemExit:
         print('Stopped with user shutdown request')
+    except:
+        print(traceback.format_exc())
     finally:
         wave_filter_node.generate_plots()
         wave_filter_node.destroy_node()

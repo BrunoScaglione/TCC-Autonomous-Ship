@@ -24,6 +24,8 @@ class YawController(Node):
 
         self.RUDDER_SAT = 0.610865
 
+        self.TIME_STEP = 0.1
+
         self.K_tuning_factor = 1
         self.Kp = self.K_tuning_factor*1.34
         self.Kd = 49.684
@@ -121,7 +123,7 @@ class YawController(Node):
         # fixes async issues
         # sometimes receives 2 desired yaw angles in sequence, without receiving estimated yaw angle
         if self.t_last_desired_yaw_angle == self.t_current_desired_yaw_angle:
-           self.t_current_desired_yaw_angle += 0.1
+           self.t_current_desired_yaw_angle += self.TIME_STEP
         
         if self.desired_yaw_angle != msg.desired_value:
             self.desired_yaw_angle_old = self.desired_yaw_angle
@@ -138,7 +140,7 @@ class YawController(Node):
         theta_bar_dot = r - (theta_des - theta_des_old)/ \
             (self.t_current_desired_yaw_angle - self.t_last_desired_yaw_angle)
         # cumulative of the error (integral action)
-        self.theta_bar_int = self.theta_bar_int + theta_bar*0.1
+        self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
         # anti windup for the integral action
         self.theta_bar_int = max(-0.5,min(self.theta_bar_int,0.5))
         self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
@@ -158,13 +160,13 @@ class YawController(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [0.1*i for i in range(len(self.rudder_angle_history))]
+        t = [self.TIME_STEP*i for i in range(len(self.rudder_angle_history))]
         fig, ax = plt.subplots(1)
         ax.set_title("Rudder angle")
         ax.plot(t, self.rudder_angle_history)
-        ax.set_xlabel(r"t [s]")
-        ax.set_ylabel(r"$delta [rad (from south clockwise)]$")
-        ax.set_ylim([-35,35])
+        ax.set_xlabel(r"t\;[s]")
+        ax.set_ylabel(r"$delta [rad\;(from south clockwise)]$")
+        ax.set_ylim([min(self.rudder_angle_history),max(self.rudder_angle_history)])
 
         graphics_file = "rudderAngle.png"
         fig.savefig(os.path.join(self.plots_dir, graphics_file))

@@ -18,7 +18,11 @@ setup(
         (os.path.join('share', package_name, 'logs', 'roslogs'), []),
         (os.path.join('share', package_name, 'db', 'rosbags'), []),
         (os.path.join('share', package_name, 'db', 'waypoints'), []),
-        (os.path.join('share', package_name, 'plots'), []),
+        (os.path.join('share', package_name, 'plots', 'state'), []),
+        (os.path.join('share', package_name, 'plots', 'simulatedState'), []),
+        (os.path.join('share', package_name, 'plots', 'filteredState'), []),
+        (os.path.join('share', package_name, 'plots', 'estimatedState'), []),
+        (os.path.join('share', package_name, 'plots', 'setpoints'), []),
         (os.path.join('share', package_name), glob('launch/*.launch.py'))
     ],
     install_requires=['setuptools'],

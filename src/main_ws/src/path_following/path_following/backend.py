@@ -69,7 +69,7 @@ class Backend(Node):
 
 def wait_future(node, future_str):
     my_future = getattr(node, future_str)
-    rclpy.spin_until_future_complete(node, my_future, timeout_sec=8)
+    rclpy.spin_until_future_complete(node, my_future, timeout_sec=15)
     if my_future.done():
         try:
             return my_future.result(), 0
