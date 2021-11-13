@@ -1,5 +1,6 @@
 import sys
 import os
+import glob
 
 import math
 import matplotlib.pyplot as plt
@@ -157,6 +158,11 @@ class YawController(Node):
         return self.rudder_msg
     
     def generate_plots(self):
+        #clean before
+        files = glob.glob(os.path.join(self.plots_dir, 'rudderAngle*.png'))
+        for f in files:
+            os.remove(f)
+
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
@@ -164,8 +170,8 @@ class YawController(Node):
         fig, ax = plt.subplots(1)
         ax.set_title("Rudder angle")
         ax.plot(t, self.rudder_angle_history)
-        ax.set_xlabel(r"t\;[s]")
-        ax.set_ylabel(r"$delta [rad\;(from south clockwise)]$")
+        ax.set_xlabel(r"$t\;[s]$")
+        ax.set_ylabel(r"$delta\;[rad\;(from south clockwise)]$")
         ax.set_ylim([min(self.rudder_angle_history),max(self.rudder_angle_history)])
 
         graphics_file = "rudderAngle.png"

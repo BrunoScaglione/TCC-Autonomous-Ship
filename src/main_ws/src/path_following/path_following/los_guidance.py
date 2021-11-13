@@ -209,6 +209,11 @@ class LosGuidance(Node):
         return (self.des_velocity_msg, self.des_yaw_msg)
     
     def generate_plots(self):
+        #clean before
+        files = glob.glob(os.path.join(self.plots_dir, 'setpoints', '*.png'))
+        for f in files:
+            os.remove(f)
+
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
@@ -217,12 +222,12 @@ class LosGuidance(Node):
         desired_values_props = [
             {
                 "title": "Linear Veloicity U Setpoint",
-                "ylabel": r"u_{des}\;[m/s]",
+                "ylabel": r"$u_{des}\;[m/s]$",
                 "file": "linearvelocityUSetpoint.png"
             },
             {
                 "title": "Angular Position Theta Setpoint",
-                "ylabel": r"\theta_{des}\;[rad]",
+                "ylabel": r"$\theta_{des}\;[rad]$",
                 "file": "angularpositionThetaSetpoint.png"
             },
         ]
@@ -231,7 +236,7 @@ class LosGuidance(Node):
             fig, ax = plt.subplots(1)
             ax.set_title(desired_values_props[i]["title"])
             ax.plot(t, self.desired_values_history[i])
-            ax.set_xlabel(r"t\;[s]")
+            ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(desired_values_props[i]["ylabel"])
             ax.set_ylim([min(self.desired_values_history[i]), max(self.desired_values_history[i])])
 

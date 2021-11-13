@@ -1,5 +1,6 @@
 import sys
 import os
+import glob
 
 import traceback
 
@@ -114,6 +115,11 @@ class WaveFilter(Node):
         )
 
     def generate_plots(self):
+        #clean before
+        files = glob.glob(os.path.join(self.plots_dir, 'simulatedState', '*.png'))
+        for f in files:
+            os.remove(f)
+
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
@@ -122,32 +128,32 @@ class WaveFilter(Node):
         filtered_state_props = [
             {
                 "title": "Filtered Linear Position X",
-                "ylabel": r"x\;[m]",
+                "ylabel": r"$x\;[m]$",
                 "file": "filteredLinearPositionX.png"
             },
             {
                 "title": "Filtered Linear Position Y",
-                "ylabel": r"y\;[m]",
+                "ylabel": r"$y\;[m]$",
                 "file": "filteredLinearPositionY.png"
             },
             {
                 "title": "Filtered Angular Position Theta",
-                "ylabel": r"\theta\;[rad\;(from\;east\;counterclockwise)] ",
+                "ylabel": r"$\theta\;[rad\;(from\;east\;counterclockwise)]$",
                 "file": "filteredAngularPositionTheta.png"
             },
             {
                 "title": "Filtered Linear Velocity U",
-                "ylabel": r"u\;[m/s]",
+                "ylabel": r"$u\;[m/s]$",
                 "file": "filteredLinearVelocityU.png"
             },
             {
                 "title": "Filtered Linear Position V",
-                "ylabel": r"v\;[m/s\;(port)]",
+                "ylabel": r"$v\;[m/s\;(port)]$",
                 "file": "filteredLinearVelocityV.png"
             },
             {
                 "title": "Filtered Angular Velocity R",
-                "ylabel": r"r\;[rad/s (counterclockwise)]",
+                "ylabel": r"$r\;[rad/s (counterclockwise)]$",
                 "file": "filteredAngularVelocityR.png"
             },
         ]
@@ -156,7 +162,7 @@ class WaveFilter(Node):
             fig, ax = plt.subplots(1)
             ax.set_title(filtered_state_props[i]["title"])
             ax.plot(t, self.filtered_state_history[i])
-            ax.set_xlabel(r"t\;[s]")
+            ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(filtered_state_props[i]["ylabel"])
             ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
 

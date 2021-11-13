@@ -1,5 +1,7 @@
 import sys
 import os
+import glob
+
 import traceback
 
 import matplotlib.pyplot as plt
@@ -159,6 +161,11 @@ class SurgeController(Node):
         return est_time
 
     def generate_plots(self):
+        #clean before
+        files = glob.glob(os.path.join(self.plots_dir, 'thrustForce*.png'))
+        for f in files:
+            os.remove(f)
+
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
@@ -166,7 +173,7 @@ class SurgeController(Node):
         fig, ax = plt.subplots(1)
         ax.set_title("Thrust force")
         ax.plot(t, self.thrust_history)
-        ax.set_xlabel(r"t\;[s]")
+        ax.set_xlabel(r"$t\;[s]$")
         ax.set_ylabel(r"$tau_1\;[N]$")
         ax.set_ylim([min(self.thrust_history), max(self.thrust_history)])
 

@@ -1,5 +1,7 @@
 import sys
 import os
+import glob
+
 import math
 
 import matplotlib.pyplot as plt
@@ -83,6 +85,11 @@ class ControlAllocation(Node):
         return self.rotation_msg
 
     def generate_plots(self):
+        # clean before
+        files = glob.glob(os.path.join(self.plots_dir, 'propellerRotation*.png'))
+        for f in files:
+            os.remove(f)
+
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
@@ -90,7 +97,7 @@ class ControlAllocation(Node):
         fig, ax = plt.subplots(1)
         ax.set_title("Proppeler rotation")
         ax.plot(t, self.propeller_history)
-        ax.set_xlabel(r"t\;[s]")
+        ax.set_xlabel(r"$t\;[s]$")
         ax.set_ylabel(r"$n_p\;[Hz]$")
         ax.set_ylim([min(self.propeller_history),max(self.propeller_history)])
 

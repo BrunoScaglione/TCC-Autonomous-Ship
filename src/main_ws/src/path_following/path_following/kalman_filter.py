@@ -1,5 +1,6 @@
 import sys
 import os
+import glob
 
 import traceback
 
@@ -79,6 +80,11 @@ class KalmanFilter(Node):
         )
 
     def generate_plots(self):
+        #clean before
+        files = glob.glob(os.path.join(self.plots_dir, 'estimatedState', '*.png'))
+        for f in files:
+            os.remove(f)
+
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
@@ -87,32 +93,32 @@ class KalmanFilter(Node):
         estimated_state_props = [
             {
                 "title": "Estimated Linear Position X",
-                "ylabel": r"x\;[m]",
+                "ylabel": r"$x\;[m]$",
                 "file": "estimatedLinearPositionX.png"
             },
             {
                 "title": "Estimated Linear Position Y",
-                "ylabel": r"y\;[m]",
+                "ylabel": r"$y\;[m]$",
                 "file": "estimatedLinearPositionY.png"
             },
             {
                 "title": "Estimated Angular Position Theta",
-                "ylabel": r"\theta\;[rad\;(from\;east\;counterclockwise)]",
+                "ylabel": r"$\theta\;[rad\;(from\;east\;counterclockwise)]$",
                 "file": "estimatedAngularPositionTheta.png"
             },
             {
                 "title": "Estimated Linear Velocity U",
-                "ylabel": r"u\;[m/s]",
+                "ylabel": r"$u\;[m/s]$",
                 "file": "estimatedLinearVelocityU.png"
             },
             {
                 "title": "Estimated Linear Position V",
-                "ylabel": r"v\;[m/s\;(port)]",
+                "ylabel": r"$v\;[m/s\;(port)]$",
                 "file": "estimatedLinearVelocityV.png"
             },
             {
                 "title": "Estimated Angular Velocity R",
-                "ylabel": r"r\;[rad/s\;(counterclockwise)]",
+                "ylabel": r"$r\;[rad/s\;(counterclockwise)]$",
                 "file": "estimatedAngularVelocityR.png"
             },
         ]
@@ -121,7 +127,7 @@ class KalmanFilter(Node):
             fig, ax = plt.subplots(1)
             ax.set_title(estimated_state_props[i]["title"])
             ax.plot(t, self.estimated_state_history[i])
-            ax.set_xlabel(r"t\;[s]")
+            ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(estimated_state_props[i]["ylabel"])
             ax.set_ylim([min(self.estimated_state_history[i]), max(self.estimated_state_history[i])])
 

@@ -2,7 +2,8 @@
 # GUI will actually be venus
 # Need to make a route for setting different locations in the map
 # Make script to delete all logs and bags
-# change name gps_imu_simul to sensors_simul
+# change name gps_imu_simul to sensors_emul
+# change name of simulated state to emulated state
 
 # wave filter should be before kalman filter (then kalman filter must not take into acount wave compenent to model noise)
 
@@ -22,6 +23,4 @@
 - The value of LOS paramater R is not clear
   
 # TODOS
-- service for getting the updated waypoints from venus server
-- desired surge velocity and yaw angle must be set at the beggining by receiving from initial conditions. Will to add some topics or change from service to topic
-- angle convention used for rudder angle in venus
+- service for getting the updated waypoints (user dragged them in gui) from venus 

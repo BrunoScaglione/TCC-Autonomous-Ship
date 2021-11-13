@@ -70,7 +70,7 @@ class Backend(Node):
         waypoints_path = os.path.join(waypoints_dir, f'waypoints_{time_stamp}.json')
 
         # clean before
-        files = glob.glob(os.path.join(waypoints_dir, '*'))
+        files = glob.glob(os.path.join(waypoints_dir, '*.json'))
         for f in files:
             os.remove(f) 
 
@@ -134,8 +134,7 @@ def receive_waypoints():
         else:
             # TODO: service for getting the updated waypoints from venus server
             pass
-    except Exception as e:
-        print(e)
+    except:
         backend_node.get_logger().info(
             "Waypoints received from client are not valid\n"
             "Returning HTTP bad request to client"
