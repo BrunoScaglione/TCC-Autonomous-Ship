@@ -38,7 +38,8 @@ class WaveFilter(Node):
         # soh vai mudar o lado direito dessa linha aqui!!(comenta a linha em vez de apagar)
         # o output seu vai ser do tipo (z,p,k). 
         # Usar a funcao zpk2sos(z,p,k) que converte pra sos (tipo que esta feito abaixo)
-        self.sos = signal.butter(6, [0.063, 0.159], 'bandstop', fs=10, output='sos')
+        # wave is at 0.083 Hz or 0.52124 rad/s which is inside the band, but in the edge 
+        self.sos = signal.butter(6, [0.063, 0.159], 'bandstop', fs=10, output='sos') 
         ##################### <pedro/> ##############
         self.zi = signal.sosfilt_zi(self.sos)
 

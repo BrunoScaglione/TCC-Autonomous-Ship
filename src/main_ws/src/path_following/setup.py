@@ -21,7 +21,6 @@ setup(
         (os.path.join('share', package_name, 'plots', 'state'), []),
         (os.path.join('share', package_name, 'plots', 'simulatedState'), []),
         (os.path.join('share', package_name, 'plots', 'filteredState'), []),
-        (os.path.join('share', package_name, 'plots', 'estimatedState'), []),
         (os.path.join('share', package_name, 'plots', 'setpoints'), []),
         (os.path.join('share', package_name), glob('launch/*.launch.py'))
     ],
