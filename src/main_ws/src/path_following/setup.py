@@ -23,6 +23,7 @@ setup(
         (os.path.join('share', package_name, 'plots', 'filteredState'), []),
         (os.path.join('share', package_name, 'plots', 'estimatedState'), []),
         (os.path.join('share', package_name, 'plots', 'setpoints'), []),
+        (os.path.join('share', package_name, 'plots', 'bode'), []),
         (os.path.join('share', package_name), glob('launch/*.launch.py'))
     ],
     install_requires=['setuptools'],

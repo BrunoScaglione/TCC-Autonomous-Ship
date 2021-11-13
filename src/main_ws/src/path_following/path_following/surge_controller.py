@@ -33,8 +33,8 @@ class SurgeController(Node):
 
         self.PHI_AS_PERCENTAGE_OF_K = 29.9810744468 #2808.95216145 for k**0.5
 
-        self.phi_tuning_factor = 3 # 3 works with shattering
-        self.kf_tuning_factor = 7 #  works with shattering
+        self.phi_tuning_factor = 4 # 3 works with shattering
+        self.kf_tuning_factor = 7 # 7 works with shattering
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(

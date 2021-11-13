@@ -5,7 +5,10 @@ import glob
 import traceback
 
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy import signal
+from scipy.signal import sosfreqz
+from scipy.signal import zpk2sos
  
 import rclpy
 from rclpy.node import Node
@@ -26,16 +29,19 @@ class WaveFilter(Node):
         self.filtered_state_history = [[],[],[],[],[],[]]
         self.simulated_state_history = [[],[],[],[],[],[]]
 
-
         # obs: low pass at 10Hz (like Fossen) is not even possible because the state is
         # sampled at 10Hz (can only work with <5Hz)
-        # aproximating Fossen's 3 2order cascades at [0.4rad/s, 0.63rad/s, 1rad/s]) didnt work (large bias)
-        # p23 wave period is 4 seconds -> freq is 0.25 Hz
-        # self.sos = signal.butter(6, [0.2, 0.3], 'bandstop', fs=10, output='sos')
-        self.sos = signal.butter(6, 0.2, fs=10, output='sos')
+        # Fossen's 3 2order cascades: [0.4rad/s, 0.63rad/s, 1rad/s])
+        # [0.4rad/s, 0.63rad/s, 1rad/s]) == [0.063Hz, 0.100Hz, 0.159Hz])
+        # p23 wave period is 12 seconds -> freq is 0.08333333333 Hz
+
+        ########### <pedro> ################
+        # soh vai mudar o lado direito dessa linha aqui!!(comenta a linha em vez de apagar)
+        # o output seu vai ser do tipo (z,p,k). 
+        # Usar a funcao zpk2sos(z,p,k) que converte pra sos (tipo que esta feito abaixo)
+        self.sos = signal.butter(6, [0.063, 0.159], 'bandstop', fs=10, output='sos')
+        ##################### <pedro/> ##############
         self.zi = signal.sosfilt_zi(self.sos)
-        # self.sos2 = signal.butter(6, [0.016, 0.025], 'bandstop', fs=10, output='sos')
-        # self.zi2 = signal.sosfilt_zi(self.sos2)
 
         self.xf_msg = State()
 
@@ -167,6 +173,32 @@ class WaveFilter(Node):
             ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
 
             fig.savefig(os.path.join(self.plots_dir, fs_dir, filtered_state_props[i]["file"]))
+        
+        # Bode plot
+        fig, ax = plt.subplots(2)
+        fig.suptitle('Frequency Response of Wave Filter', fontsize=16)
+
+        ## Gain
+        axGain = ax[0]
+        w, h = sosfreqz(self.sos, worN=8000, fs=10)
+        db = 20*np.log10(np.maximum(np.abs(h), 1e-5))
+        axGain.plot(w, db)
+        axGain.set_title('Gain')
+        axGain.set_ylim(min(db), max(db))
+        axGain.axes.get_xaxis().set_visible(False)
+        axGain.set_ylabel("Gain [dB]")                          
+
+        ## Phase
+        axPhase = ax[1]
+        w, h = sosfreqz(self.sos, worN=8000, fs=10)
+        db = 20*np.log10(np.maximum(np.abs(h), 1e-5))
+        axPhase.plot(w, np.angle(h))
+        axPhase.set_title('Phase')
+        axPhase.set_ylim(min(db), max(db))
+        axPhase.set_xlabel("$Frequency [Hz]$")
+        axPhase.set_ylabel("Phase [dB]")
+
+        fig.savefig(os.path.join(self.plots_dir, "bode", "bodePlot"))
 
 def main(args=None):
     try:
