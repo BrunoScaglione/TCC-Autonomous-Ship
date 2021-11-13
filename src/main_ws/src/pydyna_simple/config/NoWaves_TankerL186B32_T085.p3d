@@ -9,7 +9,7 @@ SEA_BOTTOM_DEFINITION = "AVERAGE_PLANE",
 SIMPLIFIED_MASS_MATRIX = "YES",
 INITIAL_SUPER_DAMPING = "NO",
 EVAL_OF_1ST_ORDER_MOTION = 1,
-WATER_DEPTH = 25.00000,
+WATER_DEPTH = 25.00000,     
 EXTERNAL_DATA = [[                                                                                       ]],
 COORDINATE_SYSTEM =
 {
@@ -74,6 +74,7 @@ CURRENTS
             { 0.00000, 1.00000, 225.00000, 0.00000, 0.00000, 330.00000 },
             { 30.00000, 1.00000, 225.00000, 0.00000, 0.00000, 330.00000}
         },
+        
     }
 },
 WINDS
@@ -95,7 +96,7 @@ WAVES
     WAVE
     {
         NAME = "Wave_SimOff2",
-        WAVE_ID = 1,
+        WAVE_ID = 2,
         HEIGHT = 2.00000000000e+00,
         PERIOD = 12.00000,
         DIRECTION = 0.00000,
