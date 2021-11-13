@@ -2,6 +2,7 @@ import os
 import glob
 import json
 from datetime import datetime
+import traceback
 
 from flask import Flask, request
 
@@ -248,6 +249,8 @@ def main():
         app.run() # port 5000 by default
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+    except:
+        print(traceback.format_exc())
     finally:
         backend_node.destroy_node()
         rclpy.shutdown()

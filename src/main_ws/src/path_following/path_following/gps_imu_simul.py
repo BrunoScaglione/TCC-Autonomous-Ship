@@ -13,7 +13,6 @@ Datasheets used:
 import sys
 import os
 import glob
-
 import traceback
 
 import collections

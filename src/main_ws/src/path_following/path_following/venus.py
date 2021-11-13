@@ -1,6 +1,5 @@
 import sys
 import traceback
-
 import math
 
 import venus.viewer

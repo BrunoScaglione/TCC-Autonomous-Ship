@@ -1,6 +1,7 @@
 import sys
 import os
 import glob
+import traceback
 
 import math
 
@@ -113,6 +114,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
+    except:
+        print(traceback.format_exc())
     finally:
         control_allocation_node.generate_plots()
         control_allocation_node.destroy_node()

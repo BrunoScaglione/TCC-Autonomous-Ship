@@ -1,8 +1,9 @@
 import sys
 import os
 import glob
-
+import traceback
 import math
+
 import matplotlib.pyplot as plt
 
 import rclpy
@@ -186,6 +187,8 @@ def main(args=None):
         print('Stopped with user interrupt')
     except SystemExit:
         print('Stopped with user shutdown request')
+    except:
+        print(traceback.format_exc())
     finally:
         yaw_controller_node.generate_plots()
         yaw_controller_node.destroy_node()

@@ -1,7 +1,6 @@
 import sys
 import os
 import glob
-
 import traceback
 
 import matplotlib.pyplot as plt
