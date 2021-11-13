@@ -178,6 +178,11 @@ class WaveFilter(Node):
 
             fig.savefig(os.path.join(self.plots_dir, fs_dir, filtered_state_props[i]["file"]))
         
+        #clean before
+        files = glob.glob(os.path.join(self.plots_dir, 'bodePlot*.png'))
+        for f in files:
+            os.remove(f)
+
         # Bode plot
         fig, ax = plt.subplots(2)
         fig.suptitle('Frequency Response of Wave Filter', fontsize=16)

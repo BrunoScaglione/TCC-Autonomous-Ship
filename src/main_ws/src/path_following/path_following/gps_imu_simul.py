@@ -150,12 +150,11 @@ class GpsImuSimulator(Node):
 
     def generate_plots(self):
         # clean before
-        filesSimulated = glob.glob(os.path.join(self.plots_dir, 'simulatedState', '*.png'))
-        for f in filesSimulated:
+        files = glob.glob(os.path.join(self.plots_dir, 'simulatedState', '*.png'))
+        for f in files:
             os.remove(f)
-
-        filesState = glob.glob(os.path.join(self.plots_dir, 'state', '*.png'))
-        for f in filesState:
+        files = glob.glob(os.path.join(self.plots_dir, 'state', '*.png'))
+        for f in files:
             os.remove(f)
 
         params = {'mathtext.default': 'regular'}
