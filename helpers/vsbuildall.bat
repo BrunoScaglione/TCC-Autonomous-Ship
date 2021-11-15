@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 call config.bat
 call %underlay_path%
 cd %main_ws_path%

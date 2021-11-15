@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0"
 call config.bat
 cd %scripts_path%
 curl -H 'Content-Type: application/json' -X POST http://localhost:5000/waypoints -d @waypoints.json

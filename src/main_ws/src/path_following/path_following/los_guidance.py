@@ -228,6 +228,10 @@ class LosGuidance(Node):
         self.desired_values_history[0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history[1].append(self.des_yaw_msg.desired_value)
 
+        if xf.time == 5:
+            print("aaaaaaaaa")
+            self.generate_plots()
+
         return (self.des_velocity_msg, self.des_yaw_msg)
     
     def generate_plots(self):
@@ -273,8 +277,8 @@ class LosGuidance(Node):
         fig, ax = plt.subplots(1)
         ax.set_title("Path error")
         ax.plot(t, self.path_error)
-        ax.set_xlabel(r"$t\;[s]$")
-        ax.set_ylabel(r"$error\;[m]$")
+        ax.set_xlabel("t [s]")
+        ax.set_ylabel("error [m]")
         ax.set_ylim([min(self.path_error), max(self.path_error)])
 
         fig.savefig(os.path.join(self.plots_dir, "error.png"))
