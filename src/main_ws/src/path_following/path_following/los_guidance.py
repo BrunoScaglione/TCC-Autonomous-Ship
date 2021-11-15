@@ -178,6 +178,10 @@ class LosGuidance(Node):
                 wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
                 wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
 
+                # norm of vector from craft location to path, making 90 degrees with path line
+                current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
+                self.path_error.append(current_path_error)
+
                 # Find x_los and y_los by solving 2 eq.
                 # Analytic solution:
                 # 1. isolating x_los
@@ -223,9 +227,6 @@ class LosGuidance(Node):
 
         self.desired_values_history[0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history[1].append(self.des_yaw_msg.desired_value)
-
-        current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
-        self.path_error.append(current_path_error)
 
         return (self.des_velocity_msg, self.des_yaw_msg)
     
