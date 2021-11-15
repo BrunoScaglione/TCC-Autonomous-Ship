@@ -38,7 +38,10 @@ class LosGuidance(Node):
         # When craft is outside this radius it should have stopped
         self.R_STOP = 100.0
 
-        self.desired_values_history = [[],[]]
+        self.desired_values_history = {
+            'values': [[],[]],
+            'time': []
+        }
 
         self.path_error = []
 
@@ -225,8 +228,9 @@ class LosGuidance(Node):
             self.des_yaw_msg.distance_waypoints = self.R_STOP
             self.des_velocity_msg.distance_waypoints = self.R_STOP
 
-        self.desired_values_history[0].append(self.des_velocity_msg.desired_value)
-        self.desired_values_history[1].append(self.des_yaw_msg.desired_value)
+        self.desired_values_history['values'][0].append(self.des_velocity_msg.desired_value)
+        self.desired_values_history['values'][1].append(self.des_yaw_msg.desired_value)
+        self.desired_values_history['time'].append(xf.time)
 
         return (self.des_velocity_msg, self.des_yaw_msg)
     
@@ -239,7 +243,8 @@ class LosGuidance(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = self.TIME_STEP*np.array(self.desired_values_history[0])
+        t = self.desired_values_history['time']
+        
         ss_dir = "setpoints"
         desired_values_props = [
             {
@@ -254,13 +259,13 @@ class LosGuidance(Node):
             },
         ]
 
-        for i in range(len(self.desired_values_history)):
+        for i in range(len(self.desired_values_history['values'])):
             fig, ax = plt.subplots(1)
             ax.set_title(desired_values_props[i]["title"])
-            ax.plot(t, self.desired_values_history[i])
+            ax.plot(t, self.desired_values_history['values'][i])
             ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(desired_values_props[i]["ylabel"])
-            ax.set_ylim(min(self.desired_values_history[i]), max(self.desired_values_history[i]))
+            ax.set_ylim(min(self.desired_values_history['values'][i]), max(self.desired_values_history['values'][i]))
 
             fig.savefig(os.path.join(self.plots_dir, ss_dir, desired_values_props[i]["file"]))
 
@@ -268,8 +273,6 @@ class LosGuidance(Node):
         files = glob.glob(os.path.join(self.plots_dir, 'error*.png'))
         for f in files:
             os.remove(f)
-
-        t = self.TIME_STEP*np.array(range(len(self.path_error)))
         
         fig, ax = plt.subplots(1)
         ax.set_title("Path error")

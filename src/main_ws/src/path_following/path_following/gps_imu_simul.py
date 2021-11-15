@@ -149,16 +149,14 @@ class GpsImuSimulator(Node):
         )
 
     def generate_plots(self):
+
+        params = {'mathtext.default': 'regular'}
+        plt.rcParams.update(params)
+        
         # clean before
         files = glob.glob(os.path.join(self.plots_dir, 'simulatedState', '*.png'))
         for f in files:
             os.remove(f)
-        files = glob.glob(os.path.join(self.plots_dir, 'state', '*.png'))
-        for f in files:
-            os.remove(f)
-
-        params = {'mathtext.default': 'regular'}
-        plt.rcParams.update(params)
 
         t = self.TIME_STEP*np.array(range(len(self.simulated_state_history[0])))
         ss_dir = "simulatedState"
@@ -194,6 +192,11 @@ class GpsImuSimulator(Node):
                 "file": "simulatedAngularVelocityR.png"
             },
         ]
+
+        files = glob.glob(os.path.join(self.plots_dir, 'state', '*.png'))
+        for f in files:
+            os.remove(f)
+
         s_dir = "state"
         state_props = [
             {
@@ -203,7 +206,7 @@ class GpsImuSimulator(Node):
             },
             {
                 "title": "Linear Position Y",
-                "ylabel": "$y [m]",
+                "ylabel": "y [m]",
                 "file": "linearPositionY.png"
             },
             {
@@ -213,12 +216,12 @@ class GpsImuSimulator(Node):
             },
             {
                 "title": "Linear Velocity U",
-                "ylabel": "$u [m/s]",
+                "ylabel": "u [m/s]",
                 "file": "linearVelocityU.png"
             },
             {
                 "title": "Linear Position V",
-                "ylabel": "$v [m/s\;(port)]",
+                "ylabel": "v [m/s (port)]",
                 "file": "linearVelocityV.png"
             },
             {

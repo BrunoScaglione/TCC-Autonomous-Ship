@@ -104,9 +104,10 @@ class SurgeController(Node):
          
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered surge velocity: %f' % msg.velocity.u)
-        thrust_msg = self.surge_control(msg.velocity.u)
-        self.publisher_propeller_thrust.publish(thrust_msg)
-        self.get_logger().info('published thrust force: %f' % thrust_msg.data)
+        self.publisher_propeller_thrust.publish(self.thrust_msg)
+        self.thrust_history.append(self.thrust_msg.data)
+        self.surge_control(msg.velocity.u)
+        self.get_logger().info('published thrust force: %f' % self.thrust_msg.data)
     
     def callback_desired_surge_velocity(self, msg):
         self.get_logger().info('listened desired surge velocity: %f' % msg.desired_value)
@@ -151,8 +152,6 @@ class SurgeController(Node):
         # thrust
         tau = u*(self.M - self.X_ADDED_MASS)
         self.thrust_msg.data = tau 
-
-        self.thrust_history.append(tau)
 
         return self.thrust_msg
     

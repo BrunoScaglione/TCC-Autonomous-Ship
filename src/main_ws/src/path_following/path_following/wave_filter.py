@@ -175,7 +175,6 @@ class WaveFilter(Node):
             ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(filtered_state_props[i]["ylabel"])
             ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
-
             fig.savefig(os.path.join(self.plots_dir, fs_dir, filtered_state_props[i]["file"]))
         
         #clean before

@@ -113,10 +113,11 @@ class YawController(Node):
         
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered yaw angle: %f' % msg.position.theta)
+        self.publisher_rudder_angle.publish(self.rudder_msg)
+        self.rudder_angle_history.append(self.rudder_msg.data)
         self.t = msg.time
-        rudder_msg = self.yaw_control(msg.position.theta, msg.velocity.r)
-        self.publisher_rudder_angle.publish(rudder_msg)
-        self.get_logger().info('published rudder angle: %f' % rudder_msg.data)
+        self.yaw_control(msg.position.theta, msg.velocity.r)
+        self.get_logger().info('published rudder angle: %f' % self.rudder_msg.data)
     
     def callback_desired_yaw_angle(self, msg):
         self.get_logger().info('listened desired yaw angle: %f' % msg.desired_value)
@@ -155,8 +156,6 @@ class YawController(Node):
         # real sat is 35 degress
         rudder_angle = max(-self.RUDDER_SAT*0.99, min(rudder_angle, self.RUDDER_SAT*0.99))
         self.rudder_msg.data = rudder_angle
-
-        self.rudder_angle_history.append(rudder_angle)
 
         return self.rudder_msg
     
