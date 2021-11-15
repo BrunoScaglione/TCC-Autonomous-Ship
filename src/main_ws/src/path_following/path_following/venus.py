@@ -135,8 +135,7 @@ class Venus(Node):
         self.vessel.data_panel[10] = KeyValue("Rudder angle", str(round(self.vessel.rudders[0].angle, 2)) + " deg (from south clockwise)")
         self.vessel.data_panel[11] = KeyValue("Propeller rotation", str(round(self.propeller_rotation, 2)) + " Hz")
                 
-    def callback_shutdown(self):
-        self.get_logger().info('User requested total shutdown')
+    def callback_shutdown(self, msg):
         sys.exit()
     
     def callback_rudder_angle(self, msg):

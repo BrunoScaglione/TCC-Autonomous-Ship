@@ -66,8 +66,7 @@ class WaveFilter(Node):
             '/filtered_state',
             1)
 
-    def callback_shutdown(self):
-        self.get_logger().info('User requested total shutdown')
+    def callback_shutdown(self, msg):
         sys.exit()
         
     def callback_simulated_state(self, msg):

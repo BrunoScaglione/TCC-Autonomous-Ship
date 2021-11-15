@@ -118,8 +118,7 @@ class LosGuidance(Node):
         res.surge, res.yaw = des_velocity_msg.desired_value, des_yaw_msg.desired_value
         return res
 
-    def callback_shutdown(self):
-        self.get_logger().info('User requested total shutdown')
+    def callback_shutdown(self, msg):
         sys.exit()
         
     def callback_filtered_state(self, msg):
@@ -283,6 +282,16 @@ class LosGuidance(Node):
 
             fig.savefig(os.path.join(self.plots_dir, ss_dir, desired_values_props[i]["file"]))
 
+
+        # Program may be interrupted when self.path_error was already updated (appended value)
+        # but t was not
+        len_t = len(t)
+        len_path_error = len(self.path_error)
+        self.get_logger().info('len(t): %f' % len_t)
+        self.get_logger().info('len(self.path_error): %f' % len_path_error)
+        if len(self.path_error) > len(t):
+            self.path_error = self.path_error[:-1]
+
         # clean before
         files = glob.glob(os.path.join(self.plots_dir, 'error*.png'))
         for f in files:
@@ -290,10 +299,6 @@ class LosGuidance(Node):
         
         fig, ax = plt.subplots(1)
         ax.set_title("Path error")
-        len_t = len(t)
-        print('len(t): ', len_t)
-        len_path_error = len(self.path_error)
-        print('len(self.path_error): ', len_path_error)
         ax.plot(t, self.path_error)
         ax.set_xlabel("t [s]")
         ax.set_ylabel("error [m]")

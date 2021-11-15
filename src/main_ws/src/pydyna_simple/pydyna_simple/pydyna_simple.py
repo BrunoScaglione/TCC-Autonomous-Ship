@@ -64,8 +64,7 @@ class PydynaSimpleNode(Node):
         self.get_logger().info('User requested simulation to end')
         sys.exit()
     
-    def callback_shutdown(self):
-        self.get_logger().info('User requested total shutdown')
+    def callback_shutdown(self, msg):
         sys.exit()
 
     def callback_init_simul(self, req, res):
