@@ -6,5 +6,8 @@ IF EXIST %path_pkg_logs_path% (
    cd %path_pkg_logs_path%
    del /s /q *.*
 )
-cd %path_pkg_rosbags_path%
+IF EXIST %path_pkg_rosbags_path% (
+   cd %path_pkg_rosbags_path%
+   del /s /q *.*
+)
 ros2 launch path_following path_following.launch.py

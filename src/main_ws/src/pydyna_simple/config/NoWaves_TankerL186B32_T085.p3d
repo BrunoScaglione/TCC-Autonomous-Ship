@@ -117,7 +117,7 @@ SWELLS
         PERIOD = 0.00000,
         DIRECTION = 90.00000,
         ANGLE = 0.00000,
-        SEED     = 1234,
+        SEED = 1234,
         GAMA = 2.00000,
         ALFA = 0.00000,
         SPECTRUM = "REGULAR",
