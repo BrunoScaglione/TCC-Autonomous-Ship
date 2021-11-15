@@ -151,9 +151,9 @@ class LosGuidance(Node):
         x_los2, y_los2 = soln[1]
         self.get_logger().info('x_los2: %f, y_los2: %f' % (x_los2, y_los2))
 
-        (x_los, y_los) = (x_los1, y_los1) if (wx_next-x)*(x_los1-x) > 0 else (x_los2, y_los2)
+        # dot product
+        (x_los, y_los) = (x_los1, y_los1) if (wx_next-x)*(x_los1-x) + (wy_next-y)*(y_los1-y) > 0 else (x_los2, y_los2)
         
-        #debugging
         self.get_logger().info('wx_next: %f' % wx_next)
         self.get_logger().info('x_los: %f, y_los: %f' % (x_los, y_los))
 
