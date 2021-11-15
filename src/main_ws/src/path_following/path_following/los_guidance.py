@@ -186,10 +186,6 @@ class LosGuidance(Node):
         U = (u**2 + v**2)**0.5
         wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
         wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
-
-        # norm of vector from craft location to path, making 90 degrees with path line
-        current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
-        self.path_error.append(current_path_error)
         
         if self.reached_next_waypoint(xf):
             if self.current_waypoint == self.num_waypoints - 1:
@@ -253,8 +249,13 @@ class LosGuidance(Node):
         #     self.des_yaw_msg.distance_waypoints = self.R_STOP
         #     self.des_velocity_msg.distance_waypoints = self.R_STOP
 
+        # norm of vector from craft location to path, making 90 degrees with path line
+        current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
+        self.path_error.append(current_path_error)
+
         self.desired_values_history['values'][0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history['values'][1].append(self.des_yaw_msg.desired_value)
+        
         self.desired_values_history['time'].append(xf.time)
 
         return (self.des_velocity_msg, self.des_yaw_msg)
