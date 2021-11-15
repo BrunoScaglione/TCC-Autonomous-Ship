@@ -40,7 +40,7 @@ class LosGuidance(Node):
 
         self.desired_values_history = [[],[]]
 
-        self.path_error = [[],[]]
+        self.path_error = []
 
         # When true, completed all waypoints
         self.finished = False
