@@ -200,11 +200,10 @@ class WaveFilter(Node):
         ## Phase
         axPhase = ax[1]
         w, h = sosfreqz(self.sos, worN=8000, fs=10)
-        db = 20*np.log10(np.maximum(np.abs(h), 1e-5))
         axPhase.plot(w, np.angle(h))
         axPhase.set_title('Phase')
-        axPhase.set_ylim(min(db), max(db))
-        axPhase.set_xlabel("$Frequency [Hz]$")
+        axPhase.set_ylim(-90, 90)
+        axPhase.set_xlabel("Frequency [Hz]")
         axPhase.set_ylabel("Phase [dB]")
 
         fig.savefig(os.path.join(self.plots_dir, "bodePlot"))

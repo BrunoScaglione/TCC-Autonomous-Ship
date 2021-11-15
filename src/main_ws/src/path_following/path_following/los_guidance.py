@@ -1,9 +1,11 @@
 import sys
 import os
+import glob
 import traceback
 
 import matplotlib.pyplot as plt
 import math
+import numpy as np
 from sympy import symbols, Eq, solve
 # import stackprinter
 
@@ -23,8 +25,6 @@ class LosGuidance(Node):
         self.declare_parameter('plots_dir', './')
         self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
 
-        self.desired_values_history = [[],[]]
-
         self.TIME_STEP = 0.1
 
         # los parameters
@@ -37,6 +37,10 @@ class LosGuidance(Node):
         # Size of radius around last waypoint. 
         # When craft is outside this radius it should have stopped
         self.R_STOP = 100.0
+
+        self.desired_values_history = [[],[]]
+
+        self.path_error = [[],[]]
 
         # When true, completed all waypoints
         self.finished = False
@@ -124,7 +128,7 @@ class LosGuidance(Node):
         wx_next , wy_next  = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
         return 1 if (x-wx_next)**2 + (y-wy_next)**2 < self.R_ACCEPTANCE**2 else 0
 
-    def get_xy_los(self, x, y, wx_next, wy_next, wx, wy):
+    def get_xy_los(self, x, y, wx, wy, wx_next, wy_next):
         x_los, y_los = symbols('x_los, y_los')
         eq1 = Eq((x_los-x)**2 + (y_los-y)**2, self.R**2)
         eq2 = Eq(((wy_next - wy)/(wx_next - wx)), (y_los - wy)/(x_los - wx))
@@ -144,6 +148,18 @@ class LosGuidance(Node):
         self.get_logger().info('x_los: %f, y_los: %f' % (x_los, y_los))
 
         return (x_los, y_los)
+    
+    def get_current_path_error(self, x, y, wx, wy, wx_next, wy_next):
+        c = (wy - wy_next)/(wx - wx_next)
+        d = wy - c*wx
+        a = - c
+        b = y - a*x
+
+        xi = (b - d)/(c - a)
+        yi = c*xi + d
+
+        current_path_error = ((x - xi)**2 + (y - yi)**2)**0.5
+        return current_path_error
     
     def los(self, xf):
         if not self.finished:
@@ -188,6 +204,10 @@ class LosGuidance(Node):
                 self.des_velocity_msg.distance_waypoints = distance_waypoints
             else:
                 self.get_logger().info('Reached final waypoint Uhulll')
+                mean_path_error = np.mean(self.path_error)
+                print('Mean path error: ', mean_path_error)
+                self.get_logger().info('Mean path error: %f' % mean_path_error)
+
                 self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
                 self.des_velocity_msg.desired_value = 0.0
 
@@ -205,6 +225,9 @@ class LosGuidance(Node):
 
         self.desired_values_history[0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history[1].append(self.des_yaw_msg.desired_value)
+
+        current_path_error = self.get_current_path_error(self, x, y, wx, wy, wx_next, wy_next)
+        self.path_error.append(current_path_error)
 
         return (self.des_velocity_msg, self.des_yaw_msg)
     
@@ -241,6 +264,22 @@ class LosGuidance(Node):
             ax.set_ylim([min(self.desired_values_history[i]), max(self.desired_values_history[i])])
 
             fig.savefig(os.path.join(self.plots_dir, ss_dir, desired_values_props[i]["file"]))
+        
+        # Path Error
+        ## clean before
+        files = glob.glob(os.path.join(self.plots_dir, 'error', '*.png'))
+        for f in files:
+            os.remove(f)
+        
+        fig, ax = plt.subplots(1)
+        ax.set_title("Path error")
+        ax.plot(t, self.path_error)
+        ax.set_xlabel(r"$t\;[s]$")
+        ax.set_ylabel(r"$error\;[m]$")
+        ax.set_ylim([min(self.path_error), max(self.path_error)])
+
+        fig.savefig(os.path.join(self.plots_dir, "error.png"))
+        
 
 def main(args=None):
     try:
