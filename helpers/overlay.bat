@@ -1,3 +1,4 @@
 @echo off
-call C:\Users\bruno\Desktop\tcc-autonomous-ship\src\main_ws\install\setup.bat
-cd "C:\Users\bruno\Desktop\tcc-autonomous-ship\src\main_ws\src"
+call config.bat
+call %setup_path%
+cd %ws_src_path%

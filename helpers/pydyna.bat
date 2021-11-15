@@ -1,3 +1,4 @@
 @echo off
-cd C:\Users\bruno\Desktop\tcc-autonomous-ship\src\main_ws\install\share\pydyna_simple\db
+call config.bat
+cd %pydyna_pkg_db_path%
 ros2 launch pydyna_simple pydyna_simple.launch.py
