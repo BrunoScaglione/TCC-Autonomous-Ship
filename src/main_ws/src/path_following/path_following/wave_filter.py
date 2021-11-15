@@ -28,6 +28,14 @@ class WaveFilter(Node):
         self.filtered_state_history = [[],[],[],[],[],[]]
         self.simulated_state_history = [[],[],[],[],[],[]]
 
+        #considering wn = [0.4, 0.63, 1]
+        #self.num = np.array([1, 2.842, 4.07, 3.227, 1.623, 0.4523, 0.0635])
+        #self.den = np.array([1, 0, 1.557, 0, 0.6204, 0, 0.0635])
+
+        #considering wn = [0.52124 - 0.23, 0.52124, 0.52124 + 0.37]
+        self.num = np.array([1, 2.385, 2.868, 1.892, 0.758, 0.1659, 0.0183])
+        self.den = np.array([1, 0, 1.151, 0, 0.3062, 0, 0.0183])
+
         # obs: low pass at 10Hz (like Fossen) is not even possible because the state is
         # sampled at 10Hz (can only work with <5Hz)
         # Fossen's 3 2order cascades: [0.4rad/s, 0.63rad/s, 1rad/s])
@@ -38,6 +46,8 @@ class WaveFilter(Node):
         # soh vai mudar o lado direito dessa linha aqui!!(comenta a linha em vez de apagar)
         # o output seu vai ser do tipo (z,p,k). 
         # Usar a funcao zpk2sos(z,p,k) que converte pra sos (tipo que esta feito abaixo)
+
+        self.zpk = signal.tf2zpk(self.num, self.den)
 
         # wave is at 0.083 Hz or 0.52124 rad/s which is inside the band, but in the edge 
         # exact fossens frequencies
