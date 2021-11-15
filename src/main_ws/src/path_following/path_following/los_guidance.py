@@ -28,7 +28,7 @@ class LosGuidance(Node):
         self.TIME_STEP = 0.1
 
         # los parameters
-        self.SHIP_LENGHT = 186
+        self.SHIP_LENGHT = 186.4
         # los radius
         self.R = self.SHIP_LENGHT*2 
         # When craft is inside acceptance radius for a waypoint that
@@ -221,12 +221,10 @@ class LosGuidance(Node):
             self.des_yaw_msg.distance_waypoints = self.R_STOP
             self.des_velocity_msg.distance_waypoints = self.R_STOP
 
-        
-
         self.desired_values_history[0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history[1].append(self.des_yaw_msg.desired_value)
 
-        current_path_error = self.get_current_path_error(self, x, y, wx, wy, wx_next, wy_next)
+        current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
         self.path_error.append(current_path_error)
 
         return (self.des_velocity_msg, self.des_yaw_msg)

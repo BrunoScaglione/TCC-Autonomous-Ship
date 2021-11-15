@@ -186,10 +186,10 @@ class WaveFilter(Node):
         # Bode plot
         fig, ax = plt.subplots(2)
         fig.suptitle('Frequency Response of Wave Filter', fontsize=16)
+        w, h = sosfreqz(self.sos, worN=8000, fs=10)
 
         ## Gain
         axGain = ax[0]
-        w, h = sosfreqz(self.sos, worN=8000, fs=10)
         db = 20*np.log10(np.maximum(np.abs(h), 1e-5))
         axGain.plot(w, db)
         axGain.set_title('Gain')
@@ -199,12 +199,12 @@ class WaveFilter(Node):
 
         ## Phase
         axPhase = ax[1]
-        w, h = sosfreqz(self.sos, worN=8000, fs=10)
         axPhase.plot(w, np.angle(h))
         axPhase.set_title('Phase')
         axPhase.set_ylim(-90, 90)
         axPhase.set_xlabel("Frequency [Hz]")
         axPhase.set_ylabel("Phase [dB]")
+        axPhase.set_yticks([-90, 0, 90])
 
         fig.savefig(os.path.join(self.plots_dir, "bodePlot"))
 
