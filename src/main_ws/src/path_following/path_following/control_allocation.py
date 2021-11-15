@@ -98,7 +98,7 @@ class ControlAllocation(Node):
         fig, ax = plt.subplots(1)
         ax.set_title("Proppeler rotation")
         ax.plot(t, self.propeller_history)
-        ax.set_xlabel(r"$t\;[s]$")
+        ax.set_xlabel("t [s]")
         ax.set_ylabel(r"$n_p\;[Hz]$")
         ax.set_ylim([min(self.propeller_history),max(self.propeller_history)])
 

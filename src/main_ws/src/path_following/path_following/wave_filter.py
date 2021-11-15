@@ -138,12 +138,12 @@ class WaveFilter(Node):
         filtered_state_props = [
             {
                 "title": "Filtered Linear Position X",
-                "ylabel": r"$x\;[m]$",
+                "ylabel": "x [m]",
                 "file": "filteredLinearPositionX.png"
             },
             {
                 "title": "Filtered Linear Position Y",
-                "ylabel": r"$y\;[m]$",
+                "ylabel": "y [m]",
                 "file": "filteredLinearPositionY.png"
             },
             {
@@ -153,17 +153,17 @@ class WaveFilter(Node):
             },
             {
                 "title": "Filtered Linear Velocity U",
-                "ylabel": r"$u\;[m/s]$",
+                "ylabel": "u [m/s]",
                 "file": "filteredLinearVelocityU.png"
             },
             {
                 "title": "Filtered Linear Position V",
-                "ylabel": r"$v\;[m/s\;(port)]$",
+                "ylabel": "v [m/s (port)]",
                 "file": "filteredLinearVelocityV.png"
             },
             {
                 "title": "Filtered Angular Velocity R",
-                "ylabel": r"$r\;[rad/s (counterclockwise)]$",
+                "ylabel": "r [rad/s (counterclockwise)]",
                 "file": "filteredAngularVelocityR.png"
             },
         ]
@@ -206,7 +206,7 @@ class WaveFilter(Node):
         axPhase.set_ylabel("Phase [dB]")
         axPhase.set_yticks([-90, 0, 90])
 
-        fig.savefig(os.path.join(self.plots_dir, "bodePlot"))
+        fig.savefig(os.path.join(self.plots_dir, "bodePlot.png"))
 
 def main(args=None):
     try:

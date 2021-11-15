@@ -165,12 +165,12 @@ class GpsImuSimulator(Node):
         simulated_state_props = [
             {
                 "title": "Simulated Linear Position X",
-                "ylabel": r"$x\;[m]$",
+                "ylabel": "x [m]",
                 "file": "simulatedLinearPositionX.png"
             },
             {
                 "title": "Simulated Linear Position Y",
-                "ylabel": r"$y\;[m]$",
+                "ylabel": "y [m]",
                 "file": "simulatedLinearPositionY.png"
             },
             {
@@ -180,17 +180,17 @@ class GpsImuSimulator(Node):
             },
             {
                 "title": "Simulated Linear Velocity U",
-                "ylabel": r"$u\;[m/s]$",
+                "ylabel": "u [m/s]",
                 "file": "simulatedLinearVelocityU.png"
             },
             {
                 "title": "Simulated Linear Position V",
-                "ylabel": r"$v\;[m/s\;(port)]$",
+                "ylabel": "v [m/s (port)]",
                 "file": "simulatedLinearVelocityV.png"
             },
             {
                 "title": "Simulated Angular Velocity R",
-                "ylabel": r"$r\;[rad/s\;(counterclockwise)]$",
+                "ylabel": "r [rad/s (counterclockwise)]",
                 "file": "simulatedAngularVelocityR.png"
             },
         ]
@@ -198,12 +198,12 @@ class GpsImuSimulator(Node):
         state_props = [
             {
                 "title": "Linear Position X",
-                "ylabel": r"$x\;[m]$",
+                "ylabel": "x [m]",
                 "file": "linearPositionX.png"
             },
             {
                 "title": "Linear Position Y",
-                "ylabel": r"$y\;[m]$",
+                "ylabel": "$y [m]",
                 "file": "linearPositionY.png"
             },
             {
@@ -213,17 +213,17 @@ class GpsImuSimulator(Node):
             },
             {
                 "title": "Linear Velocity U",
-                "ylabel": r"$u\;[m/s]$",
+                "ylabel": "$u [m/s]",
                 "file": "linearVelocityU.png"
             },
             {
                 "title": "Linear Position V",
-                "ylabel": r"$v\;[m/s\;(port)]$",
+                "ylabel": "$v [m/s\;(port)]",
                 "file": "linearVelocityV.png"
             },
             {
                 "title": "Angular Velocity R",
-                "ylabel": r"$r\;[rad/s\;(counterclockwise)]$",
+                "ylabel": "r [rad/s (counterclockwise)]",
                 "file": "angularVelocityR.png"
             },
         ]
@@ -235,7 +235,7 @@ class GpsImuSimulator(Node):
                 fig, ax = plt.subplots(1)
                 ax.set_title(props[j]["title"])
                 ax.plot(t, history[j])
-                ax.set_xlabel(r"$t\;[s]$")
+                ax.set_xlabel("t [s]")
                 ax.set_ylabel(props[j]["ylabel"])
                 ax.set_ylim([min(history[j]), max(history[j])])
 

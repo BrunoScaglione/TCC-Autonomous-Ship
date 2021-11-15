@@ -171,12 +171,11 @@ class YawController(Node):
         fig, ax = plt.subplots(1)
         ax.set_title("Rudder angle")
         ax.plot(t, self.rudder_angle_history)
-        ax.set_xlabel(r"$t\;[s]$")
-        ax.set_ylabel(r"$delta\;[rad\;(from south clockwise)]$")
-        ax.set_ylim([min(self.rudder_angle_history),max(self.rudder_angle_history)])
+        ax.set_xlabel("t [s]")
+        ax.set_ylabel(r"$\delta\;[rad\;(from south clockwise)]$")
+        ax.set_ylim([min(self.rudder_angle_history), max(self.rudder_angle_history)])
 
-        graphics_file = "rudderAngle.png"
-        fig.savefig(os.path.join(self.plots_dir, graphics_file))
+        fig.savefig(os.path.join(self.plots_dir, "rudderAngle.png"))
 
 def main(args=None):
     try:
