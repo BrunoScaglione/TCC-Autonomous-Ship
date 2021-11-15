@@ -172,74 +172,86 @@ class LosGuidance(Node):
         return current_path_error
     
     def los(self, xf):
-        if not self.finished:
-            if self.reached_next_waypoint(xf):
-                if self.current_waypoint == self.num_waypoints - 1:
-                    self.finished = True
-                else:
-                    self.current_waypoint += 1
-                    self.get_logger().info('changed waypoint at time: %f' % xf.time)
-            
-            if not self.finished:
-                idx = self.current_waypoint
-                x, y = xf.position.x, xf.position.y
-                u, v = xf.velocity.u, xf.velocity.v
-                U = (u**2 + v**2)**0.5
-                wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
-                wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
+        # If you dont want to shutdown nodes, use code below
+        # and put tab in all the code below "if not self.finished:" until
+        # "else:
+        #     self.get_logger().info('Already reached final waypoint')"
+        # craft will stop within the radius R_STOP pointing east
 
-                # norm of vector from craft location to path, making 90 degrees with path line
-                current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
-                self.path_error.append(current_path_error)
+        # if not self.finished:
 
-                # Find x_los and y_los by solving 2 eq.
-                # Analytic solution:
-                # 1. isolating x_los
-                # ((wy - wy_past)/(wx - wx_past))*(x_los - wx) == (y_los - wy)
-                # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
-                # 2.  substitute and solve for y_los
-                # (x_los-wx)**2 + (y_los-wy)**2 == self.R**2
-                # 3.  get x_los
-                # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
+        idx = self.current_waypoint
+        x, y = xf.position.x, xf.position.y
+        u, v = xf.velocity.u, xf.velocity.v
+        U = (u**2 + v**2)**0.5
+        wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
+        wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
 
-                x_los, y_los = self.get_xy_los(x, y, wx, wy, wx_next, wy_next)
-                beta = math.asin(v/U)
-                chi_d = math.atan2(x_los - x, y_los - y)
-                psi_d = chi_d + beta
-                # theta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
-                self.des_yaw_msg.desired_value = 1.57079632679 - psi_d # psi to theta (radians)
-                self.des_velocity_msg.desired_value = wv_next
-
-                distance_waypoints = ((wx_next - wx)**2 + (wy_next - wy)**2)**0.5
-                self.get_logger().info('wx_next: %f' % wx_next)
-                self.get_logger().info('wx: %f' % wx)
-                self.get_logger().info('distance_waypoints: %f' % distance_waypoints)
-                self.des_yaw_msg.distance_waypoints = distance_waypoints
-                self.des_velocity_msg.distance_waypoints = distance_waypoints
+        # norm of vector from craft location to path, making 90 degrees with path line
+        current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
+        self.path_error.append(current_path_error)
+        
+        if self.reached_next_waypoint(xf):
+            if self.current_waypoint == self.num_waypoints - 1:
+                self.finished = True
             else:
-                self.get_logger().info('Reached final waypoint Uhulll')
-                mean_path_error = np.mean(self.path_error)
-                print('Mean path error: ', mean_path_error)
-                self.get_logger().info('Mean path error: %f' % mean_path_error)
+                self.current_waypoint += 1
+                self.get_logger().info('changed waypoint at time: %f' % xf.time)
+        
+        if not self.finished:
+            # Find x_los and y_los by solving 2 eq.
+            # Analytic solution:
+            # 1. isolating x_los
+            # ((wy - wy_past)/(wx - wx_past))*(x_los - wx) == (y_los - wy)
+            # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
+            # 2.  substitute and solve for y_los
+            # (x_los-wx)**2 + (y_los-wy)**2 == self.R**2
+            # 3.  get x_los
+            # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
 
-                # Will shutdown all nodes when reached final waypoint
-                self.publisher_shutdown.publish(self.shutdown_msg)
+            x_los, y_los = self.get_xy_los(x, y, wx, wy, wx_next, wy_next)
+            beta = math.asin(v/U)
+            chi_d = math.atan2(x_los - x, y_los - y)
+            psi_d = chi_d + beta
 
-                # If you dont want to shutdown nodes, use code below
-                # craft will stop within the radius R_STOP pointing east
+            # theta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
+            self.des_yaw_msg.desired_value = 1.57079632679 - psi_d # psi to theta (radians)
+            self.des_velocity_msg.desired_value = wv_next
 
-                # self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
-                # self.des_velocity_msg.desired_value = 0.0
-
-                # self.des_yaw_msg.distance_waypoints = self.R_STOP
-                # self.des_velocity_msg.distance_waypoints = self.R_STOP
+            distance_waypoints = ((wx_next - wx)**2 + (wy_next - wy)**2)**0.5
+            self.get_logger().info('wx_next: %f' % wx_next)
+            self.get_logger().info('wx: %f' % wx)
+            self.get_logger().info('distance_waypoints: %f' % distance_waypoints)
+            self.des_yaw_msg.distance_waypoints = distance_waypoints
+            self.des_velocity_msg.distance_waypoints = distance_waypoints
         else:
             self.get_logger().info('Reached final waypoint Uhulll')
-            self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
-            self.des_velocity_msg.desired_value = 0.0
+            mean_path_error = np.mean(self.path_error)
+            print('Mean path error: ', mean_path_error)
+            self.get_logger().info('Mean path error: %f' % mean_path_error)
 
-            self.des_yaw_msg.distance_waypoints = self.R_STOP
-            self.des_velocity_msg.distance_waypoints = self.R_STOP
+            # Will shutdown all nodes when reached final waypoint
+            self.publisher_shutdown.publish(self.shutdown_msg)
+
+            # If you dont want to shutdown nodes, use code below
+            # craft will stop within the radius R_STOP pointing east
+
+            # self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
+            # self.des_velocity_msg.desired_value = 0.0
+
+            # self.des_yaw_msg.distance_waypoints = self.R_STOP
+            # self.des_velocity_msg.distance_waypoints = self.R_STOP
+    
+        # If you dont want to shutdown nodes, use code below
+        # craft will stop within the radius R_STOP pointing east
+
+        # else:
+        #     self.get_logger().info('Already reached final waypoint')
+        #     self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
+        #     self.des_velocity_msg.desired_value = 0.0
+
+        #     self.des_yaw_msg.distance_waypoints = self.R_STOP
+        #     self.des_velocity_msg.distance_waypoints = self.R_STOP
 
         self.desired_values_history['values'][0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history['values'][1].append(self.des_yaw_msg.desired_value)
