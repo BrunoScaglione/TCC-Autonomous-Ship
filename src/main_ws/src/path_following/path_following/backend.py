@@ -233,7 +233,7 @@ def end_simul():
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
 
 @app.route("/shutdown")
-def shutdown_nodes():
+def shutdown_nodes(): 
     try:
         backend_node.get_logger().info("Shutting down nodes")
         backend_node.publisher_shutdown.publish(backend_node.shutdown_msg)

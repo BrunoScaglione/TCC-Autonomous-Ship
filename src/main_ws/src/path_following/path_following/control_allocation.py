@@ -113,8 +113,9 @@ def main(args=None):
         rclpy.spin(control_allocation_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+        control_allocation_node.get_logger().info('Stopped with user interrupt')
     except SystemExit:
-        print('Stopped with user shutdown request')
+        pass
     except:
         print(traceback.format_exc())
     finally:

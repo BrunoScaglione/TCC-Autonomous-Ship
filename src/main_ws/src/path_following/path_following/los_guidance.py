@@ -55,6 +55,9 @@ class LosGuidance(Node):
         # self.des_velocity_msg = Float32()
         self.des_velocity_msg = Control()
 
+        self.shutdown_msg = Bool()
+        self.shutdown_msg.data = True
+
         self.server_init_setpoints = self.create_service(
             InitValues, '/init_setpoints', self.callback_init_setpoints
         )
@@ -79,6 +82,11 @@ class LosGuidance(Node):
         self.publisher_desired_surge_velocity = self.create_publisher(
             Control,
             '/desired_surge_velocity',
+            1)
+        
+        self.publisher_shutdown = self.create_publisher(
+            Bool,
+            '/shutdown',
             1)
 
     def log_state(self, msg):
@@ -215,11 +223,17 @@ class LosGuidance(Node):
                 print('Mean path error: ', mean_path_error)
                 self.get_logger().info('Mean path error: %f' % mean_path_error)
 
-                self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
-                self.des_velocity_msg.desired_value = 0.0
+                # Will shutdown all nodes when reached final waypoint
+                self.publisher_shutdown.publish(self.shutdown_msg)
 
-                self.des_yaw_msg.distance_waypoints = self.R_STOP
-                self.des_velocity_msg.distance_waypoints = self.R_STOP
+                # If you dont want to shutdown nodes, use code below
+                # craft will stop within the radius R_STOP pointing east
+
+                # self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
+                # self.des_velocity_msg.desired_value = 0.0
+
+                # self.des_yaw_msg.distance_waypoints = self.R_STOP
+                # self.des_velocity_msg.distance_waypoints = self.R_STOP
         else:
             self.get_logger().info('Reached final waypoint Uhulll')
             self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
@@ -293,8 +307,14 @@ def main(args=None):
         rclpy.spin(los_guidance_node)
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
+        los_guidance_node.get_logger().info('Stopped with user interrupt')
     except SystemExit:
-        print('Stopped with user shutdown request')
+        if los_guidance_node.finished:
+            print('Finished path')
+            los_guidance_node.get_logger().info('Finished path')
+        else:
+            print('Stopped with user shutdown request')
+            los_guidance_node.get_logger().info('Stopped with user shutdown request')
     except:
         print(traceback.format_exc())
     finally:
