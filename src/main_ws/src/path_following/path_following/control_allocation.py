@@ -2,8 +2,9 @@ import sys
 import os
 import glob
 import traceback
-
 import math
+
+import numpy as np
 
 import matplotlib.pyplot as plt
 
@@ -94,13 +95,13 @@ class ControlAllocation(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [self.TIME_STEP*i for i in range(len(self.propeller_history))]
+        t = self.TIME_STEP*np.array(range(len(self.propeller_history)))
         fig, ax = plt.subplots(1)
         ax.set_title("Proppeler rotation")
         ax.plot(t, self.propeller_history)
         ax.set_xlabel("t [s]")
         ax.set_ylabel(r"$n_p\;[Hz]$")
-        ax.set_ylim([min(self.propeller_history),max(self.propeller_history)])
+        ax.set_ylim(min(self.propeller_history),max(self.propeller_history))
 
         graphics_file = "propellerRotation.png"
         fig.savefig(os.path.join(self.plots_dir, graphics_file))

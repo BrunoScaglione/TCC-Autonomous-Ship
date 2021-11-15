@@ -228,9 +228,6 @@ class LosGuidance(Node):
         self.desired_values_history[0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history[1].append(self.des_yaw_msg.desired_value)
 
-        if 5 < xf.time < 7:
-            self.generate_plots()
-
         return (self.des_velocity_msg, self.des_yaw_msg)
     
     def generate_plots(self):
@@ -242,7 +239,7 @@ class LosGuidance(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [self.TIME_STEP*i for i in range(len(self.desired_values_history[0]))]
+        t = self.TIME_STEP*np.array(self.desired_values_history[0])
         ss_dir = "setpoints"
         desired_values_props = [
             {
@@ -263,26 +260,29 @@ class LosGuidance(Node):
             ax.plot(t, self.desired_values_history[i])
             ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(desired_values_props[i]["ylabel"])
-            ax.set_ylim([min(self.desired_values_history[i]), max(self.desired_values_history[i])])
+            ax.set_ylim(min(self.desired_values_history[i]), max(self.desired_values_history[i]))
 
             fig.savefig(os.path.join(self.plots_dir, ss_dir, desired_values_props[i]["file"]))
-        
-        # Path Error
-        ## clean before
+
+        # clean before
         files = glob.glob(os.path.join(self.plots_dir, 'error*.png'))
         for f in files:
             os.remove(f)
+
+        t = self.TIME_STEP*np.array(range(len(self.path_error)))
         
         fig, ax = plt.subplots(1)
         ax.set_title("Path error")
+        len_t = len(t)
+        print('len(t): ', len_t)
+        len_path_error = len(self.path_error)
+        print('len(self.path_error): ', len_path_error)
         ax.plot(t, self.path_error)
         ax.set_xlabel("t [s]")
         ax.set_ylabel("error [m]")
         ax.set_ylim(min(self.path_error), max(self.path_error))
-        print("oiiiiiiiiiiiiiii")
         fig.savefig(os.path.join(self.plots_dir, "error.png"))
         
-
 def main(args=None):
     try:
         rclpy.init(args=args)

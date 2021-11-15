@@ -160,7 +160,7 @@ class GpsImuSimulator(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [self.TIME_STEP*i for i in range(len(self.simulated_state_history[0]))]
+        t = self.TIME_STEP*np.array(range(len(self.simulated_state_history[0])))
         ss_dir = "simulatedState"
         simulated_state_props = [
             {
@@ -237,7 +237,7 @@ class GpsImuSimulator(Node):
                 ax.plot(t, history[j])
                 ax.set_xlabel("t [s]")
                 ax.set_ylabel(props[j]["ylabel"])
-                ax.set_ylim([min(history[j]), max(history[j])])
+                ax.set_ylim(min(history[j]), max(history[j]))
 
                 fig.savefig(os.path.join(self.plots_dir, dir, props[j]["file"]))
 

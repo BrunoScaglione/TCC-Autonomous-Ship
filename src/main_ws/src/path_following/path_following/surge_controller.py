@@ -180,13 +180,13 @@ class SurgeController(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [self.TIME_STEP*i for i in range(len(self.thrust_history))]
+        t = self.TIME_STEP*np.array(range(len(self.thrust_history)))
         fig, ax = plt.subplots(1)
         ax.set_title("Thrust force")
         ax.plot(t, self.thrust_history)
         ax.set_xlabel("t [s]")
         ax.set_ylabel(r"$\tau_1\;[N]$")
-        ax.set_ylim([min(self.thrust_history), max(self.thrust_history)])
+        ax.set_ylim(min(self.thrust_history), max(self.thrust_history))
 
         graphics_file = "thrustForce.png"
         fig.savefig(os.path.join(self.plots_dir, graphics_file))

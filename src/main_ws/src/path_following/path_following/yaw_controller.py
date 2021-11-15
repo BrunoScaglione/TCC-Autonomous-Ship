@@ -4,6 +4,8 @@ import glob
 import traceback
 import math
 
+import numpy as np
+
 import matplotlib.pyplot as plt
 
 import rclpy
@@ -167,13 +169,13 @@ class YawController(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [self.TIME_STEP*i for i in range(len(self.rudder_angle_history))]
+        t = self.TIME_STEP*np.array(range(len(self.rudder_angle_history)))
         fig, ax = plt.subplots(1)
         ax.set_title("Rudder angle")
         ax.plot(t, self.rudder_angle_history)
         ax.set_xlabel("t [s]")
         ax.set_ylabel(r"$\delta\;[rad\;(from south clockwise)]$")
-        ax.set_ylim([min(self.rudder_angle_history), max(self.rudder_angle_history)])
+        ax.set_ylim(min(self.rudder_angle_history), max(self.rudder_angle_history))
 
         fig.savefig(os.path.join(self.plots_dir, "rudderAngle.png"))
 

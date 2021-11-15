@@ -133,7 +133,7 @@ class WaveFilter(Node):
         params = {'mathtext.default': 'regular'}
         plt.rcParams.update(params)
 
-        t = [self.TIME_STEP*i for i in range(len(self.filtered_state_history[0]))]
+        t = self.TIME_STEP*np.array(range(len(self.filtered_state_history[0])))
         fs_dir = "filteredState"
         filtered_state_props = [
             {
