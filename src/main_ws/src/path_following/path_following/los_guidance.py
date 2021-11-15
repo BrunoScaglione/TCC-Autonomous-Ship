@@ -188,11 +188,11 @@ class LosGuidance(Node):
                 # 3.  get x_los
                 # x_los == ((y_los - wy) + wx*((wy - wy_past)/(wx - wx_past)))/((wy - wy_past)/(wx - wx_past))
 
-                x_los, y_los = self.get_xy_los(x, y, wx_next, wy_next, wx, wy)
+                x_los, y_los = self.get_xy_los(x, y, wx, wy, wx_next, wy_next)
                 beta = math.asin(v/U)
                 chi_d = math.atan2(x_los - x, y_los - y)
                 psi_d = chi_d + beta
-                # teta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
+                # theta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
                 self.des_yaw_msg.desired_value = 1.57079632679 - psi_d # psi to theta (radians)
                 self.des_velocity_msg.desired_value = wv_next
 
@@ -265,7 +265,7 @@ class LosGuidance(Node):
         
         # Path Error
         ## clean before
-        files = glob.glob(os.path.join(self.plots_dir, 'error', '*.png'))
+        files = glob.glob(os.path.join(self.plots_dir, 'error*.png'))
         for f in files:
             os.remove(f)
         
