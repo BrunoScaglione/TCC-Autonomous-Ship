@@ -1,6 +1,5 @@
 @echo off
 call config.bat
-set folder=%path_pkg_logs_path%
 IF EXIST %folder% (
     cd %folder%
     del /s /q *.*
