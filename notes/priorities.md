@@ -1,8 +1,19 @@
-# Make a route for setting different locations in the map
-# change name gps_imu_simul to sensors_emul
-# change name of simulated state to emulated state
 
-# Report:      
+# WHERE ARE THESE WAVES COMING FROM?! ALREADY TURNED OFF WAVES IN P3D
+
+# Tasks
+
+- Tune controllers
+- Discover why there seems to be waves, but p3d has waves off
+
+# Extra
+
+- Make a route for setting different locations in the map
+- change name gps_imu_simul to sensors_emul
+- change name of simulated state to emulated state
+
+# Report
+
 - remember to rewrite surge control part
 - change architectre figure: GUI and colors 
 - control allocation subscribes to state also
@@ -16,8 +27,8 @@
 - yaw controller: intead of tau it's rudder 
 - control allocation receives surge velocity from \state topic, not \filtered_state
 - The value of LOS paramater R is not clear
-- future work: interpolate between desired velocities (b-splines). Now, there is a 
-- realtively large jump in the actuator each time changes waypoint
+- future work: interpolate between desired velocities (b-splines). Now, there is a relatively large jump in the actuator each time changes waypoint
   
-# TODOS
+# CODE TODOS
+
 - service for getting the updated waypoints (user dragged them in gui) from venus 
