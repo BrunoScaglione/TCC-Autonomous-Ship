@@ -21,10 +21,18 @@ class PydynaSimpleNode(Node):
     def __init__(self):
         super().__init__('pydyna_simple_node')
 
+        P3D_FILES = [
+            'TankerL186B32_T085.p3d',
+            'NoWaves_TankerL186B32_T085.p3d',
+            'NoCurrent&Wind_TankerL186B32_T085.p3d',
+            'NoWaves&Current&Wind_TankerL186B32_T085.p3d'
+        ]
+
         self.declare_parameter('pkg_dir', './')
         self.declare_parameter('pkg_share_dir', './')
-        # NoWaves&Current&Wind_TankerL186B32_T085.p3d
-        self.declare_parameter('p3d', 'NoWaves_TankerL186B32_T085.p3d')
+        # this will be overwritten by launch file
+        self.declare_parameter('p3d', P3D_FILES[0]) 
+
         self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
         self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
         self.p3d = self.get_parameter('p3d').get_parameter_value().string_value

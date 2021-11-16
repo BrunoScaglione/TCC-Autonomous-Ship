@@ -21,9 +21,7 @@ class SurgeController(Node):
         super().__init__('surge_controller_node')
 
         self.declare_parameter('plots_dir', './')
-        self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
-
-        self.thrust_history = [] #debugging
+        self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value 
 
         self.TIME_STEP = 0.1
 
@@ -31,6 +29,8 @@ class SurgeController(Node):
         self.M = 40415
 
         self.PHI_AS_PERCENTAGE_OF_K = 29.9810744468 #2808.95216145 for k**0.5
+
+        self.thrust_history = []
 
         self.phi_tuning_factor = 4 # 3 works with shattering
         self.kf_tuning_factor = 7 # 7 works with shattering

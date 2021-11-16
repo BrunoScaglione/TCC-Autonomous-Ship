@@ -172,7 +172,7 @@ class LosGuidance(Node):
         return current_path_error
     
     def los(self, xf):
-        # If you dont want to shutdown nodes, use code below
+        ##### If you dont want to shutdown nodes, use code below
         # and put tab in all the code below "if not self.finished:" until
         # "else:
         #     self.get_logger().info('Already reached final waypoint')"
@@ -229,7 +229,7 @@ class LosGuidance(Node):
             # Will shutdown all nodes when reached final waypoint
             self.publisher_shutdown.publish(self.shutdown_msg)
 
-            # If you dont want to shutdown nodes, use code below
+            ##### If you dont want to shutdown nodes, use code below
             # craft will stop within the radius R_STOP pointing east
 
             # self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
@@ -238,7 +238,7 @@ class LosGuidance(Node):
             # self.des_yaw_msg.distance_waypoints = self.R_STOP
             # self.des_velocity_msg.distance_waypoints = self.R_STOP
     
-        # If you dont want to shutdown nodes, use code below
+        ##### If you dont want to shutdown nodes, use code below
         # craft will stop within the radius R_STOP pointing east
 
         # else:

@@ -1,10 +1,7 @@
 
-# WHERE ARE THESE WAVES COMING FROM?! ALREADY TURNED OFF WAVES IN P3D
-
 # Tasks
 
 - Tune controllers
-- Discover why there seems to be waves, but p3d has waves off
 
 # Extra
 
