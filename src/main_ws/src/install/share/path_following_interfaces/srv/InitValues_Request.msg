@@ -1,5 +1,0 @@
-#request
-State initial_state
-Waypoints waypoints
-float32 surge 0.0
-float32 yaw 0.0

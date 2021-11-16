@@ -1,8 +1,0 @@
-[INFO 1637100202.978745600] [yaw_controller_node]: theta_bar: 0.214602 (yaw_control() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:143)
-[INFO 1637100202.979479200] [yaw_controller_node]: self.theta_bar_int: 0.021460 (yaw_control() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:150)
-[INFO 1637100203.366372200] [yaw_controller_node]: listened filtered yaw angle: 0.998613 (callback_filtered_state() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:114)
-[INFO 1637100203.368019200] [yaw_controller_node]: theta_bar: 0.213215 (yaw_control() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:143)
-[INFO 1637100203.368992500] [yaw_controller_node]: self.theta_bar_int: 0.042782 (yaw_control() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:150)
-[INFO 1637100203.370072500] [yaw_controller_node]: published rudder angle: -0.604756 (callback_filtered_state() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:119)
-[INFO 1637100203.504071600] [yaw_controller_node]: listened desired yaw angle: 0.785463 (callback_desired_yaw_angle() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:122)
-[INFO 1637100237.382506900] [yaw_controller_node]: Stopped with user interrupt (main() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:187)
