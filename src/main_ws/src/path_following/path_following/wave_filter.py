@@ -48,13 +48,20 @@ class WaveFilter(Node):
         # Usar a funcao zpk2sos(z,p,k) que converte pra sos (tipo que esta feito abaixo)
 
         self.zpk = signal.tf2zpk(self.num, self.den)
+        self.zeroes = self.zpk[0]
+        self.poles = self.zpk[1]
+        self.gain = self.zpk[2]
+
+        self.bilinear = signal.bilinear_zpk(self.zeroes, self.poles, self.gain, 5)
 
         # wave is at 0.083 Hz or 0.52124 rad/s which is inside the band, but in the edge 
         # exact fossens frequencies
         # self.sos = signal.butter(6, [0.063, 0.159], 'bandstop', fs=10, output='sos')
         # centralized on our wave frequency (fossen's but shifted)
         self.sos = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
+
         ##################### <pedro/> ##############
+
         self.zi = signal.sosfilt_zi(self.sos)
 
         self.xf_msg = State()
