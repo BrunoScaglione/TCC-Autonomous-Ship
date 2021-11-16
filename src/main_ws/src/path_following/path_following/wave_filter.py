@@ -47,6 +47,10 @@ class WaveFilter(Node):
         ##################### <pedro/> ##############
         self.zi = signal.sosfilt_zi(self.sos)
 
+        # why 0.3? I doubled the wave filter (since the freq band of the system is below wave filter)
+        self.sos2 =  signal.butter(6, 0.3, fs=10, output='sos')
+        self.zi2 = signal.sosfilt_zi(self.sos2)
+
         self.xf_msg = State()
 
         self.subscription_shutdown = self.create_subscription(
@@ -85,7 +89,10 @@ class WaveFilter(Node):
     
     def state_filter(self, t):
         # filters entire state
+        # band stop (notch): remove wave component
         state_history_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], self.simulated_state_history)
+        # low pass: remove high freq noise from white noise added by gps_imu_simul
+        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
