@@ -9,12 +9,19 @@ from launch_ros.actions import Node
 # however absolute paths should do, with get_package_share_directory
 
 def generate_launch_description():
+    P3D_FILES = [
+        'TankerL186B32_T085.p3d',
+        'NoWaves_TankerL186B32_T085.p3d',
+        'NoCurrent&Wind_TankerL186B32_T085.p3d',
+        'NoWaves&Current&Wind_TankerL186B32_T085.p3d'
+    ]
+
     pkg_share_dir = get_package_share_directory('path_following')
     pkg_install_dir = get_package_prefix('path_following')
     pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
     plots_dir = os.path.join(pkg_share_dir, 'plots')
-    p3d = 'TankerL186B32_T085.p3d'
+    p3d = P3D_FILES[0]
     db_dir = os.path.join(pkg_share_dir, 'db')
 
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')

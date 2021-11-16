@@ -118,7 +118,7 @@ class LosGuidance(Node):
         res.surge, res.yaw = des_velocity_msg.desired_value, des_yaw_msg.desired_value
         return res
 
-    def callback_shutdown(self, msg):
+    def callback_shutdown(self, _):
         sys.exit()
         
     def callback_filtered_state(self, msg):
@@ -136,7 +136,25 @@ class LosGuidance(Node):
         x, y = xf.position.x, xf.position.y
         idx = self.current_waypoint
         wx_next , wy_next  = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
-        return 1 if (x-wx_next)**2 + (y-wy_next)**2 < self.R_ACCEPTANCE**2 else 0
+        return 1 if (x-wx_next)**2 + (y-wy_next)**2 <= self.R_ACCEPTANCE**2 else 0
+    
+    def missed_waypoint(self, xf):
+        # when craft passes line that is orthogonal to los line and 
+        # intercept the next waypoint
+        # instead of going back trying to reach waypoint missed, 
+        # craft will change to next waypoint
+        x, y = xf.position.x, xf.position.y
+        idx = self.current_waypoint
+        wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
+        wx_next , wy_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
+        a = (wy_next - wy)/(wx_next - wx)
+        self.get_logger().info('a: %f' % a)
+        a_wnext= -a
+        b_wnext= wy_next - a_wnext*wx_next
+
+        passed_wnext = (y > a_wnext*x + b_wnext)
+        self.get_logger().info('passed_wnext: %f' % passed_wnext)
+        return passed_wnext 
 
     def get_xy_los(self, x, y, wx, wy, wx_next, wy_next):
         x_los, y_los = symbols('x_los, y_los')
@@ -151,8 +169,9 @@ class LosGuidance(Node):
         x_los2, y_los2 = soln[1]
         self.get_logger().info('x_los2: %f, y_los2: %f' % (x_los2, y_los2))
 
-        # dot product
-        (x_los, y_los) = (x_los1, y_los1) if (wx_next-x)*(x_los1-x) + (wy_next-y)*(y_los1-y) > 0 else (x_los2, y_los2)
+        # dot product -> projection of (los intercept - craft positio) vector
+        # onto los line vector (connecting waypoints)
+        (x_los, y_los) = (x_los1, y_los1) if (wx_next-wx)*(x_los1-x) + (wy_next-wy)*(y_los1-y) > 0 else (x_los2, y_los2)
         
         self.get_logger().info('wx_next: %f' % wx_next)
         self.get_logger().info('x_los: %f, y_los: %f' % (x_los, y_los))
@@ -172,7 +191,7 @@ class LosGuidance(Node):
         return current_path_error
     
     def los(self, xf):
-        # If you dont want to shutdown nodes, use code below
+        ##### If you dont want to shutdown nodes, use code below
         # and put tab in all the code below "if not self.finished:" until
         # "else:
         #     self.get_logger().info('Already reached final waypoint')"
@@ -187,13 +206,13 @@ class LosGuidance(Node):
         wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
         wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
         
-        if self.reached_next_waypoint(xf):
+        if self.reached_next_waypoint(xf) or self.missed_waypoint(xf):
             if self.current_waypoint == self.num_waypoints - 1:
                 self.finished = True
             else:
                 self.current_waypoint += 1
                 self.get_logger().info('changed waypoint at time: %f' % xf.time)
-        
+            
         if not self.finished:
             # Find x_los and y_los by solving 2 eq.
             # Analytic solution:
@@ -229,7 +248,7 @@ class LosGuidance(Node):
             # Will shutdown all nodes when reached final waypoint
             self.publisher_shutdown.publish(self.shutdown_msg)
 
-            # If you dont want to shutdown nodes, use code below
+            ##### If you dont want to shutdown nodes, use code below
             # craft will stop within the radius R_STOP pointing east
 
             # self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
@@ -238,7 +257,7 @@ class LosGuidance(Node):
             # self.des_yaw_msg.distance_waypoints = self.R_STOP
             # self.des_velocity_msg.distance_waypoints = self.R_STOP
     
-        # If you dont want to shutdown nodes, use code below
+        ##### If you dont want to shutdown nodes, use code below
         # craft will stop within the radius R_STOP pointing east
 
         # else:

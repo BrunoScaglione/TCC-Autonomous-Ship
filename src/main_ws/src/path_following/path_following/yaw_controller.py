@@ -24,11 +24,11 @@ class YawController(Node):
         self.declare_parameter('plots_dir', './')
         self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
 
-        self.rudder_angle_history = []
-
         self.RUDDER_SAT = 0.610865
 
         self.TIME_STEP = 0.1
+
+        self.rudder_angle_history = []
 
         self.K_tuning_factor = 1
         self.Kp = self.K_tuning_factor*1.34

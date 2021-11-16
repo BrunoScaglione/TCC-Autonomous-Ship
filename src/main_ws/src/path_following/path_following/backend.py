@@ -22,7 +22,7 @@ class Backend(Node):
         self.db_dir = self.get_parameter('db_dir').get_parameter_value().string_value
 
         self.end_msg = Bool()
-        self.end_msg.data = True
+        self.end_msg.data = True 
         self.shutdown_msg = Bool()
         self.shutdown_msg.data = True
         
