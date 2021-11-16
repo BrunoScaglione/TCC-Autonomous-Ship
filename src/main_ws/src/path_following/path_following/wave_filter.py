@@ -58,14 +58,16 @@ class WaveFilter(Node):
         # exact fossens frequencies
         # self.sos = signal.butter(6, [0.063, 0.159], 'bandstop', fs=10, output='sos')
         # centralized on our wave frequency (fossen's but shifted)
-        #self.sos = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
+        self.sos = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
 
         ##################### <pedro/> ##############
 
         #sos from bilinear filter signal
-        self.sos = signal.zpk2sos(self.bilinear[0], self.bilinear[1], self.bilinear[2])
+        self.sos2 = signal.zpk2sos(self.bilinear[0], self.bilinear[1], self.bilinear[2])
 
         self.zi = signal.sosfilt_zi(self.sos)
+
+        self.zi2 = signal.sosfilt_zi(self.sos2)
 
         self.xf_msg = State()
 

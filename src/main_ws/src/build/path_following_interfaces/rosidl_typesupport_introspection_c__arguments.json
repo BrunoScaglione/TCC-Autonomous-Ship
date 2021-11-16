@@ -1,0 +1,31 @@
+{
+  "package_name": "path_following_interfaces",
+  "output_dir": "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_typesupport_introspection_c/path_following_interfaces",
+  "template_dir": "C:/dev/ros2_galactic/install/share/rosidl_typesupport_introspection_c/resource",
+  "idl_tuples": [
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/Position.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/Velocity.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/State.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/PositionsXY.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/Waypoints.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:msg/Control.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces:srv/InitValues.idl"
+  ],
+  "target_dependencies": [
+    "C:/dev/ros2_galactic/install/lib/rosidl_typesupport_introspection_c/rosidl_typesupport_introspection_c",
+    "C:/dev/ros2_galactic/install/Lib/site-packages/rosidl_typesupport_introspection_c/__init__.py",
+    "C:/dev/ros2_galactic/install/share/rosidl_typesupport_introspection_c/resource/idl__rosidl_typesupport_introspection_c.h.em",
+    "C:/dev/ros2_galactic/install/share/rosidl_typesupport_introspection_c/resource/idl__type_support.c.em",
+    "C:/dev/ros2_galactic/install/share/rosidl_typesupport_introspection_c/resource/msg__rosidl_typesupport_introspection_c.h.em",
+    "C:/dev/ros2_galactic/install/share/rosidl_typesupport_introspection_c/resource/msg__type_support.c.em",
+    "C:/dev/ros2_galactic/install/share/rosidl_typesupport_introspection_c/resource/srv__rosidl_typesupport_introspection_c.h.em",
+    "C:/dev/ros2_galactic/install/share/rosidl_typesupport_introspection_c/resource/srv__type_support.c.em",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces/msg/Position.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces/msg/Velocity.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces/msg/State.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces/msg/PositionsXY.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces/msg/Waypoints.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces/msg/Control.idl",
+    "C:/TCC-Autonomous-Ship/src/main_ws/src/build/path_following_interfaces/rosidl_adapter/path_following_interfaces/srv/InitValues.idl"
+  ]
+}
