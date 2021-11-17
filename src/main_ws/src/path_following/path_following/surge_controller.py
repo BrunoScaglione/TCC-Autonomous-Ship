@@ -33,7 +33,7 @@ class SurgeController(Node):
         self.thrust_history = []
 
         self.phi_tuning_factor = 4 # 4 works +-
-        self.kf_tuning_factor = 7 # 7 works +-
+        self.kf_tuning_factor = 50 # 7 works +-
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(
@@ -67,34 +67,13 @@ class SurgeController(Node):
 
     def callback_shutdown(self, _):
         sys.exit()
-    
-    # tunes controller based on controller tuned for worst case scenario:
-        # has to go from v=1 to v=3 from waypoint (0,0) to (500,500)
-    def tune_controller(self, waypoints, initial_state):
-        waypoints.position.x.insert(0, initial_state.position.x)
-        waypoints.position.y.insert(0, initial_state.position.y)
-        waypoints.velocity.insert(0, initial_state.velocity.u)
-        cases = []
-        for i in range(1, len(waypoints.velocity)):
-            distance = (
-                (waypoints.position.x[i] - waypoints.position.x[i-1])**2 +
-                (waypoints.position.y[i] - waypoints.position.y[i-1])**2
-            )**0.5
-            delta_surge_velocity = (waypoints.velocity[i] - waypoints.velocity[i-1])
-            cases.append(delta_surge_velocity/distance)
-        worst_case = max(cases)
-        # 0.00282842712 = (3 - 1)/sqrt(500^2 + 500^2)
-        self.kf_tuning_factor = self.kf_tuning_factor*(worst_case/0.00282842712)
         
     def callback_init_control(self, req, res):
-        self.tune_controller(req.waypoints, req.initial_state)
         self.desired_surge_velocity = req.surge
         self.desired_surge_velocity_old = req.initial_state.velocity.u
         self.distance_waypoints = (
-            # index 1 instead of 0 because inserted initial condition as first waypoint 
-            # in function "tune_controller"
-            (req.waypoints.position.x[1] - req.initial_state.position.x)**2 +
-            (req.waypoints.position.y[1] - req.initial_state.position.y)**2
+            (req.waypoints.position.x[0] - req.initial_state.position.x)**2 +
+            (req.waypoints.position.y[0] - req.initial_state.position.y)**2
         )**0.5
         self.get_logger().info('initial distance_waypoints: %f' % self.distance_waypoints)
         thrust_msg = self.surge_control(req.initial_state.velocity.u)

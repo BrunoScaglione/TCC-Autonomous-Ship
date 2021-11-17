@@ -100,7 +100,9 @@ class YawController(Node):
             cases.append(delta_yaw_angle/distance)
         worst_case = max(cases)
         # 0.0011107205 = math.radians(90 - 45)/sqrt(500^2 + 500^2)
-        self.K_tuning_factor = self.K_tuning_factor*(worst_case/0.0011107205)
+        auto_tuning_factor = worst_case/0.0011107205
+        self.get_logger().info('yaw controller autotuning factor: %f' % auto_tuning_factor)
+        self.K_tuning_factor = self.K_tuning_factor*auto_tuning_factor
 
     def callback_init_control(self, req, res):
         self.tune_controller(req.waypoints, req.initial_state)
