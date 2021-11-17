@@ -2,7 +2,6 @@ import sys
 import os
 import glob
 import traceback
-import math
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -111,6 +110,9 @@ class WaveFilter(Node):
         self.filtered_state_history[4].append(self.xf_msg.velocity.v)
         self.filtered_state_history[5].append(self.xf_msg.velocity.r)
 
+        if t == 5.0:
+            self.generate_plots()
+
         return self.xf_msg
 
 
@@ -215,18 +217,18 @@ class WaveFilter(Node):
             axGain.semilogx(w, db)
             axGain.set_title('Gain')
             axGain.set_ylim(min(db), max(db))
-            axGain.axes.get_xaxis().set_visible(False)
+            axGain.set_xlabel("Frequency [Hz]")
             axGain.set_ylabel("Gain [dB]")                          
 
             ## Phase
             axPhase = ax[1]
-            negative_phase = [(-phase - 180) if phase > 0 else phase for phase in math.degrees(np.angle(h))]
+            negative_phase = [(-phase - 180) if phase > 0 else phase for phase in np.rad2deg(np.angle(h))]
             axPhase.semilogx(w, negative_phase)
             axPhase.set_title('Phase')
-            axPhase.set_ylim(-180, 0)
+            axPhase.set_ylim(min(negative_phase), 0)
             axPhase.set_xlabel("Frequency [Hz]")
             axPhase.set_ylabel("Phase [deg]")
-            axPhase.set_yticks([-180, 0])
+            axPhase.set_yticks([min(negative_phase), 0])
 
             fig.savefig(os.path.join(self.plots_dir, bode_dir, filter['file']))
 
