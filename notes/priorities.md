@@ -2,6 +2,7 @@
 # Tasks
 
 - Tune controllers
+- Find out why pydyna is giving non unique data error for NoWaves p3d file
 
 # Extra
 
@@ -28,6 +29,6 @@
   - interpolate between desired velocities (b-splines). Now, there is a relatively large jump in the actuator each time changes waypoint
   - kalman filter
 
-# CODE TODOS
+# Code TODOS
 
 - service for getting the updated waypoints (user dragged them in gui) from venus

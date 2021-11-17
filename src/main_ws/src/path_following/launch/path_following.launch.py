@@ -21,7 +21,7 @@ def generate_launch_description():
     pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
     plots_dir = os.path.join(pkg_share_dir, 'plots')
-    p3d_file = P3D_FILES[1] # change p3d here
+    p3d_file = P3D_FILES[0] # change p3d here
     db_dir = os.path.join(pkg_share_dir, 'db')
 
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
