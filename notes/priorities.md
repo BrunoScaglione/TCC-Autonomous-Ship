@@ -2,7 +2,9 @@
 # Tasks
 
 - Tune controllers
-- Find out why pydyna is giving non unique data error for NoWaves p3d file
+- Find out why pydyna is giving non unique data error for p3d:
+  - had when tried to use NoWaves p3d
+  - had when changed current in normal p3d
 
 # Extra
 

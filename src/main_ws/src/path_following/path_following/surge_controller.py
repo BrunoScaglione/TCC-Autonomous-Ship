@@ -32,8 +32,8 @@ class SurgeController(Node):
 
         self.thrust_history = []
 
-        self.phi_tuning_factor = 4 # 3 works with shattering
-        self.kf_tuning_factor = 7 # 7 works with shattering
+        self.phi_tuning_factor = 4 # 4 works +-
+        self.kf_tuning_factor = 7 # 7 works +-
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(

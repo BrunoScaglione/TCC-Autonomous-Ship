@@ -1,6 +1,8 @@
+STATUS: ON
 - LOCAL_SYSTEM = { 63353.89034, 22570.74644, -8.50000, 0.00000, 0.00000, 144.00000 }
 + LOCAL_SYSTEM = { 0.00000, 0.00000, -8.50000, 0.00000, 0.00000, 144.00000 }
 
+STATUS: ON
 - WAVES
 {
     WAVE
@@ -17,32 +19,13 @@
         SPECTRUM = "JONSWAP",
     }
 },
-(Correct version, but without apparent waves) 
-+ WAVES
-{
-    WAVE
-    {
-        NAME = "Wave_SimOff2",
-        WAVE_ID = 2,
-        HEIGHT = 9.00000000000e+00,
-        PERIOD = 4.00000,
-        DIRECTION = 0.00000,
-        ANGLE = 225.00000,
-        GAMA = 3.24018,
-        ALFA = 1.02635,
-        SEED = 1234,
-        SPECTRUM = "JONSWAP",
-    }
-
-},
-(Trying to get some waves) 
 + WAVES
 {
     WAVE
     {
         NAME = "Wave_SimOff2",
         WAVE_ID = 1,
-        HEIGHT = 3.00000000000e+00,
+        HEIGHT = 0.00000000000e+00,
         PERIOD = 12.00000,
         DIRECTION = 0.00000,
         ANGLE = 225.00000,
@@ -52,6 +35,68 @@
         SPECTRUM = "JONSWAP",
     }
 
+},
+
+STATUS: OFF
+- WINDS
+{
+    WIND
+    {
+        NAME = "Wind_SimOff",
+        WIND_ID = 1,
+        AIR_DENSITY = 0.00123,
+        VELOCITY = 8.73800,
+        DIRECTION = 190.00000,
+        ANGLE = 210.00000,
+        SEED = 1234,
+        SPECTRUM = "API",
+    }
+},
++ WINDS
+{
+    WIND
+    {
+        NAME = "Wind_SimOff",
+        WIND_ID = 1,
+        AIR_DENSITY = 0.00123,
+        VELOCITY = 0.0,
+        DIRECTION = 190.00000,
+        ANGLE = 210.00000,
+        SEED = 1234,
+        SPECTRUM = "API",
+    }
+},
+
+STATUS: ON
+- CURRENTS
+{
+    CURRENT
+    {
+        NAME = "Current_SimOff",
+        CURRENT_ID = 1,
+        WATER_DENSITY = 1.02500,
+        SEED = 0,
+        PROFILE_DEPTH_VEL_DIR_FLUCT_PER_ANG =
+        {
+            { 0.00000, 1.00000, 225.00000, 0.00000, 0.00000, 330.00000 },
+            { 30.00000, 1.00000, 225.00000, 0.00000, 0.00000, 330.00000}
+        },
+    }
+},
++ CURRENTS
+{
+    CURRENT
+    {
+        NAME = "Current_SimOff",
+        CURRENT_ID = 1,
+        WATER_DENSITY = 1.02500,
+        SEED = 0,
+        PROFILE_DEPTH_VEL_DIR_FLUCT_PER_ANG =
+        {
+            { 0.00000, 1.00000, 225.00000, 0.00000, 0.00000, 330.00000 },
+            { 0.00000, 1.00000, 225.00000, 0.00000, 0.00000, 330.00000}
+        },
+    }
 },
 
 
