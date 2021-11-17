@@ -69,7 +69,7 @@ class WaveFilter(Node):
             '/filtered_state',
             1)
 
-    def callback_shutdown(self, msg):
+    def callback_shutdown(self, _):
         sys.exit()
         
     def callback_simulated_state(self, msg):

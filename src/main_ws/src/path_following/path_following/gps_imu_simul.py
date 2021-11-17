@@ -78,7 +78,7 @@ class GpsImuSimulator(Node):
             '/simulated_state',
             1)
 
-    def callback_shutdown(self, msg):
+    def callback_shutdown(self, _):
         sys.exit()
         
     def callback_state(self, msg):

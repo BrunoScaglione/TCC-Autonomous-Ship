@@ -67,6 +67,9 @@ class YawController(Node):
             1)
 
         self.rudder_msg = Float32()
+
+    def callback_shutdown(self, _):
+        sys.exit()
     
     def tune_controller(self, waypoints, initial_state):
         waypoints.position.x.insert(0, initial_state.position.x)
@@ -106,9 +109,6 @@ class YawController(Node):
         rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)
         res.yaw = rudder_msg.data
         return res
-
-    def callback_shutdown(self, msg):
-        sys.exit()
         
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered yaw angle: %f' % msg.position.theta)

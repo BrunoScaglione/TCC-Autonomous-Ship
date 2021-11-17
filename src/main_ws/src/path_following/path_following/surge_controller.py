@@ -64,6 +64,9 @@ class SurgeController(Node):
             1)
 
         self.thrust_msg = Float32()
+
+    def callback_shutdown(self, _):
+        sys.exit()
     
     # tunes controller based on controller tuned for worst case scenario:
         # has to go from v=1 to v=3 from waypoint (0,0) to (500,500)
@@ -97,9 +100,6 @@ class SurgeController(Node):
         thrust_msg = self.surge_control(req.initial_state.velocity.u)
         res.surge = thrust_msg.data
         return res
-
-    def callback_shutdown(self, msg):
-        sys.exit()
          
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered surge velocity: %f' % msg.velocity.u)

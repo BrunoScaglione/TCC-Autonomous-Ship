@@ -21,21 +21,17 @@ class PydynaSimpleNode(Node):
     def __init__(self):
         super().__init__('pydyna_simple_node')
 
-        P3D_FILES = [
-            'TankerL186B32_T085.p3d',
-            'NoWaves_TankerL186B32_T085.p3d',
-            'NoCurrent&Wind_TankerL186B32_T085.p3d',
-            'NoWaves&Current&Wind_TankerL186B32_T085.p3d'
-        ]
+        self.TIME_STEP = 0.1
 
+        # need to declare them before
         self.declare_parameter('pkg_dir', './')
         self.declare_parameter('pkg_share_dir', './')
         # this will be overwritten by launch file
-        self.declare_parameter('p3d', P3D_FILES[0]) 
+        self.declare_parameter('p3d_file', './') 
 
         self.pkg_dir = self.get_parameter('pkg_dir').get_parameter_value().string_value
         self.pkg_share_dir = self.get_parameter('pkg_share_dir').get_parameter_value().string_value
-        self.p3d = self.get_parameter('p3d').get_parameter_value().string_value
+        self.p3d_file = self.get_parameter('p3d_file').get_parameter_value().string_value
 
         self.num_simul = 0
         self.end_simul = 0
@@ -72,7 +68,7 @@ class PydynaSimpleNode(Node):
         self.get_logger().info('User requested simulation to end')
         sys.exit()
     
-    def callback_shutdown(self, msg):
+    def callback_shutdown(self, _):
         sys.exit()
 
     def callback_init_simul(self, req, res):
@@ -87,8 +83,8 @@ class PydynaSimpleNode(Node):
         self.rudder_angle = req.yaw
         self.subscriptions_synced = False
 
-        self.rpt = pydyna.create_text_report(os.path.join(self.pkg_share_dir, f'logs/pydynalogs/pydyna_log_{self.num_simul}'))
-        self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config/{self.p3d}'))
+        self.rpt = pydyna.create_text_report(os.path.join(self.pkg_share_dir, f'logs\pydynalogs\pydyna_log_{self.num_simul}'))
+        self.sim = pydyna.create_simulation(os.path.join(self.pkg_dir, f'config\{self.p3d_file}'))
         
         self.ship = self.sim.vessels['104']
         x, y, theta = req.initial_state.position.x, req.initial_state.position.y, req.initial_state.position.theta
@@ -121,7 +117,8 @@ class PydynaSimpleNode(Node):
         propeller = self.ship.thrusters['0']
         propeller.dem_rotation = self.propeller_rotation
         rudder = self.ship.rudders['0']
-        rudder.dem_angle = -self.rudder_angle # pydyna uses counterclockwise convention
+        # pydyna uses counterclockwise convention
+        rudder.dem_angle = -self.rudder_angle 
 
         self.sim.step()
 
@@ -132,7 +129,7 @@ class PydynaSimpleNode(Node):
         self.state.velocity.v = self.ship.linear_velocity[1]
         self.state.velocity.r = self.ship.angular_velocity[2]
 
-        self.state.time += 0.1
+        self.state.time += self.TIME_STEP
 
     def publish_state(self):
         self.publisher_state.publish(self.state)
