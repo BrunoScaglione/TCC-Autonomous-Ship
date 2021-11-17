@@ -2,6 +2,7 @@ import sys
 import os
 import glob
 import traceback
+import math
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -219,12 +220,13 @@ class WaveFilter(Node):
 
             ## Phase
             axPhase = ax[1]
-            axPhase.plot(w, np.angle(h))
+            negative_phase = [(-phase - 180) if phase > 0 else phase for phase in math.degrees(np.angle(h))]
+            axPhase.plot(w, negative_phase)
             axPhase.set_title('Phase')
-            axPhase.set_ylim(-90, 90)
+            axPhase.set_ylim(-180, 0)
             axPhase.set_xlabel("Frequency [Hz]")
-            axPhase.set_ylabel("Phase [dB]")
-            axPhase.set_yticks([-90, 0, 90])
+            axPhase.set_ylabel("Phase [deg]")
+            axPhase.set_yticks([-180, 0])
 
             fig.savefig(os.path.join(self.plots_dir, bode_dir, filter['file']))
 
