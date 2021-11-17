@@ -212,7 +212,7 @@ class WaveFilter(Node):
             ## Gain
             axGain = ax[0]
             db = 20*np.log10(np.maximum(np.abs(h), 1e-5))
-            axGain.plot(w, db)
+            axGain.semilogx(w, db)
             axGain.set_title('Gain')
             axGain.set_ylim(min(db), max(db))
             axGain.axes.get_xaxis().set_visible(False)
@@ -221,7 +221,7 @@ class WaveFilter(Node):
             ## Phase
             axPhase = ax[1]
             negative_phase = [(-phase - 180) if phase > 0 else phase for phase in math.degrees(np.angle(h))]
-            axPhase.plot(w, negative_phase)
+            axPhase.semilogx(w, negative_phase)
             axPhase.set_title('Phase')
             axPhase.set_ylim(-180, 0)
             axPhase.set_xlabel("Frequency [Hz]")
