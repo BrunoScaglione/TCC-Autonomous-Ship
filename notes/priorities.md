@@ -24,8 +24,10 @@
 - yaw controller: intead of tau it's rudder 
 - control allocation receives surge velocity from \state topic, not \filtered_state
 - The value of LOS paramater R is not clear
-- future work: interpolate between desired velocities (b-splines). Now, there is a relatively large jump in the actuator each time changes waypoint
-  
+- future work: 
+  - interpolate between desired velocities (b-splines). Now, there is a relatively large jump in the actuator each time changes waypoint
+  - kalman filter
+
 # CODE TODOS
 
-- service for getting the updated waypoints (user dragged them in gui) from venus 
+- service for getting the updated waypoints (user dragged them in gui) from venus

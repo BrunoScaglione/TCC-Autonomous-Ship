@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
 from scipy.signal import sosfreqz
-from scipy.signal import zpk2sos
  
 import rclpy
 from rclpy.node import Node
@@ -47,7 +46,7 @@ class WaveFilter(Node):
         ##################### <pedro/> ##############
         self.zi = signal.sosfilt_zi(self.sos)
 
-        # why 0.3? I doubled the wave filter (since the freq band of the system is below wave filter)
+        # # chosen 0.3 by testing some values in this range
         self.sos2 =  signal.butter(6, 0.3, fs=10, output='sos')
         self.zi2 = signal.sosfilt_zi(self.sos2)
 
@@ -92,7 +91,7 @@ class WaveFilter(Node):
         # band stop (notch): remove wave component
         state_history_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], self.simulated_state_history)
         # low pass: remove high freq noise from white noise added by gps_imu_simul
-        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
+        # comment line below when gps_imu_simul is not activated
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
@@ -183,35 +182,51 @@ class WaveFilter(Node):
             ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
             fig.savefig(os.path.join(self.plots_dir, fs_dir, filtered_state_props[i]["file"]))
         
+        bode_dir = "bodePlots"
+
+        filters = [
+            {
+                'dtf': self.sos,
+                'title': 'Wave filter - Frequency response',
+                'file': 'notchFilterBodePlot.png'
+            },
+            {
+                'dtf': self.sos2,
+                'title': 'Sensor noise filter - Frequency response',
+                'file': 'lowPassFilterBodePlot.png'
+            }
+        ]
+
         #clean before
-        files = glob.glob(os.path.join(self.plots_dir, 'bodePlot*.png'))
+        files = glob.glob(os.path.join(self.plots_dir, bode_dir, '*.png'))
         for f in files:
             os.remove(f)
 
-        # Bode plot
-        fig, ax = plt.subplots(2)
-        fig.suptitle('Frequency Response of Wave Filter', fontsize=16)
-        w, h = sosfreqz(self.sos, worN=8000, fs=10)
+        for filter in filters:
+            # Bode plot
+            fig, ax = plt.subplots(2)
+            fig.suptitle(filter['title'], fontsize=16)
+            w, h = sosfreqz(filter['dtf'], worN=8000, fs=10)
 
-        ## Gain
-        axGain = ax[0]
-        db = 20*np.log10(np.maximum(np.abs(h), 1e-5))
-        axGain.plot(w, db)
-        axGain.set_title('Gain')
-        axGain.set_ylim(min(db), max(db))
-        axGain.axes.get_xaxis().set_visible(False)
-        axGain.set_ylabel("Gain [dB]")                          
+            ## Gain
+            axGain = ax[0]
+            db = 20*np.log10(np.maximum(np.abs(h), 1e-5))
+            axGain.plot(w, db)
+            axGain.set_title('Gain')
+            axGain.set_ylim(min(db), max(db))
+            axGain.axes.get_xaxis().set_visible(False)
+            axGain.set_ylabel("Gain [dB]")                          
 
-        ## Phase
-        axPhase = ax[1]
-        axPhase.plot(w, np.angle(h))
-        axPhase.set_title('Phase')
-        axPhase.set_ylim(-90, 90)
-        axPhase.set_xlabel("Frequency [Hz]")
-        axPhase.set_ylabel("Phase [dB]")
-        axPhase.set_yticks([-90, 0, 90])
+            ## Phase
+            axPhase = ax[1]
+            axPhase.plot(w, np.angle(h))
+            axPhase.set_title('Phase')
+            axPhase.set_ylim(-90, 90)
+            axPhase.set_xlabel("Frequency [Hz]")
+            axPhase.set_ylabel("Phase [dB]")
+            axPhase.set_yticks([-90, 0, 90])
 
-        fig.savefig(os.path.join(self.plots_dir, "bodePlot.png"))
+            fig.savefig(os.path.join(self.plots_dir, bode_dir, filter['file']))
 
 def main(args=None):
     try:
