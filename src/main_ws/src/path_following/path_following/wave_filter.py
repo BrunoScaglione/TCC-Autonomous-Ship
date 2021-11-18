@@ -29,12 +29,12 @@ class WaveFilter(Node):
         self.simulated_state_history = [[],[],[],[],[],[]]
 
         #considering wn = [0.4, 0.63, 1]
-        #self.num = np.array([1, 2.842, 4.07, 3.227, 1.623, 0.4523, 0.0635])
-        #self.den = np.array([1, 0, 1.557, 0, 0.6204, 0, 0.0635])
+        #self.num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
+        #self.den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
 
         #considering wn = [0.52124 - 0.23, 0.52124, 0.52124 + 0.37]
-        self.num = np.array([1, 2.385, 2.868, 1.892, 0.758, 0.1659, 0.0183])
-        self.den = np.array([1, 0, 1.151, 0, 0.3062, 0, 0.0183])
+        #self.num = np.array([1, 2.385, 2.868, 1.892, 0.758, 0.1659, 0.0183])
+        #self.den = np.array([1, 3.407, 4.655, 3.255, 1.228, 0.237, 0.0183])
 
         # obs: low pass at 10Hz (like Fossen) is not even possible because the state is
         # sampled at 10Hz (can only work with <5Hz)
@@ -47,12 +47,9 @@ class WaveFilter(Node):
         # o output seu vai ser do tipo (z,p,k). 
         # Usar a funcao zpk2sos(z,p,k) que converte pra sos (tipo que esta feito abaixo)
 
-        self.zpk = signal.tf2zpk(self.num, self.den)
-        self.zeroes = self.zpk[0]
-        self.poles = self.zpk[1]
-        self.gain = self.zpk[2]
+        #self.z, self.p, self.k = signal.tf2zpk(self.num, self.den)
 
-        self.bilinear = signal.bilinear_zpk(self.zeroes, self.poles, self.gain, 5)
+        #self.z2, self.p2, self.k2 = signal.bilinear_zpk(self.z, self.p, self.k, 10)
 
         # wave is at 0.083 Hz or 0.52124 rad/s which is inside the band, but in the edge 
         # exact fossens frequencies
@@ -63,11 +60,11 @@ class WaveFilter(Node):
         ##################### <pedro/> ##############
 
         #sos from bilinear filter signal
-        self.sos2 = signal.zpk2sos(self.bilinear[0], self.bilinear[1], self.bilinear[2])
+        #self.sos2 = signal.zpk2sos(self.z2, self.p2, self.k2)
 
         self.zi = signal.sosfilt_zi(self.sos)
 
-        self.zi2 = signal.sosfilt_zi(self.sos2)
+        #self.zi2 = signal.sosfilt_zi(self.sos2)
 
         self.xf_msg = State()
 
