@@ -2,7 +2,6 @@ STATUS: ON
 - LOCAL_SYSTEM = { 63353.89034, 22570.74644, -8.50000, 0.00000, 0.00000, 144.00000 }
 + LOCAL_SYSTEM = { 0.00000, 0.00000, -8.50000, 0.00000, 0.00000, 144.00000 }
 
-STATUS: ON
 - WAVES
 {
     WAVE
@@ -19,6 +18,7 @@ STATUS: ON
         SPECTRUM = "JONSWAP",
     }
 },
+STATUS: ON
 + WAVES
 {
     WAVE
@@ -36,8 +36,25 @@ STATUS: ON
     }
 
 },
-
 STATUS: OFF
++ WAVES
+{
+    WAVE
+    {
+        NAME = "Wave_SimOff2",
+        WAVE_ID = 1,
+        HEIGHT = 2.00000000000e+00,
+        PERIOD = 12.00000,
+        DIRECTION = 0.00000,
+        ANGLE = 225.00000,
+        GAMA = 1.889,
+        ALFA = 0.000799679,
+        SEED = 1234,
+        SPECTRUM = "JONSWAP",
+    }
+
+},
+
 - WINDS
 {
     WIND
@@ -52,6 +69,7 @@ STATUS: OFF
         SPECTRUM = "API",
     }
 },
+STATUS: OFF
 + WINDS
 {
     WIND
@@ -67,7 +85,6 @@ STATUS: OFF
     }
 },
 
-STATUS: ON
 - CURRENTS
 {
     CURRENT
@@ -83,6 +100,7 @@ STATUS: ON
         },
     }
 },
+STATUS: OFF
 + CURRENTS
 {
     CURRENT

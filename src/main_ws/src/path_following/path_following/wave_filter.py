@@ -87,12 +87,17 @@ class WaveFilter(Node):
     
     def state_filter(self, t):
         # filters entire state
-        # band stop (notch): remove wave component
+
+        # Wave filters
+        # Butterworth notch filter
         state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_butter, sig, zi=sig[0]*self.zi_notch_butter)[0], self.simulated_state_history)
-        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], self.simulated_state_history)
-        # low pass: remove high freq noise from white noise added by gps_imu_simul
+        # Fossen noth filter
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], self.simulated_state_history)
+        
+        # Noise filter (low pass): remove high freq noise from white noise added by gps_imu_simul
         # comment line below when gps_imu_simul is not activated
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_lowpass_butter, sig, zi=sig[0]*self.zi_lowpass_butter)[0], state_history_filtered)
+        
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
         self.xf_msg.position.x = state_current_filtered[0]
