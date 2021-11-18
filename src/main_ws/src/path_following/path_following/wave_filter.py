@@ -52,21 +52,21 @@ class WaveFilter(Node):
 
         # wave is at 0.083 Hz or 0.52124 rad/s which is inside the band, but in the edge 
         # exact fossens frequencies
-        # self.sos = signal.butter(6, [0.063, 0.159], 'bandstop', fs=10, output='sos')
+        # self.sos_notch_butter = signal.butter(6, [0.063, 0.159], 'bandstop', fs=10, output='sos')
         # centralized on our wave frequency (fossen's but shifted)
-        self.sos = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
 
         ##################### <pedro/> ##############
 
         #sos from bilinear filter signal
         self.sos_notch_fossen = signal.zpk2sos(self.z2, self.p2, self.k2)
-        self.zi3 = signal.sosfilt_zi(self.sos_notch_fossen)
+        self.zi_notch_fossen = signal.sosfilt_zi(self.sos_notch_fossen)
 
-        self.zi = signal.sosfilt_zi(self.sos)
+        self.sos_notch_butter = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
+        self.zi_notch_butter = signal.sosfilt_zi(self.sos_notch_butter)
 
         # # chosen 0.3 by testing some values in this range
-        self.sos2 =  signal.butter(6, 0.3, fs=10, output='sos')
-        self.zi2 = signal.sosfilt_zi(self.sos2)
+        self.sos_lowpass_butter =  signal.butter(6, 0.3, fs=10, output='sos')
+        self.zi_lowpass_butter = signal.sosfilt_zi(self.sos_lowpass_butter)
 
         self.xf_msg = State()
 
@@ -107,11 +107,12 @@ class WaveFilter(Node):
     def state_filter(self, t):
         # filters entire state
         # band stop (notch): remove wave component
-        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos, sig, zi=sig[0]*self.zi)[0], self.simulated_state_history)
+        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_butter, sig, zi=sig[0]*self.zi_notch_butter)[0], self.simulated_state_history)
         # low pass: remove high freq noise from white noise added by gps_imu_simul
         # comment line below when gps_imu_simul is not activated
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
-        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi3)[0], state_history_filtered)
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], state_history_filtered)
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_lowpass_butter, sig, zi=sig[0]*self.zi_lowpass_butter)[0], state_history_filtered)
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
         self.xf_msg.position.x = state_current_filtered[0]
@@ -205,12 +206,12 @@ class WaveFilter(Node):
 
         filters = [
             {
-                'dtf': self.sos3,
+                'dtf': self.sos_notch_butter,
                 'title': 'Wave filter - Frequency response',
                 'file': 'notchFilterBodePlot.png'
             },
             {
-                'dtf': self.sos2,
+                'dtf': self.sos_lowpass_butter,
                 'title': 'Sensor noise filter - Frequency response',
                 'file': 'lowPassFilterBodePlot.png'
             }
