@@ -32,18 +32,7 @@ class WaveFilter(Node):
         # Fossen's 3 2order cascades: [0.4rad/s, 0.63rad/s, 1rad/s])
         # [0.4rad/s, 0.63rad/s, 1rad/s]) == [0.063Hz, 0.100Hz, 0.159Hz])
         # p23 wave period is 12 seconds -> freq is 0.08333333333 Hz
-
-        ########### <pedro> ################
-        # soh vai mudar o lado direito dessa linha aqui!!(comenta a linha em vez de apagar)
-        # o output seu vai ser do tipo (z,p,k). 
-        # Usar a funcao zpk2sos(z,p,k) que converte pra sos (tipo que esta feito abaixo)
-
-        # wave is at 0.083 Hz or 0.52124 rad/s which is inside the band, but in the edge 
-        # exact fossens frequencies
-        # self.sos_notch_butter = signal.butter(6, [0.063, 0.159], 'bandstop', fs=10, output='sos')
-        # centralized on our wave frequency (fossen's but shifted)
         self.sos_notch_butter = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
-        ##################### <pedro/> ##############
         self.zi_notch_butter = signal.sosfilt_zi(self.sos_notch_butter)
 
         # # chosen 0.3 by testing some values in this range
