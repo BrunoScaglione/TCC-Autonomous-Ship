@@ -1,4 +1,0 @@
-[INFO 1637203307.342669400] [control_allocation_node]: listened filtered surge velocity: 0.999790 (callback_filtered_state() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\control_allocation.py:67)
-[INFO 1637203307.343787100] [control_allocation_node]: listened propeller thrust: nan (callback_propeller_thrust() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\control_allocation.py:71)
-[INFO 1637203307.344897800] [control_allocation_node]: published propeller rotation: -1.732500 (callback_propeller_thrust() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\control_allocation.py:74)
-[INFO 1637203413.910615300] [control_allocation_node]: Stopped with user interrupt (main() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\control_allocation.py:115)

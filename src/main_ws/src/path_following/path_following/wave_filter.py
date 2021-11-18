@@ -59,8 +59,8 @@ class WaveFilter(Node):
         ##################### <pedro/> ##############
 
         #sos from bilinear filter signal
-        self.sos3 = signal.zpk2sos(self.z2, self.p2, self.k2)
-        self.zi3 = signal.sosfilt_zi(self.sos3)
+        self.sos_notch_fossen = signal.zpk2sos(self.z2, self.p2, self.k2)
+        self.zi3 = signal.sosfilt_zi(self.sos_notch_fossen)
 
         self.zi = signal.sosfilt_zi(self.sos)
 
@@ -111,7 +111,7 @@ class WaveFilter(Node):
         # low pass: remove high freq noise from white noise added by gps_imu_simul
         # comment line below when gps_imu_simul is not activated
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
-        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos3, sig, zi=sig[0]*self.zi3)[0], state_history_filtered)
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi3)[0], state_history_filtered)
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
         self.xf_msg.position.x = state_current_filtered[0]

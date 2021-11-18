@@ -1,4 +1,0 @@
-[INFO 1637204221.258812400] [rosbag2_storage]: Opened database 'rosbag2_2021_11_17-23_57_01\rosbag2_2021_11_17-23_57_01_0.db3' for READ_WRITE. (open() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_storage_default_plugins\src\rosbag2_storage_default_plugins\sqlite\sqlite_storage.cpp:217)
-[INFO 1637204221.258933800] [rosbag2_recorder]: Listening for topics... (record() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_transport\src\rosbag2_transport\recorder.cpp:97)
-[INFO 1637204221.262256500] [rosbag2_recorder]: Subscribed to topic '/state' (subscribe_topic() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_transport\src\rosbag2_transport\recorder.cpp:207)
-[INFO 1637204221.263739000] [rosbag2_recorder]: All requested topics are subscribed. Stopping discovery... (topics_discovery() at C:\dev\ros2_galactic\src\ros2\rosbag2\rosbag2_transport\src\rosbag2_transport\recorder.cpp:125)
