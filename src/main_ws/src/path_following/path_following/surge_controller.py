@@ -28,12 +28,17 @@ class SurgeController(Node):
         self.X_ADDED_MASS = -3375
         self.M = 40415
 
-        self.PHI_AS_PERCENTAGE_OF_K = 29.9810744468 #2808.95216145 for k**0.5
+        # self.PHI_AS_PERCENTAGE_OF_K = 29.9810744468 #2808.95216145 for k**0.5
+        self.PHI_LOG_CONSTANT = 30.14
 
         self.thrust_history = []
 
-        self.phi_tuning_factor = 4 # 4 works +-
-        self.kf_tuning_factor = 50 # 7 works +-
+        #phi
+        self.phi_log_tuning_factor = 1 # 4 works +-
+        self.phi_constant_tuning_factor = 1.5
+
+        # kf
+        self.kf_tuning_factor = 5 # 7 works +-
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(
@@ -119,7 +124,8 @@ class SurgeController(Node):
         k = (self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
         self.get_logger().info('k: %f' % k)
         # based on phi = 0.32 and k = 13*5.18*(10**-5) + 0.01 of controller i made for surge control project (from 0 to 5m/s)
-        phi = self.phi_tuning_factor*self.PHI_AS_PERCENTAGE_OF_K*k
+        # phi = self.phi_tuning_factor*self.PHI_AS_PERCENTAGE_OF_K*k
+        phi = self.phi_constant_tuning_factor*self.PHI_LOG_CONSTANT*np.log(k/self.phi_log_tuning_factor + 1)
         self.get_logger().info('phi: %f' % phi)
         # sat function
         sats = max(-1, min(s/phi, 1))
@@ -140,11 +146,11 @@ class SurgeController(Node):
         est_time_bootstrap = (est_time_lin + est_time_exp)
         # ponderates between linear and exponential response
         # when phi is higher goes from linear to exponential
-        # but the claculation depends on knowing phi, which depend on est_time itself
+        # but the claculation depends on knowing phi, which depend on k which depends on est_time itself
         # so, begins with a guess for est_time and runs 5 iterations
         for _ in range(5):
             k = (self.kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/(est_time_bootstrap/2)))
-            phi_bootstrap = self.phi_tuning_factor*self.PHI_AS_PERCENTAGE_OF_K*k
+            phi_bootstrap = self.phi_constant_tuning_factor*self.PHI_LOG_CONSTANT*np.log(k/self.phi_log_tuning_factor + 1)
             est_time_bootstrap = (((final_velocity-initial_velocity) - phi_bootstrap)*est_time_lin + phi_bootstrap*est_time_exp)/(final_velocity-initial_velocity)
         return est_time_bootstrap
 
