@@ -28,12 +28,17 @@ class SurgeController(Node):
         self.X_ADDED_MASS = -3375
         self.M = 40415
 
-        self.PHI_AS_PERCENTAGE_OF_K = 29.9810744468 #2808.95216145 for k**0.5
+        # self.PHI_AS_PERCENTAGE_OF_K = 29.9810744468 #2808.95216145 for k**0.5
+        self.PHI_LOG_CONSTANT = 30.14
 
         self.thrust_history = []
 
-        self.phi_tuning_factor = 4 # 3 works with shattering
-        self.kf_tuning_factor = 7 # 7 works with shattering
+        #phi
+        self.phi_log_tuning_factor = 1 # 4 works +-
+        self.phi_constant_tuning_factor = 1.5
+
+        # kf
+        self.kf_tuning_factor = 5 # 7 works +-
         self.kf = self.kf_tuning_factor*13
 
         self.server_init_control = self.create_service(
@@ -64,42 +69,21 @@ class SurgeController(Node):
             1)
 
         self.thrust_msg = Float32()
-    
-    # tunes controller based on controller tuned for worst case scenario:
-        # has to go from v=1 to v=3 from waypoint (0,0) to (500,500)
-    def tune_controller(self, waypoints, initial_state):
-        waypoints.position.x.insert(0, initial_state.position.x)
-        waypoints.position.y.insert(0, initial_state.position.y)
-        waypoints.velocity.insert(0, initial_state.velocity.u)
-        cases = []
-        for i in range(1, len(waypoints.velocity)):
-            distance = (
-                (waypoints.position.x[i] - waypoints.position.x[i-1])**2 +
-                (waypoints.position.y[i] - waypoints.position.y[i-1])**2
-            )**0.5
-            delta_surge_velocity = (waypoints.velocity[i] - waypoints.velocity[i-1])
-            cases.append(delta_surge_velocity/distance)
-        worst_case = max(cases)
-        # 0.00282842712 = (3 - 1)/sqrt(500^2 + 500^2)
-        self.kf_tuning_factor = self.kf_tuning_factor*(worst_case/0.00282842712)
+
+    def callback_shutdown(self, _):
+        sys.exit()
         
     def callback_init_control(self, req, res):
-        self.tune_controller(req.waypoints, req.initial_state)
         self.desired_surge_velocity = req.surge
         self.desired_surge_velocity_old = req.initial_state.velocity.u
         self.distance_waypoints = (
-            # index 1 instead of 0 because inserted initial condition as first waypoint 
-            # in function "tune_controller"
-            (req.waypoints.position.x[1] - req.initial_state.position.x)**2 +
-            (req.waypoints.position.y[1] - req.initial_state.position.y)**2
+            (req.waypoints.position.x[0] - req.initial_state.position.x)**2 +
+            (req.waypoints.position.y[0] - req.initial_state.position.y)**2
         )**0.5
         self.get_logger().info('initial distance_waypoints: %f' % self.distance_waypoints)
         thrust_msg = self.surge_control(req.initial_state.velocity.u)
         res.surge = thrust_msg.data
         return res
-
-    def callback_shutdown(self, msg):
-        sys.exit()
          
     def callback_filtered_state(self, msg):
         self.get_logger().info('listened filtered surge velocity: %f' % msg.velocity.u)
@@ -140,7 +124,8 @@ class SurgeController(Node):
         k = (self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
         self.get_logger().info('k: %f' % k)
         # based on phi = 0.32 and k = 13*5.18*(10**-5) + 0.01 of controller i made for surge control project (from 0 to 5m/s)
-        phi = self.phi_tuning_factor*self.PHI_AS_PERCENTAGE_OF_K*k
+        # phi = self.phi_tuning_factor*self.PHI_AS_PERCENTAGE_OF_K*k
+        phi = self.phi_constant_tuning_factor*self.PHI_LOG_CONSTANT*np.log(k/self.phi_log_tuning_factor + 1)
         self.get_logger().info('phi: %f' % phi)
         # sat function
         sats = max(-1, min(s/phi, 1))
@@ -161,11 +146,11 @@ class SurgeController(Node):
         est_time_bootstrap = (est_time_lin + est_time_exp)
         # ponderates between linear and exponential response
         # when phi is higher goes from linear to exponential
-        # but the claculation depends on knowing phi, which depend on est_time itself
+        # but the claculation depends on knowing phi, which depend on k which depends on est_time itself
         # so, begins with a guess for est_time and runs 5 iterations
         for _ in range(5):
             k = (self.kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/(est_time_bootstrap/2)))
-            phi_bootstrap = self.phi_tuning_factor*self.PHI_AS_PERCENTAGE_OF_K*k
+            phi_bootstrap = self.phi_constant_tuning_factor*self.PHI_LOG_CONSTANT*np.log(k/self.phi_log_tuning_factor + 1)
             est_time_bootstrap = (((final_velocity-initial_velocity) - phi_bootstrap)*est_time_lin + phi_bootstrap*est_time_exp)/(final_velocity-initial_velocity)
         return est_time_bootstrap
 

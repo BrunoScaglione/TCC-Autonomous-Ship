@@ -61,6 +61,9 @@ class Venus(Node):
             self.callback_waypoints,
             1)
 
+    def callback_shutdown(self, _):
+        sys.exit()
+
     def venus_init(self):
         # GET MAPQUEST API KEY
         self.viewer = venus.viewer.Venus(mapquest_key = "1bZQGGHqFLQBezmB29WKAHTJKBXM0wDl", logging=True, port=6150)
@@ -134,9 +137,6 @@ class Venus(Node):
         self.vessel.data_panel[9] = KeyValue("Time", str(round(state.time, 2)) + " s")
         self.vessel.data_panel[10] = KeyValue("Rudder angle", str(round(self.vessel.rudders[0].angle, 2)) + " deg (from south clockwise)")
         self.vessel.data_panel[11] = KeyValue("Propeller rotation", str(round(self.propeller_rotation, 2)) + " Hz")
-                
-    def callback_shutdown(self, msg):
-        sys.exit()
     
     def callback_rudder_angle(self, msg):
         self.get_logger().info('listened rudder angle: %f' % msg.data)

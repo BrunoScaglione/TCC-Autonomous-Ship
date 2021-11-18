@@ -60,7 +60,7 @@ class ControlAllocation(Node):
             '/propeller_rotation',
             1)
     
-    def callback_shutdown(self, msg):
+    def callback_shutdown(self, _):
         sys.exit()
 
     def callback_filtered_state(self, msg):

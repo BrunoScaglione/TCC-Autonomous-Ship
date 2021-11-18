@@ -1,0 +1,35 @@
+- case 1: 
+  - meta: 
+    - date: 16/11
+  - conditions:
+    - realistic p3d (all effects)
+    - linear waypoints
+    - initial u = 1 m/s and the rest is 0
+    - gps_imu_simul deactivated
+  - results:
+    - mean error:
+      - run 1: 15.75
+      - run 2: 16.2
+- case 2:  
+  - meta: 
+    - date: 16/11
+  - conditions:
+    - realistic p3d (all effects)
+    - linear waypoints
+    - initial u = 1 m/s and the rest is 0
+    - gps_imu_simul activated
+    - with low pass filter at 0.3 Hz
+  - results:
+    - mean error: 
+      - run 1: 22.4
+- case 2:  
+  - meta: 
+    - date: 16/11
+  - conditions:
+    - no waves p3d
+    - linear waypoints
+    - initial u = 1 m/s and the rest is 0
+    - gps_imu_simul deactivated
+  - results:
+    - mean error: 
+      - run 1: 

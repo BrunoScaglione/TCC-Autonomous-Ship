@@ -20,7 +20,7 @@ def generate_launch_description():
     pkg_install_dir = get_package_prefix('pydyna_simple')
     pkg_dir = os.path.join(pkg_install_dir, 'lib', 'pydyna_simple')
     logs_dir = os.path.join(pkg_share_dir, 'logs')
-    p3d = P3D_FILES[0]
+    p3d = P3D_FILES[0] # change p3d here
 
     os.environ['ROS_LOG_DIR'] = os.path.join(logs_dir, 'roslogs')
     # Set LOG format

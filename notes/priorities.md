@@ -2,6 +2,9 @@
 # Tasks
 
 - Tune controllers
+- Find out why pydyna is giving non unique data error for p3d:
+  - had when tried to use NoWaves p3d
+  - had when changed current in normal p3d
 
 # Extra
 
@@ -24,8 +27,10 @@
 - yaw controller: intead of tau it's rudder 
 - control allocation receives surge velocity from \state topic, not \filtered_state
 - The value of LOS paramater R is not clear
-- future work: interpolate between desired velocities (b-splines). Now, there is a relatively large jump in the actuator each time changes waypoint
-  
-# CODE TODOS
+- future work: 
+  - interpolate between desired velocities (b-splines). Now, there is a relatively large jump in the actuator each time changes waypoint
+  - kalman filter
 
-- service for getting the updated waypoints (user dragged them in gui) from venus 
+# Code TODOS
+
+- service for getting the updated waypoints (user dragged them in gui) from venus
