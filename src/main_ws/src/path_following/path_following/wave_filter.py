@@ -32,8 +32,18 @@ class WaveFilter(Node):
         # Fossen's 3 2order cascades: [0.4rad/s, 0.63rad/s, 1rad/s])
         # [0.4rad/s, 0.63rad/s, 1rad/s]) == [0.063Hz, 0.100Hz, 0.159Hz])
         # p23 wave period is 12 seconds -> freq is 0.08333333333 Hz
+
+        # Butterworth notch
         self.sos_notch_butter = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
         self.zi_notch_butter = signal.sosfilt_zi(self.sos_notch_butter)
+
+        # Fossen notch                                              
+        num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
+        den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
+        z_s, p_s, k_s = signal.tf2zpk(num, den)
+        z_z, p_z, k_z = signal.bilinear_zpk(z_s, p_s, k_s, 10)
+        self.sos_notch_fossen = signal.zpk2sos(z_z, p_z, k_z)
+        self.zi_notch_fossen = signal.sosfilt_zi(self.sos_notch_fossen)
 
         # # chosen 0.3 by testing some values in this range
         self.sos_lowpass_butter =  signal.butter(6, 0.3, fs=10, output='sos')
@@ -79,6 +89,7 @@ class WaveFilter(Node):
         # filters entire state
         # band stop (notch): remove wave component
         state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_butter, sig, zi=sig[0]*self.zi_notch_butter)[0], self.simulated_state_history)
+        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], self.simulated_state_history)
         # low pass: remove high freq noise from white noise added by gps_imu_simul
         # comment line below when gps_imu_simul is not activated
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_lowpass_butter, sig, zi=sig[0]*self.zi_lowpass_butter)[0], state_history_filtered)
@@ -176,8 +187,13 @@ class WaveFilter(Node):
         filters = [
             {
                 'dtf': self.sos_notch_butter,
-                'title': 'Wave filter - Frequency response',
-                'file': 'notchFilterBodePlot.png'
+                'title': 'Wave filter (Butterworth) - Frequency response',
+                'file': 'notchFilterButterBodePlot.png'
+            },
+            {
+                'dtf': self.sos_notch_fossen,
+                'title': 'Wave filter (Fossen) - Frequency response',
+                'file': 'notchFilterFossenBodePlot.png'
             },
             {
                 'dtf': self.sos_lowpass_butter,
