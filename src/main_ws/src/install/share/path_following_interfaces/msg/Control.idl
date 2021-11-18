@@ -1,0 +1,16 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from path_following_interfaces/msg/Control.msg
+// generated code does not contain a copyright notice
+
+
+module path_following_interfaces {
+  module msg {
+    struct Control {
+      @default (value=0.0)
+      float desired_value;
+
+      @default (value=707.0)
+      float distance_waypoints;
+    };
+  };
+};

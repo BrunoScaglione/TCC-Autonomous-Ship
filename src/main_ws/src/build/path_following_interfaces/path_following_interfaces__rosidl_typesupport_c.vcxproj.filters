@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_typesupport_c\path_following_interfaces\msg\position__type_support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_typesupport_c\path_following_interfaces\msg\velocity__type_support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_typesupport_c\path_following_interfaces\msg\state__type_support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_typesupport_c\path_following_interfaces\msg\positions_xy__type_support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_typesupport_c\path_following_interfaces\msg\waypoints__type_support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_typesupport_c\path_following_interfaces\msg\control__type_support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\rosidl_typesupport_c\path_following_interfaces\srv\init_values__type_support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\TCC-Autonomous-Ship\src\main_ws\src\build\path_following_interfaces\CMakeFiles\04a4d482e60118ef9910d4c3c2a95049\position__type_support.cpp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\TCC-Autonomous-Ship\src\main_ws\src\path_following_interfaces\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{1FD477B5-E867-361B-B142-244A19A07523}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{EC383B9A-1AB3-3D7B-B6CD-34FC530BB93B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
