@@ -32,12 +32,12 @@ class SurgeController(Node):
 
         self.thrust_history = []
 
-        self.phi_constant_tuning_factor = 2.23 # 2.23 # best: 1.5 
-        self.phi_log_tuning_factor = 1 # 0.00000001 # best: 10000
+        self.phi_constant_tuning_factor = 2.23 
+        self.phi_log_tuning_factor = 1 
         
-        self.kf_constant_tuning_factor = 3.3 # best: 1
-        self.kf_power_tuning_factor = 1.7 # best 2
-        self.kf_power_constant_tuning_factor = 1.0 #best 1
+        self.kf_constant_tuning_factor = 3.3 
+        self.kf_power_tuning_factor = 1.7 
+        self.kf_power_constant_tuning_factor = 1.0 
 
         self.server_init_control = self.create_service(
             InitValues, '/init_surge_control', self.callback_init_control

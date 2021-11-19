@@ -64,6 +64,14 @@ class WaveFilter(Node):
         self.sos_notch_butter = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
         self.zi_notch_butter = signal.sosfilt_zi(self.sos_notch_butter)
 
+        # Fossen notch                                              
+        num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
+        den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
+        z_s, p_s, k_s = signal.tf2zpk(num, den)
+        z_z, p_z, k_z = signal.bilinear_zpk(z_s, p_s, k_s, 10)
+        self.sos_notch_fossen = signal.zpk2sos(z_z, p_z, k_z)
+        self.zi_notch_fossen = signal.sosfilt_zi(self.sos_notch_fossen)
+
         # # chosen 0.3 by testing some values in this range
         self.sos_lowpass_butter =  signal.butter(6, 0.3, fs=10, output='sos')
         self.zi_lowpass_butter = signal.sosfilt_zi(self.sos_lowpass_butter)
@@ -106,12 +114,18 @@ class WaveFilter(Node):
     
     def state_filter(self, t):
         # filters entire state
-        # band stop (notch): remove wave component
+
+        # Wave filters
+        # Butterworth notch filter
         state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_butter, sig, zi=sig[0]*self.zi_notch_butter)[0], self.simulated_state_history)
-        # low pass: remove high freq noise from white noise added by gps_imu_simul
+        # Fossen noth filter
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], self.simulated_state_history)
+        
+        # Noise filter (low pass): remove high freq noise from white noise added by gps_imu_simul
         # comment line below when gps_imu_simul is not activated
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], self.simulated_state_history)
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_lowpass_butter, sig, zi=sig[0]*self.zi_lowpass_butter)[0], state_history_filtered)
+        
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
         self.xf_msg.position.x = state_current_filtered[0]
