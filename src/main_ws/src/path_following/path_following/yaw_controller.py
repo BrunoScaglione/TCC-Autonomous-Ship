@@ -35,9 +35,9 @@ class YawController(Node):
         self.last_rudder_angle = 0
 
         self.K_tuning_factor = 1
-        self.Kp = self.K_tuning_factor*1.34  # best: *1.34 (me: 12)
+        self.Kp = self.K_tuning_factor*1.34 # best: *1.34 (me: 12)
         self.Kd = 65 
-        self.Ki = 0.00583
+        self.Ki = 0.001 # best:  0.000583 (antiwindup way), 0.00583 (old way)
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
         # for the integral action (acumulates error)
@@ -122,6 +122,7 @@ class YawController(Node):
         self.publisher_rudder_angle.publish(self.rudder_msg)
         self.rudder_angle_history.append(self.rudder_msg.data)
         self.t = msg.time
+        self.get_logger().info('time: %f' % msg.time)
         self.yaw_control(msg.position.theta, msg.velocity.r)
         self.get_logger().info('published rudder angle: %f' % self.rudder_msg.data)
     
@@ -152,6 +153,7 @@ class YawController(Node):
             (self.t_current_desired_yaw_angle - self.t_last_desired_yaw_angle)
 
         if antiwindup:
+            self.get_logger().info('antiwindup: %f' % "on")
             # control action 
             rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot
 
@@ -168,6 +170,7 @@ class YawController(Node):
             return rudder_angle, theta_bar_int
 
         else:
+            self.get_logger().info('antiwindup: %f' % "off")
             # cumulative of the error (integral action)
             self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
             # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))

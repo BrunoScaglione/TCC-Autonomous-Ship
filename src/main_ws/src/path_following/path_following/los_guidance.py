@@ -188,6 +188,8 @@ class LosGuidance(Node):
         yi = c*xi + d
 
         current_path_error = ((x - xi)**2 + (y - yi)**2)**0.5
+        if y < c*x + d:
+            current_path_error = - current_path_error
         return current_path_error
     
     def los(self, xf):
@@ -319,8 +321,6 @@ class LosGuidance(Node):
         # but t was not
         len_t = len(t)
         len_path_error = len(self.path_error)
-        self.get_logger().info('len(t): %f' % len_t)
-        self.get_logger().info('len(self.path_error): %f' % len_path_error)
         if len(self.path_error) > len(t):
             self.path_error = self.path_error[:-1]
 
