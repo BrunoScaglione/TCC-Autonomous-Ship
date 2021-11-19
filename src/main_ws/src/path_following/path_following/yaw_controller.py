@@ -42,7 +42,6 @@ class YawController(Node):
         self.t_last_desired_yaw_angle = 0
         # for the integral action (acumulates error)
         self.theta_bar_int = 0
-
         self.integration_range = 0.1
 
         self.server_init_control = self.create_service(
