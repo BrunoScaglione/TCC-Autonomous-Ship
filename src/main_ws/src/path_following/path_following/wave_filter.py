@@ -28,12 +28,12 @@ class WaveFilter(Node):
         self.simulated_state_history = [[],[],[],[],[],[]]
 
         #considering wn = [0.4, 0.63, 1]
-        self.num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
-        self.den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
+        #self.num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
+        #self.den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
 
         #considering wn = [0.52124 - 0.23, 0.52124, 0.52124 + 0.37]
-        #self.num = np.array([1, 2.385, 2.868, 1.892, 0.758, 0.1659, 0.0183])
-        #self.den = np.array([1, 3.407, 4.655, 3.255, 1.228, 0.237, 0.0183])
+        self.num = np.array([1, 2.385, 2.868, 1.892, 0.758, 0.1659, 0.0183])
+        self.den = np.array([1, 3.407, 4.655, 3.255, 1.228, 0.237, 0.0183])
 
         # obs: low pass at 10Hz (like Fossen) is not even possible because the state is
         # sampled at 10Hz (can only work with <5Hz)
@@ -110,8 +110,7 @@ class WaveFilter(Node):
         state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_butter, sig, zi=sig[0]*self.zi_notch_butter)[0], self.simulated_state_history)
         # low pass: remove high freq noise from white noise added by gps_imu_simul
         # comment line below when gps_imu_simul is not activated
-        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos2, sig, zi=sig[0]*self.zi2)[0], state_history_filtered)
-        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], state_history_filtered)
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], self.simulated_state_history)
         # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_lowpass_butter, sig, zi=sig[0]*self.zi_lowpass_butter)[0], state_history_filtered)
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
@@ -206,7 +205,7 @@ class WaveFilter(Node):
 
         filters = [
             {
-                'dtf': self.sos_notch_butter,
+                'dtf': self.sos_notch_fossen,
                 'title': 'Wave filter - Frequency response',
                 'file': 'notchFilterBodePlot.png'
             },
@@ -214,6 +213,11 @@ class WaveFilter(Node):
                 'dtf': self.sos_lowpass_butter,
                 'title': 'Sensor noise filter - Frequency response',
                 'file': 'lowPassFilterBodePlot.png'
+            },
+            {
+                'dtf': self.sos_notch_butter,
+                'title': 'Sensor noise filter - Frequency response',
+                'file': 'NotchFilterButterBodePlot.png'
             }
         ]
 

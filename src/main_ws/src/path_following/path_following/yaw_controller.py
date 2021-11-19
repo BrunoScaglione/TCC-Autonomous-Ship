@@ -31,7 +31,8 @@ class YawController(Node):
         self.rudder_angle_history = []
 
         self.K_tuning_factor = 1
-        self.Kp = self.K_tuning_factor*1  # best: *1.34 (me: 12)
+        #self.Kp = self.K_tuning_factor*1  # best: *1.34 (me: 12)
+        self.Kp = 1.34
         self.Kd = 49.684
         self.Ki = 0.00583
         self.t_current_desired_yaw_angle = 0.1
@@ -148,7 +149,7 @@ class YawController(Node):
         # cumulative of the error (integral action)
         self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
         # anti windup for the integral action
-        self.theta_bar_int = max(-0.5,min(self.theta_bar_int,0.5))
+        self.theta_bar_int = max(-1,min(self.theta_bar_int,1))
         self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
 
         # control action 
