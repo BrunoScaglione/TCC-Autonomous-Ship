@@ -32,6 +32,8 @@ class YawController(Node):
 
         self.rudder_angle_history = []
 
+        self.last_rudder_angle = 0
+
         self.K_tuning_factor = 1
         self.Kp = self.K_tuning_factor*1.34  # best: *1.34 (me: 12)
         self.Kd = 65 
@@ -183,16 +185,17 @@ class YawController(Node):
             # verify if the current control would increase the abs(self.theta_bar_int)
             if self.last_rudder_angle*self.pid(theta, r, experiment=True, antiwindup=True)[1] > 0:
                 # dont consider integral action
-                rudder_angle = self.pid(theta, r, antiwindup=True)
+                rudder_angle = self.pid(theta, r, antiwindup=True)[0]
             else:
-                rudder_angle = self.pid(theta, r)
+                rudder_angle = self.pid(theta, r)[0]
         else:
-            rudder_angle = self.pid(theta, r)
+            rudder_angle = self.pid(theta, r)[0]
 
         # rudder saturation (with 1% safety margin)
         # real sat is 35 degress
         rudder_angle = max(-self.RUDDER_SAT*0.99, min(rudder_angle, self.RUDDER_SAT*0.99))
         self.rudder_msg.data = rudder_angle
+        self.last_rudder_angle = rudder_angle
         
         return self.rudder_msg
     
