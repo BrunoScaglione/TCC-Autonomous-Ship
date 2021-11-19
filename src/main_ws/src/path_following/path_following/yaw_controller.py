@@ -28,11 +28,13 @@ class YawController(Node):
 
         self.TIME_STEP = 0.1
 
+        # self.ANTIWINDUP = 2
+
         self.rudder_angle_history = []
 
         self.K_tuning_factor = 1
         self.Kp = self.K_tuning_factor*1.34  # best: *1.34 (me: 12)
-        self.Kd = 49.684
+        self.Kd = 65 
         self.Ki = 0.00583
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
@@ -110,6 +112,7 @@ class YawController(Node):
         self.desired_yaw_angle_old = req.initial_state.position.theta
         rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)
         res.yaw = rudder_msg.data
+        self.last_rudder_angle = rudder_msg.data
         return res
         
     def callback_filtered_state(self, msg):
@@ -134,8 +137,8 @@ class YawController(Node):
         if self.desired_yaw_angle != msg.desired_value:
             self.desired_yaw_angle_old = self.desired_yaw_angle
             self.desired_yaw_angle = msg.desired_value
-
-    def yaw_control(self, theta, r):
+    
+    def pid(self, theta, r, experiment=False, antiwindup=False):
         # desired theta
         theta_des = self.desired_yaw_angle
         # last desired theta
@@ -145,19 +148,52 @@ class YawController(Node):
         self.get_logger().info('theta_bar: %f' % theta_bar)
         theta_bar_dot = r - (theta_des - theta_des_old)/ \
             (self.t_current_desired_yaw_angle - self.t_last_desired_yaw_angle)
-        # cumulative of the error (integral action)
-        self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
-        # anti windup for the integral action
-        self.theta_bar_int = max(-0.5,min(self.theta_bar_int,0.5))
-        self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
 
-        # control action 
-        rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * self.theta_bar_int
+        if antiwindup:
+            # control action 
+            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot
+
+            return rudder_angle, None
+        
+        elif experiment: # doesnt save value to self.theta_bar_int
+            # cumulative of the error (integral action)
+            theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
+            # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))
+            self.get_logger().info('self.theta_bar_int: %f' % theta_bar_int)
+            # control action 
+            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * theta_bar_int
+        
+            return rudder_angle, theta_bar_int
+
+        else:
+            # cumulative of the error (integral action)
+            self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
+            # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))
+            self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
+            # control action 
+            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * self.theta_bar_int
+           
+            return rudder_angle, None
+
+    def yaw_control(self, theta, r):
+        # antiwindup stategy
+        if ( # saturated
+            self.last_rudder_angle > self.RUDDER_SAT*0.99 or self.last_rudder_angle < -self.RUDDER_SAT*0.99
+        ): 
+            # verify if the current control would increase the abs(self.theta_bar_int)
+            if self.last_rudder_angle*self.pid(theta, r, experiment=True, antiwindup=True)[1] > 0:
+                # dont consider integral action
+                rudder_angle = self.pid(theta, r, antiwindup=True)
+            else:
+                rudder_angle = self.pid(theta, r)
+        else:
+            rudder_angle = self.pid(theta, r)
+
         # rudder saturation (with 1% safety margin)
         # real sat is 35 degress
         rudder_angle = max(-self.RUDDER_SAT*0.99, min(rudder_angle, self.RUDDER_SAT*0.99))
         self.rudder_msg.data = rudder_angle
-
+        
         return self.rudder_msg
     
     def generate_plots(self):
