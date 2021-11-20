@@ -190,6 +190,7 @@ class LosGuidance(Node):
         current_path_error = ((x - xi)**2 + (y - yi)**2)**0.5
         if y < c*x + d:
             current_path_error = - current_path_error
+        self.get_logger().info('current_path_error: %f' % current_path_error)
         return current_path_error
     
     def los(self, xf):
@@ -243,7 +244,7 @@ class LosGuidance(Node):
             self.des_velocity_msg.distance_waypoints = distance_waypoints
         else:
             self.get_logger().info('Reached final waypoint Uhulll')
-            mean_path_error = np.mean(self.path_error)
+            mean_path_error = np.mean(np.abs(self.path_error))
             print('Mean path error: ', mean_path_error)
             self.get_logger().info('Mean path error: %f' % mean_path_error)
 
