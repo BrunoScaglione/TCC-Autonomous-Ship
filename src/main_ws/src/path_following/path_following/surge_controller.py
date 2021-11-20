@@ -32,11 +32,10 @@ class SurgeController(Node):
 
         self.thrust_history = []
 
-        # self.phi_constant_tuning_factor = 1.7 # last 1.2
-        self.phi_slope_tuning_factor = 10**-6
-        self.phi_offset_tuning_factor = 0.1
+        self.phi_slope_tuning_factor = 10**-10
+        self.phi_offset_tuning_factor = -0.13 # -0.13 -0.17 # -0.2 # -0.07 # -0.1 # 0.0005 # last 0.005 or 0.002
         
-        self.kf_constant_tuning_factor = 6.5 # last 3.0
+        self.kf_constant_tuning_factor = 3.4 # 3.3 3.0 # 3.0 # 5.0 # last 5.0
 
         self.server_init_control = self.create_service(
             InitValues, '/init_surge_control', self.callback_init_control
@@ -124,7 +123,6 @@ class SurgeController(Node):
         # 0.0106734 is the baseline k (kf=13, from 0 to 5m/s in 500s) from my surge control project
         # 0.32 is the baseline phi from my surge control project
         phi = self.phi_slope_tuning_factor*k + (0.32 - self.phi_slope_tuning_factor*0.0106734) + self.phi_offset_tuning_factor
-
         self.get_logger().info('phi: %f' % phi)
         # sat function
         sats = max(-1, min(s/phi, 1))
