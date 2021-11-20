@@ -33,7 +33,7 @@ class YawController(Node):
         self.last_rudder_angle = 0
 
         self.K_tuning_factor = 1
-        self.Kp = self.K_tuning_factor*6.4 # best: 6.4
+        self.Kp = 1.6 # best: 6.4
         self.Kd = 65 # best: 65
         self.Ki = 0.000075 # best:  0.000075 (antiwindup way), 0.00583 (old way)
         self.t_current_desired_yaw_angle = 0.1
@@ -159,14 +159,14 @@ class YawController(Node):
         if abs(theta_bar) > self.integration_range:
             self.get_logger().info('abs(theta_bar) > 0.1: %f' % 1)
             # control action 
-            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot
+            rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot
 
             return rudder_angle, None
 
         elif antiwindup:
             self.get_logger().info('antiwindup: %f' % 1)
             # control action 
-            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot
+            rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot
 
             return rudder_angle, None
         
@@ -177,7 +177,7 @@ class YawController(Node):
             # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))
             self.get_logger().info('self.theta_bar_int: %f' % theta_bar_int)
             # control action 
-            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * theta_bar_int
+            rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot - self.Ki * theta_bar_int
         
             return rudder_angle, theta_bar*self.TIME_STEP
 
@@ -188,7 +188,7 @@ class YawController(Node):
             # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))
             self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
             # control action 
-            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * self.theta_bar_int
+            rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot - self.Ki * self.theta_bar_int
            
             return rudder_angle, None
 
