@@ -33,9 +33,9 @@ class YawController(Node):
         self.last_rudder_angle = 0
 
         self.K_tuning_factor = 1
-        self.Kp = 1.6 # best: 6.4
+        self.Kp = 1.6 # best: 1.6
         self.Kd = 65 # best: 65
-        self.Ki = 0.000075 # best:  0.000075 (antiwindup way), 0.00583 (old way)
+        self.Ki = 0.00075  # best: 0.00075 # what i used when tuning surge controller:  0.000075 (antiwindup way), 0.00583 (old way)
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
         # for the integral action (acumulates error)
@@ -163,7 +163,7 @@ class YawController(Node):
 
             return rudder_angle, None
 
-        elif antiwindup:
+        if antiwindup:
             self.get_logger().info('antiwindup: %f' % 1)
             # control action 
             rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot
