@@ -1,0 +1,15 @@
+source;share\path_following_interfaces\hook\cmake_prefix_path.ps1
+source;share\path_following_interfaces\hook\cmake_prefix_path.bat
+source;share\path_following_interfaces\hook\cmake_prefix_path.dsv
+source;share\path_following_interfaces\hook\path_dll.ps1
+source;share\path_following_interfaces\hook\path_dll.bat
+source;share\path_following_interfaces\hook\path_dll.dsv
+source;share\path_following_interfaces\hook\path.ps1
+source;share\path_following_interfaces\hook\path.bat
+source;share\path_following_interfaces\hook\path.dsv
+source;share\path_following_interfaces\hook\pythonpath.ps1
+source;share\path_following_interfaces\hook\pythonpath.bat
+source;share\path_following_interfaces\hook\pythonpath.dsv
+source;share/path_following_interfaces/local_setup.bat
+source;share/path_following_interfaces/local_setup.dsv
+source;share/path_following_interfaces/local_setup.ps1

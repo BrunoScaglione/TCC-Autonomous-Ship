@@ -1,0 +1,7 @@
+[INFO 1637364642.762563400] [venus_node]: initial waypoint + listened 5 waypoints (callback_waypoints() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\venus.py:158)
+[INFO 1637364642.763347800] [venus_node]: listened waypoint 0: 0.000000 0.000000 0.000000 (callback_waypoints() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\venus.py:169)
+[INFO 1637364642.765576200] [venus_node]: listened waypoint 1: 500.000000 500.000000 3.000000 (callback_waypoints() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\venus.py:169)
+[INFO 1637364642.767292300] [venus_node]: listened waypoint 2: 1000.000000 1000.000000 3.500000 (callback_waypoints() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\venus.py:169)
+[INFO 1637364642.768798300] [venus_node]: listened waypoint 3: 1500.000000 1500.000000 4.000000 (callback_waypoints() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\venus.py:169)
+[INFO 1637364642.770175700] [venus_node]: listened waypoint 4: 2000.000000 2000.000000 4.500000 (callback_waypoints() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\venus.py:169)
+[INFO 1637364642.772328400] [venus_node]: listened waypoint 5: 2500.000000 2500.000000 5.000000 (callback_waypoints() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\venus.py:169)
