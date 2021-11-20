@@ -32,10 +32,11 @@ class SurgeController(Node):
 
         self.thrust_history = []
 
-        self.phi_constant_tuning_factor = 1 # best 2
-        self.phi_log_tuning_factor = 0.09
+        # self.phi_constant_tuning_factor = 1.7 # last 1.2
+        self.phi_slope_tuning_factor = 10**-6
+        self.phi_offset_tuning_factor = 0.1
         
-        self.kf_constant_tuning_factor = 2.5 # best 15
+        self.kf_constant_tuning_factor = 6.5 # last 3.0
 
         self.server_init_control = self.create_service(
             InitValues, '/init_surge_control', self.callback_init_control
@@ -122,11 +123,7 @@ class SurgeController(Node):
         self.get_logger().info('k: %f' % k)
         # 0.0106734 is the baseline k (kf=13, from 0 to 5m/s in 500s) from my surge control project
         # 0.32 is the baseline phi from my surge control project
-        phi = (
-            self.phi_constant_tuning_factor 
-            *(0.32/np.log(0.0106734*self.phi_log_tuning_factor + 1))
-            *np.log(k*self.phi_log_tuning_factor + 1)
-        )
+        phi = self.phi_slope_tuning_factor*k + (0.32 - self.phi_slope_tuning_factor*0.0106734) + self.phi_offset_tuning_factor
 
         self.get_logger().info('phi: %f' % phi)
         # sat function
@@ -153,11 +150,7 @@ class SurgeController(Node):
         # so, begins with a guess for est_time and runs 5 iterations
         for _ in range(5):
             k = (kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/(est_time_bootstrap)))
-            phi_bootstrap = (
-                self.phi_constant_tuning_factor 
-                *(0.32/np.log(0.0106734*self.phi_log_tuning_factor + 1))
-                *np.log(k*self.phi_log_tuning_factor + 1)
-            )
+            phi_bootstrap = self.phi_slope_tuning_factor*k + (0.32 - self.phi_slope_tuning_factor*0.0106734) + self.phi_offset_tuning_factor
             est_time_bootstrap = (((final_velocity-initial_velocity) - phi_bootstrap)*est_time_lin + phi_bootstrap*est_time_exp)/(final_velocity-initial_velocity)
         return est_time_bootstrap
 

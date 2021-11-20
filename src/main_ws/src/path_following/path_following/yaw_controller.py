@@ -33,7 +33,7 @@ class YawController(Node):
         self.last_rudder_angle = 0
 
         self.K_tuning_factor = 1
-        self.Kp = self.K_tuning_factor*1.34 # best: *1.34
+        self.Kp = self.K_tuning_factor*6.4 # best: 6.4
         self.Kd = 65 # best: 65
         self.Ki = 0.000075 # best:  0.000075 (antiwindup way), 0.00583 (old way)
         self.t_current_desired_yaw_angle = 0.1
@@ -89,18 +89,22 @@ class YawController(Node):
                 waypoints.position.y[i]-waypoints.position.y[i-1],
                 waypoints.position.x[i]-waypoints.position.x[i-1]
             )
+
             self.desired_steady_state_yaw_angles.append(desired_steady_state_yaw_angle)
-            try:
+            if i != 1:
+                self.get_logger().info(' i != 1:')
                 last_desired_steady_state_yaw_angle = math.atan2(
                     waypoints.position.y[i-1]-waypoints.position.y[i-2],
                     waypoints.position.x[i-1]-waypoints.position.x[i-2]
                 )
-            except IndexError:
+            else:
+                self.get_logger().info('i == 1:')
                 last_desired_steady_state_yaw_angle = initial_state.position.theta
             delta_yaw_angle = (
-                desired_steady_state_yaw_angle - last_desired_steady_state_yaw_angle
+                abs(desired_steady_state_yaw_angle - last_desired_steady_state_yaw_angle)
             )
-            cases.append(delta_yaw_angle/distance)
+            case = delta_yaw_angle/distance
+            cases.append(case)
         worst_case = max(cases)
         # 0.0011107205 = math.radians(90 - 45)/sqrt(500^2 + 500^2)
         auto_tuning_factor = worst_case/0.0011107205
