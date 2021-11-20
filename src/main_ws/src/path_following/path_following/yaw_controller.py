@@ -32,7 +32,7 @@ class YawController(Node):
 
         self.rudder_angle_history = []
 
-        self.last_rudder_angle = 0
+        self.last_rudder_angle = 1
 
         self.K_tuning_factor = 1
         self.Kp = self.K_tuning_factor*1.34 # best: *1.34 (me: 12)
