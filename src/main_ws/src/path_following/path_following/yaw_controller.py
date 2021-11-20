@@ -32,12 +32,12 @@ class YawController(Node):
 
         self.rudder_angle_history = []
 
-        self.last_rudder_angle = 1
+        self.last_rudder_angle = 0
 
         self.K_tuning_factor = 1
-        self.Kp = self.K_tuning_factor*1.34 # best: *1.34 (me: 12)
-        self.Kd = 65 
-        self.Ki = 0.005 # best:  0.000583 (antiwindup way), 0.00583 (old way)
+        self.Kp = self.K_tuning_factor*2 # best: *1.34
+        self.Kd = 65 # best: 65
+        self.Ki = 0.000075 # best:  0.000075 (antiwindup way), 0.00583 (old way)
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
         # for the integral action (acumulates error)
@@ -154,8 +154,15 @@ class YawController(Node):
             (self.t_current_desired_yaw_angle - self.t_last_desired_yaw_angle)
         self.get_logger().info('theta_bar_dot: %f' % theta_bar_dot)
 
-        if antiwindup:
-            self.get_logger().info('antiwindup: %f' % "on")
+        if abs(theta_bar) > self.integration_range:
+            self.get_logger().info('abs(theta_bar) > 0.1: %f' % 1)
+            # control action 
+            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot
+
+            return rudder_angle, None
+
+        elif antiwindup:
+            self.get_logger().info('antiwindup: %f' % 1)
             # control action 
             rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot
 
@@ -163,16 +170,17 @@ class YawController(Node):
         
         elif experiment: # doesnt save value to self.theta_bar_int
             # cumulative of the error (integral action)
+            self.get_logger().info('no antiwindup experiment: %f' % 1)
             theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
             # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))
             self.get_logger().info('self.theta_bar_int: %f' % theta_bar_int)
             # control action 
             rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * theta_bar_int
         
-            return rudder_angle, theta_bar_int
+            return rudder_angle, theta_bar*self.TIME_STEP
 
         else:
-            self.get_logger().info('antiwindup: %f' % "off")
+            self.get_logger().info('antiwindup: %f' % 0)
             # cumulative of the error (integral action)
             self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
             # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))
