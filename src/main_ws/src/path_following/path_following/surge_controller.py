@@ -32,12 +32,10 @@ class SurgeController(Node):
 
         self.thrust_history = []
 
-        self.phi_constant_tuning_factor = 2.23 
-        self.phi_log_tuning_factor = 1 
+        self.phi_constant_tuning_factor = 1 # best 2
+        self.phi_log_tuning_factor = 0.09
         
-        self.kf_constant_tuning_factor = 3.3 
-        self.kf_power_tuning_factor = 1.7 
-        self.kf_power_constant_tuning_factor = 1.0 
+        self.kf_constant_tuning_factor = 2.5 # best 15
 
         self.server_init_control = self.create_service(
             InitValues, '/init_surge_control', self.callback_init_control
@@ -111,14 +109,13 @@ class SurgeController(Node):
         distance = self.distance_waypoints
         self.get_logger().info('distance_waypoints: %f' % self.distance_waypoints)
         # estimated time to get from the old waypoint to the next
-        # soltion of following equation
+        # solution of following equation
         # distance(t) = integral of velocity(t) from 0 to est_time (xf_dold*est_time + (xf_d - xf_dold)*(est_time + (1/k)*exp(-est_time*k)))
         # velocity(t) = xf_dold + (xf_d - xf_dold)*(1 - exp(-t*k))
         # distance(t) = (xf_dold*est_time + (xf_d - xf_dold)*(est_time + (1/k)*exp(-est_time*k)) -(1/k)*(xf_d - xf_dold))
         # k = (self.kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
         # distance = distance(t)
-        # kf = self.kf_constant_tuning_factor*self.KF_CONSTANT
-        kf = self.kf_constant_tuning_factor*(self.KF_CONSTANT/2)*(1/((self.kf_power_constant_tuning_factor*xf_dold**self.kf_power_tuning_factor) + 1))
+        kf = self.kf_constant_tuning_factor*(self.KF_CONSTANT)
         est_time = self.get_est_time(distance, kf, xf_dold, xf_d)
         self.get_logger().info('est_time: %f' % est_time)
         k = (kf*5.18*(10**-5) + (abs(xf_dold-xf_d)/est_time))
@@ -136,7 +133,8 @@ class SurgeController(Node):
         sats = max(-1, min(s/phi, 1))
         self.get_logger().info('sats: %f' % sats)
         # input as function of x (control action)
-        u = xf*abs(xf)*(1.9091*(10**-4) - kf*5.18*(10**-5)*sats) - (abs(xf_dold-xf_d)/est_time)*sats
+        # u = xf*abs(xf)*(1.9091*(10**-4) - kf*5.18*(10**-5)*sats) - (abs(xf_dold-xf_d)/est_time)*sats
+        u = xf*abs(xf)*1.9091*(10**-4) - kf*5.18*(10**-5)*sats - (abs(xf_dold-xf_d)/est_time)*sats
         self.get_logger().info('u: %f' % u) 
         # thrust
         tau = u*(self.M - self.X_ADDED_MASS)

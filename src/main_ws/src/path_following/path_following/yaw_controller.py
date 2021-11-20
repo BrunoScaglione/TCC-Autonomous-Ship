@@ -24,18 +24,16 @@ class YawController(Node):
         self.declare_parameter('plots_dir', './')
         self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
 
-        self.RUDDER_SAT = 0.610865
+        self.RUDDER_SAT = 0.610865 # 35 degrees
 
         self.TIME_STEP = 0.1
-
-        # self.ANTIWINDUP = 2
 
         self.rudder_angle_history = []
 
         self.last_rudder_angle = 0
 
         self.K_tuning_factor = 1
-        self.Kp = self.K_tuning_factor*2 # best: *1.34
+        self.Kp = self.K_tuning_factor*1.34 # best: *1.34
         self.Kd = 65 # best: 65
         self.Ki = 0.000075 # best:  0.000075 (antiwindup way), 0.00583 (old way)
         self.t_current_desired_yaw_angle = 0.1
