@@ -170,7 +170,7 @@ class YawController(Node):
 
         return rudder_angle, None
     
-    def pid(self, theta, r, experiment=False, antiwindup=False):
+    def yaw_control(self, theta, r):
         # desired theta
         theta_des = self.desired_yaw_angle
         # last desired theta
@@ -182,36 +182,27 @@ class YawController(Node):
             (self.t_current_desired_yaw_angle - self.t_last_desired_yaw_angle)
         self.get_logger().info('theta_bar_dot: %f' % theta_bar_dot)
 
-        if antiwindup:
-            self.get_logger().info('antiwindup: %f' % 1)
+        # antiwindup stategy 1
+        if abs(theta_bar) > self.integration_range:
+            self.get_logger().info('### not using integrator because of integration range')
             return self.pid_not_using_integrator(self, theta_bar, theta_bar_dot)
 
-        elif experiment: # doesnt save value to self.theta_bar_int
-            # cumulative of the error (integral action)
-            self.get_logger().info('no antiwindup experiment: %f' % 1)
-            return self.pid_using_integrator(self, theta_bar, theta_bar_dot, experiment=True)
-        
-        elif abs(theta_bar) > self.integration_range:
-            self.get_logger().info('abs(theta_bar) > 0.1: %f' % 1)
-            return self.pid_not_using_integrator(self, theta_bar, theta_bar_dot)
-
-        else:
-            self.get_logger().info('antiwindup: %f' % 0)
-            return self.pid_using_integrator(self, theta_bar, theta_bar_dot)
-
-    def yaw_control(self, theta, r):
-        # antiwindup stategy
-        if ( # saturated
+        # antiwindup stategy 2
+        elif ( # saturated
             self.last_rudder_angle > self.RUDDER_SAT*0.99 or self.last_rudder_angle < -self.RUDDER_SAT*0.99
         ): 
             # verify if the current control would increase the abs(self.theta_bar_int)
-            if self.last_rudder_angle*self.pid(theta, r, experiment=True)[1] > 0:
+            self.get_logger().info('### doing antiwindup experiment with integrator')
+            if self.last_rudder_angle*self.pid_using_integrator(theta_bar, theta_bar_dot, experiment=True)[1] > 0:
                 # dont consider integral action
-                rudder_angle = self.pid(theta, r, antiwindup=True)[0]
+                self.get_logger().info('### not using antiwindup because would "saturate more"')
+                rudder_angle = self.pid_not_using_integrator(theta_bar, theta_bar_dot)[0]
             else:
-                rudder_angle = self.pid(theta, r)[0]
+                self.get_logger().info('### normal pid using integrator')
+                rudder_angle = self.pid_using_integrator(theta_bar, theta_bar_dot)[0]
         else:
-            rudder_angle = self.pid(theta, r)[0]
+            self.get_logger().info('### normal pid using integrator')
+            rudder_angle = self.pid_using_integrator(theta_bar, theta_bar_dot)[0]
 
         # rudder saturation (with 1% safety margin)
         # real sat is 35 degress
