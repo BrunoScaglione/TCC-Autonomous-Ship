@@ -168,7 +168,7 @@ class YawController(Node):
         # control action 
         rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot
 
-        return rudder_angle, None
+        return rudder_angle
     
     def yaw_control(self, theta, r):
         # desired theta
@@ -185,7 +185,7 @@ class YawController(Node):
         # antiwindup stategy 1
         if abs(theta_bar) > self.integration_range:
             self.get_logger().info('### not using integrator because of integration range')
-            return self.pid_not_using_integrator(self, theta_bar, theta_bar_dot)
+            rudder_angle =  self.pid_not_using_integrator(theta_bar, theta_bar_dot)
 
         # antiwindup stategy 2
         elif ( # saturated
@@ -196,7 +196,7 @@ class YawController(Node):
             if self.last_rudder_angle*self.pid_using_integrator(theta_bar, theta_bar_dot, experiment=True)[1] > 0:
                 # dont consider integral action
                 self.get_logger().info('### not using antiwindup because would "saturate more"')
-                rudder_angle = self.pid_not_using_integrator(theta_bar, theta_bar_dot)[0]
+                rudder_angle = self.pid_not_using_integrator(theta_bar, theta_bar_dot)
             else:
                 self.get_logger().info('### normal pid using integrator')
                 rudder_angle = self.pid_using_integrator(theta_bar, theta_bar_dot)[0]
