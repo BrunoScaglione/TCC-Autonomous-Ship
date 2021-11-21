@@ -169,10 +169,10 @@ class YawController(Node):
         # antiwindup stategy 1
         if abs(theta_bar) > self.integration_range:
             self.get_logger().info('### not using integrator because of integration range')
-            rudder_angle =  self.pid_not_using_integrator(theta_bar, theta_bar_dot)
+            rudder_angle =  self.pid(theta_bar, theta_bar_dot, integrator=False)
         else:
             self.get_logger().info('### normal pid using integrator')
-            rudder_angle = self.pid_using_integrator(theta_bar, theta_bar_dot)
+            rudder_angle = self.pid(theta_bar, theta_bar_dot)
 
         # rudder saturation (with 1% safety margin)
         # real sat is 35 degress
