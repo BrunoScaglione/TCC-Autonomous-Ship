@@ -247,6 +247,9 @@ class LosGuidance(Node):
             mean_path_error = np.mean(np.abs(self.path_error))
             print('Mean path error: ', mean_path_error)
             self.get_logger().info('Mean path error: %f' % mean_path_error)
+            max_path_error = np.max(np.abs(self.path_error))
+            print('Max path error: ', max_path_error)
+            self.get_logger().info('Max path error: %f' % max_path_error)
 
             # Will shutdown all nodes when reached final waypoint
             self.publisher_shutdown.publish(self.shutdown_msg)
