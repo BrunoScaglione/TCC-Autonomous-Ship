@@ -48,7 +48,7 @@ class WaveFilter(Node):
         # systems pole = 1/time constant is proxy for systems bandwith
         # systems pole is 0.0001592 Hz (based on my papaer, 63% of step response)
         # pole (resultant) of butterworth filter must be >> 0.0001592
-        self.sos_lowpass_butter =  signal.butter(6, 0.1, fs=10, output='sos')
+        self.sos_lowpass_butter =  signal.butter(6, 0.10625, fs=10, output='sos') 
         self.zi_lowpass_butter = signal.sosfilt_zi(self.sos_lowpass_butter)
 
         self.xf_msg = State()
