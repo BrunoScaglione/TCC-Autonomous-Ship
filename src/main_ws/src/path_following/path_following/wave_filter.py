@@ -45,8 +45,10 @@ class WaveFilter(Node):
         self.sos_notch_fossen = signal.zpk2sos(z_z, p_z, k_z)
         self.zi_notch_fossen = signal.sosfilt_zi(self.sos_notch_fossen)
 
-        # # chosen 0.3 by testing some values in this range
-        self.sos_lowpass_butter =  signal.butter(6, 0.3, fs=10, output='sos')
+        # systems pole = 1/time constant is proxy for systems bandwith
+        # systems pole is 0.0001592 Hz (based on my papaer, 63% of step response)
+        # pole (resultant) of butterworth filter must be >> 0.0001592
+        self.sos_lowpass_butter =  signal.butter(6, 0.1, fs=10, output='sos')
         self.zi_lowpass_butter = signal.sosfilt_zi(self.sos_lowpass_butter)
 
         self.xf_msg = State()
@@ -96,7 +98,7 @@ class WaveFilter(Node):
         
         # Noise filter (low pass): remove high freq noise from white noise added by gps_imu_simul
         # comment line below when gps_imu_simul is not activated
-        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_lowpass_butter, sig, zi=sig[0]*self.zi_lowpass_butter)[0], state_history_filtered)
+        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_lowpass_butter, sig, zi=sig[0]*self.zi_lowpass_butter)[0], state_history_filtered)
         
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 

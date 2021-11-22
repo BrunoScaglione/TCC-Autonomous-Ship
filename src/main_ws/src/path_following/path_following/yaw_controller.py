@@ -75,9 +75,6 @@ class YawController(Node):
         sys.exit()
     
     def tune_controller(self, waypoints, initial_state):
-        waypoints.position.x.insert(0, initial_state.position.x)
-        waypoints.position.y.insert(0, initial_state.position.y)
-        waypoints.velocity.insert(0, initial_state.velocity.u)
         cases = []
         self.desired_steady_state_yaw_angles = []
         for i in range(1, len(waypoints.velocity)):
@@ -112,7 +109,14 @@ class YawController(Node):
         self.K_tuning_factor = self.K_tuning_factor*auto_tuning_factor
 
     def callback_init_control(self, req, res):
-        self.tune_controller(req.waypoints, req.initial_state)
+        self.waypoints = req.waypoints
+
+        # format waypoints
+        self.waypoints.position.x.insert(0, req.initial_state.position.x)
+        self.waypoints.position.y.insert(0, req.initial_state.position.y)
+        self.waypoints.velocity.insert(0, req.initial_state.velocity.u)
+
+        self.tune_controller(self.waypoints, req.initial_state)
         self.desired_yaw_angle = req.yaw
         self.desired_yaw_angle_old = req.initial_state.position.theta
         rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)

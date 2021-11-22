@@ -280,6 +280,8 @@ class LosGuidance(Node):
         
         self.desired_values_history['time'].append(xf.time)
 
+        self.des_velocity_msg.current_waypoint, self.des_yaw_msg.current_waypoint = idx, idx
+
         return (self.des_velocity_msg, self.des_yaw_msg)
     
     def generate_plots(self):

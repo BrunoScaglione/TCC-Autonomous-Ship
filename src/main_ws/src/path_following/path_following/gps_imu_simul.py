@@ -109,34 +109,34 @@ class GpsImuSimulator(Node):
             + ((-np.cos(theta)*x_dot - np.sin(theta)*y_dot)*sigma_theta)**2 )**0.5
 
     def state_simul(self, x):
-        # self.xs_msg.position.x = x.position.x + np.random.normal(0, self.SIGMA_X) # gps
-        # self.xs_msg.position.y = x.position.y + np.random.normal(0, self.SIGMA_Y) # gps
-        # self.xs_msg.position.theta = x.position.theta + np.random.normal(0, self.SIGMA_THETA) # gyrocompass
+        self.xs_msg.position.x = x.position.x + np.random.normal(0, self.SIGMA_X) # gps
+        self.xs_msg.position.y = x.position.y + np.random.normal(0, self.SIGMA_Y) # gps
+        self.xs_msg.position.theta = x.position.theta + np.random.normal(0, self.SIGMA_THETA) # gyrocompass
 
-        # self.xs_msg.velocity.u = x.velocity.u + np.random.normal(0, self.sigma_u) # gps
-        # self.xs_msg.velocity.v = x.velocity.v + np.random.normal(0, self.sigma_v) # gps
-        # self.xs_msg.velocity.r = x.velocity.r + np.random.normal(0, self.SIGMA_R) # imu
+        self.xs_msg.velocity.u = x.velocity.u + np.random.normal(0, self.sigma_u) # gps
+        self.xs_msg.velocity.v = x.velocity.v + np.random.normal(0, self.sigma_v) # gps
+        self.xs_msg.velocity.r = x.velocity.r + np.random.normal(0, self.SIGMA_R) # imu
 
-        # self.xs_msg.time = x.time
+        self.xs_msg.time = x.time
 
-        # self.simulated_state_history[0].append(self.xs_msg.position.x)
-        # self.simulated_state_history[1].append(self.xs_msg.position.y)
-        # self.simulated_state_history[2].append(self.xs_msg.position.theta)
-        # self.simulated_state_history[3].append(self.xs_msg.velocity.u)
-        # self.simulated_state_history[4].append(self.xs_msg.velocity.v)
-        # self.simulated_state_history[5].append(self.xs_msg.velocity.r)
+        self.simulated_state_history[0].append(self.xs_msg.position.x)
+        self.simulated_state_history[1].append(self.xs_msg.position.y)
+        self.simulated_state_history[2].append(self.xs_msg.position.theta)
+        self.simulated_state_history[3].append(self.xs_msg.velocity.u)
+        self.simulated_state_history[4].append(self.xs_msg.velocity.v)
+        self.simulated_state_history[5].append(self.xs_msg.velocity.r)
 
-        # return self.xs_msg
+        return self.xs_msg
 
-        # code below is to not implement gps_imu_simul
-        self.simulated_state_history[0].append(x.position.x)
-        self.simulated_state_history[1].append(x.position.y)
-        self.simulated_state_history[2].append(x.position.theta)
-        self.simulated_state_history[3].append(x.velocity.u)
-        self.simulated_state_history[4].append(x.velocity.v)
-        self.simulated_state_history[5].append(x.velocity.r)
+        # # code below is to not implement gps_imu_simul
+        # self.simulated_state_history[0].append(x.position.x)
+        # self.simulated_state_history[1].append(x.position.y)
+        # self.simulated_state_history[2].append(x.position.theta)
+        # self.simulated_state_history[3].append(x.velocity.u)
+        # self.simulated_state_history[4].append(x.velocity.v)
+        # self.simulated_state_history[5].append(x.velocity.r)
 
-        return x 
+        # return x 
 
     def log_state(self, state, communicator):
         log_str = 'listened' if communicator == 'subscriber' else 'published simulated'
