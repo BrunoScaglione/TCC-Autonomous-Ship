@@ -14,5 +14,44 @@
 #       - run 1: 12.4
 #       - run 2: ...
 
+- case 1:  
+  - meta: 
+    - date: 22/11
+  - conditions:
+    - p3d with waves
+    - linear waypoints
+    - initial u = 1 m/s and the rest is 0
+    - gps_imu_simul activated
+    - Radius of acceptance = 50
+  - results:
+    - mean error: 
+      - run 1: 16.02
+      - run 2: ...
+      - run 3: ...
+    - max error:
+      - run 1: 48.4
+      - run 2: ...
+      - run 3: ...
+
+- case 1:  
+  - meta: 
+    - date: 22/11
+  - conditions:
+    - p3d with waves
+    - zigzag waypoints
+    - initial u = 1 m/s and the rest is 0
+    - gps_imu_simul activated
+    - Radius of acceptance = 2*SHIP_LENGHT
+  - results:
+    - mean error: 
+      - run 1: ...
+      - run 2: ...
+      - run 3: ...
+    - max error:
+      - run 1: ...
+      - run 2: ...
+      - run 3: ...
+
+
 
 

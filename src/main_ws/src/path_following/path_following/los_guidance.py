@@ -31,9 +31,17 @@ class LosGuidance(Node):
         self.SHIP_LENGHT = 186.4
         # los radius
         self.R = self.SHIP_LENGHT*2 
+
+        ###########################################
+        # VERY IMPORTANT, CHANGING THIS VALUE ALLOWS TRADEOFF
+        ## BETWEEN SMOOTH TRAJECTORY (higher value) AND REACHING WAYPOINTS PRECISELY
         # When craft is inside acceptance radius for a waypoint that
         # it considers waypoint was reached
-        self.R_ACCEPTANCE = 50 
+        # tuned for:
+        # self.R_ACCEPTANCE = 50 # use this for linear waypoints
+        self.R_ACCEPTANCE = self.SHIP_LENGHT*2  # use this for zigzag waypoints
+        ############################################
+
         # Size of radius around last waypoint. 
         # When craft is outside this radius it should have stopped
         self.R_STOP = 100.0
@@ -179,10 +187,33 @@ class LosGuidance(Node):
         return (x_los, y_los)
     
     def get_current_path_error(self, x, y, wx, wy, wx_next, wy_next):
-        c = (wy - wy_next)/(wx - wx_next)
-        d = wy - c*wx
-        a = - c
-        b = y - a*x
+        idx = self.current_waypoint
+        if idx > 1:
+            wx_before, wy_before = self.waypoints.position.x[idx-2], self.waypoints.position.y[idx-2]
+            # cx + d is line connecting waypoints
+            # ax +  b is orthogonal to cx + d, passing through a waypoint or through the craft
+            self.get_logger().info('wx_before: %f' % wx_before)
+            self.get_logger().info('wx_before: %f' % wx_before)
+            c = (wy_before - wy)/(wx_before - wx)
+            d = wy_before - c*wx_before
+            a = - c
+            b = wy - a*wx
+
+            if y < a*x + b:
+                # craft changed from waypoint a to waypoint b, but hasnt passed 
+                # waypoint a yet, so error will be relative to line that goes to waypoint a
+                # waypoint a is w, waypoint b is w_next, and waypoint before a is w_before
+                b = y - a*x
+            else:
+                c = (wy - wy_next)/(wx - wx_next)
+                d = wy - c*wx
+                a = - c
+                b = y - a*x
+        else:
+            c = (wy - wy_next)/(wx - wx_next)
+            d = wy - c*wx
+            a = - c
+            b = y - a*x
 
         xi = (b - d)/(c - a)
         yi = c*xi + d
@@ -192,6 +223,7 @@ class LosGuidance(Node):
             current_path_error = - current_path_error
         self.get_logger().info('current_path_error: %f' % current_path_error)
         return current_path_error
+
     
     def los(self, xf):
         ##### If you dont want to shutdown nodes, use code below
@@ -201,13 +233,6 @@ class LosGuidance(Node):
         # craft will stop within the radius R_STOP pointing east
 
         # if not self.finished:
-
-        idx = self.current_waypoint
-        x, y = xf.position.x, xf.position.y
-        u, v = xf.velocity.u, xf.velocity.v
-        U = (u**2 + v**2)**0.5
-        wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
-        wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
         
         if self.reached_next_waypoint(xf) or self.missed_waypoint(xf):
             if self.current_waypoint == self.num_waypoints - 1:
@@ -215,6 +240,13 @@ class LosGuidance(Node):
             else:
                 self.current_waypoint += 1
                 self.get_logger().info('changed waypoint at time: %f' % xf.time)
+        
+        idx = self.current_waypoint
+        x, y = xf.position.x, xf.position.y
+        u, v = xf.velocity.u, xf.velocity.v
+        U = (u**2 + v**2)**0.5
+        wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
+        wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
             
         if not self.finished:
             # Find x_los and y_los by solving 2 eq.
