@@ -98,7 +98,7 @@ class WaveFilter(Node):
         
         # Noise filter (low pass): remove high freq noise from white noise added by gps_imu_simul
         # comment line below when gps_imu_simul is not activated
-        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_lowpass_butter, sig, zi=sig[0]*self.zi_lowpass_butter)[0], state_history_filtered)
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_lowpass_butter, sig, zi=sig[0]*self.zi_lowpass_butter)[0], state_history_filtered)
         
         state_current_filtered = [sig[-1] for sig in state_history_filtered]
 
