@@ -1,2 +1,0 @@
-[INFO 1637364643.136789000] [yaw_controller_node]: yaw controller autotuning factor: 4.008017 (tune_controller() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:108)
-[INFO 1637364643.137807900] [yaw_controller_node]: theta_bar: 0.814602 (pid() at C:\TCC-Autonomous-Ship\src\main_ws\src\install\Lib\site-packages\path_following\yaw_controller.py:151)

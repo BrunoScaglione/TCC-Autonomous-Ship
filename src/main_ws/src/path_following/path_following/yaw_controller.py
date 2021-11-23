@@ -35,7 +35,7 @@ class YawController(Node):
         self.last_rudder_angle = 0
 
         self.K_tuning_factor = 1
-        self.Kp = self.K_tuning_factor*2 # best: *1.34
+        self.Kp = self.K_tuning_factor*1.34 # best: *1.34
         self.Kd = 65 # best: 65
         self.Ki = 0.000075 # best:  0.000075 (antiwindup way), 0.00583 (old way)
         self.t_current_desired_yaw_angle = 0.1

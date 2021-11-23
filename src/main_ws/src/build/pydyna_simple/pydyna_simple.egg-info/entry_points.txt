@@ -1,3 +1,0 @@
-[console_scripts]
-simul = pydyna_simple.pydyna_simple:main
-
