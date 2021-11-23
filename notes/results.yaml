@@ -1,11 +1,79 @@
+# Do 3 runs for each case that will be in the report
+# example:
+
+# - case 1:  
+#   - meta: 
+#     - date: 18/11
+#   - conditions:
+#     - no waves p3d
+#     - linear waypoints
+#     - initial u = 1 m/s and the rest is 0
+#     - gps_imu_simul deactivated
+#   - results:
+#     - mean error: 
+#       - run 1: 12.4
+#       - run 2: ...
+
+
 - case 1:  
   - meta: 
-    - date: 18/11
+    - date: 22/11
   - conditions:
-    - no waves p3d
-    - linear waypoints
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
     - initial u = 1 m/s and the rest is 0
-    - gps_imu_simul deactivated
+    - gps_imu_simul deactivated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
   - results:
     - mean error: 
-      - run 1: 12
+      - run 1: ...
+      - run 2: ...
+      - run 3: ...
+    - max error:
+      - run 1: ...
+      - run 2: ...
+      - run 3: ...
+
+- case 2:  
+  - meta: 
+    - date: 22/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 1 m/s and the rest is 0
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean error: 
+      - run 1: ...
+      - run 2: ...
+      - run 3: ...
+    - max error:
+      - run 1: ...
+      - run 2: ...
+      - run 3: ...
+
+- case 3:  
+  - meta: 
+    - date: 22/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - zigzag waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 1 m/s and the rest is 0
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = *SHIP_LENGHT (have to change line in los_guidance)
+  - results:
+    - mean error: 
+      - run 1: ...
+      - run 2: ...
+      - run 3: ...
+    - max error:
+      - run 1: ...
+      - run 2: ...
+      - run 3: ...
+
+...other cases *that work* (That follows path. To follow desired velocities is
+very hard, and only works well in case 1, which was the case used to tune controllers)
+
+
+

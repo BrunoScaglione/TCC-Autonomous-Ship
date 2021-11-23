@@ -24,20 +24,18 @@ class YawController(Node):
         self.declare_parameter('plots_dir', './')
         self.plots_dir = self.get_parameter('plots_dir').get_parameter_value().string_value
 
-        self.RUDDER_SAT = 0.610865
+        self.RUDDER_SAT = 0.610865 # 35 degrees
 
         self.TIME_STEP = 0.1
-
-        # self.ANTIWINDUP = 2
 
         self.rudder_angle_history = []
 
         self.last_rudder_angle = 0
 
         self.K_tuning_factor = 1
-        self.Kp = self.K_tuning_factor*1.34 # best: *1.34
+        self.Kp = 1.6 # best: 1.6
         self.Kd = 65 # best: 65
-        self.Ki = 0.000075 # best:  0.000075 (antiwindup way), 0.00583 (old way)
+        self.Ki = 0.00075  # best: 0.00075 # what i used when tuning surge controller:  0.000075 (antiwindup way), 0.00583 (old way)
         self.t_current_desired_yaw_angle = 0.1
         self.t_last_desired_yaw_angle = 0
         # for the integral action (acumulates error)
@@ -77,9 +75,6 @@ class YawController(Node):
         sys.exit()
     
     def tune_controller(self, waypoints, initial_state):
-        waypoints.position.x.insert(0, initial_state.position.x)
-        waypoints.position.y.insert(0, initial_state.position.y)
-        waypoints.velocity.insert(0, initial_state.velocity.u)
         cases = []
         self.desired_steady_state_yaw_angles = []
         for i in range(1, len(waypoints.velocity)):
@@ -91,18 +86,22 @@ class YawController(Node):
                 waypoints.position.y[i]-waypoints.position.y[i-1],
                 waypoints.position.x[i]-waypoints.position.x[i-1]
             )
+
             self.desired_steady_state_yaw_angles.append(desired_steady_state_yaw_angle)
-            try:
+            if i != 1:
+                self.get_logger().info(' i != 1:')
                 last_desired_steady_state_yaw_angle = math.atan2(
                     waypoints.position.y[i-1]-waypoints.position.y[i-2],
                     waypoints.position.x[i-1]-waypoints.position.x[i-2]
                 )
-            except IndexError:
+            else:
+                self.get_logger().info('i == 1:')
                 last_desired_steady_state_yaw_angle = initial_state.position.theta
             delta_yaw_angle = (
-                desired_steady_state_yaw_angle - last_desired_steady_state_yaw_angle
+                abs(desired_steady_state_yaw_angle - last_desired_steady_state_yaw_angle)
             )
-            cases.append(delta_yaw_angle/distance)
+            case = delta_yaw_angle/distance
+            cases.append(case)
         worst_case = max(cases)
         # 0.0011107205 = math.radians(90 - 45)/sqrt(500^2 + 500^2)
         auto_tuning_factor = worst_case/0.0011107205
@@ -110,7 +109,14 @@ class YawController(Node):
         self.K_tuning_factor = self.K_tuning_factor*auto_tuning_factor
 
     def callback_init_control(self, req, res):
-        self.tune_controller(req.waypoints, req.initial_state)
+        self.waypoints = req.waypoints
+
+        # format waypoints
+        self.waypoints.position.x.insert(0, req.initial_state.position.x)
+        self.waypoints.position.y.insert(0, req.initial_state.position.y)
+        self.waypoints.velocity.insert(0, req.initial_state.velocity.u)
+
+        self.tune_controller(self.waypoints, req.initial_state)
         self.desired_yaw_angle = req.yaw
         self.desired_yaw_angle_old = req.initial_state.position.theta
         rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)
@@ -141,8 +147,18 @@ class YawController(Node):
         if self.desired_yaw_angle != msg.desired_value:
             self.desired_yaw_angle_old = self.desired_yaw_angle
             self.desired_yaw_angle = msg.desired_value
-    
-    def pid(self, theta, r, experiment=False, antiwindup=False):
+
+    def pid(self, theta_bar, theta_bar_dot, integrator=True):
+        if integrator:
+            self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
+            self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
+            rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot - self.Ki*self.theta_bar_int
+        else:
+            rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot
+        
+        return rudder_angle
+
+    def yaw_control(self, theta, r):
         # desired theta
         theta_des = self.desired_yaw_angle
         # last desired theta
@@ -154,55 +170,13 @@ class YawController(Node):
             (self.t_current_desired_yaw_angle - self.t_last_desired_yaw_angle)
         self.get_logger().info('theta_bar_dot: %f' % theta_bar_dot)
 
+        # antiwindup stategy 1
         if abs(theta_bar) > self.integration_range:
-            self.get_logger().info('abs(theta_bar) > 0.1: %f' % 1)
-            # control action 
-            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot
-
-            return rudder_angle, None
-
-        elif antiwindup:
-            self.get_logger().info('antiwindup: %f' % 1)
-            # control action 
-            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot
-
-            return rudder_angle, None
-        
-        elif experiment: # doesnt save value to self.theta_bar_int
-            # cumulative of the error (integral action)
-            self.get_logger().info('no antiwindup experiment: %f' % 1)
-            theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
-            # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))
-            self.get_logger().info('self.theta_bar_int: %f' % theta_bar_int)
-            # control action 
-            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * theta_bar_int
-        
-            return rudder_angle, theta_bar*self.TIME_STEP
-
+            self.get_logger().info('### not using integrator because of integration range')
+            rudder_angle =  self.pid(theta_bar, theta_bar_dot, integrator=False)
         else:
-            self.get_logger().info('antiwindup: %f' % 0)
-            # cumulative of the error (integral action)
-            self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
-            # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))
-            self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
-            # control action 
-            rudder_angle = -self.Kp * theta_bar - self.Kd * theta_bar_dot - self.Ki * self.theta_bar_int
-           
-            return rudder_angle, None
-
-    def yaw_control(self, theta, r):
-        # antiwindup stategy
-        if ( # saturated
-            self.last_rudder_angle > self.RUDDER_SAT*0.99 or self.last_rudder_angle < -self.RUDDER_SAT*0.99
-        ): 
-            # verify if the current control would increase the abs(self.theta_bar_int)
-            if self.last_rudder_angle*self.pid(theta, r, experiment=True, antiwindup=True)[1] > 0:
-                # dont consider integral action
-                rudder_angle = self.pid(theta, r, antiwindup=True)[0]
-            else:
-                rudder_angle = self.pid(theta, r)[0]
-        else:
-            rudder_angle = self.pid(theta, r)[0]
+            self.get_logger().info('### normal pid using integrator')
+            rudder_angle = self.pid(theta_bar, theta_bar_dot)
 
         # rudder saturation (with 1% safety margin)
         # real sat is 35 degress
@@ -250,3 +224,32 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+
+# USEFULL SNIPPETS:
+# -  for antiwindup strategy 2 (may be used in ther scenario)
+    # [useful snippet in other situation] for antiwindup strategy 2 only:
+    #     # cumulative of the error (integral action)
+    #     theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
+    #     # self.theta_bar_int = max(-self.ANTIWINDUP, min(self.theta_bar_int,self.ANTIWINDUP))
+    #     self.get_logger().info('self.theta_bar_int: %f' % theta_bar_int)
+    #     # control action 
+    #     rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot - self.Ki *theta_bar_int
+        
+    #     return rudder_angle, theta_bar*self.TIME_STEP
+
+    # [useful snippet in other situation] antiwindup stategy 2 -> wasnt very succesfull in this case, but is generally good
+    # if ( # saturated
+    #     self.last_rudder_angle > self.RUDDER_SAT*0.99 or self.last_rudder_angle < -self.RUDDER_SAT*0.99
+    # ): 
+    #     # verify if the current control would increase the abs(self.theta_bar_int)
+    #     self.get_logger().info('### doing antiwindup experiment with integrator')
+    #     if self.last_rudder_angle*self.pid_using_integrator(theta_bar, theta_bar_dot, experiment=True)[1] > 0:
+    #         # dont consider integral action
+    #         self.get_logger().info('### not using antiwindup because would "saturate more"')
+    #         rudder_angle = self.pid_not_using_integrator(theta_bar, theta_bar_dot)
+    #     else:
+    #         self.get_logger().info('### normal pid using integrator')
+    #         rudder_angle = self.pid_using_integrator(theta_bar, theta_bar_dot)[0]
+    # else:
+    #     self.get_logger().info('### normal pid using integrator')
+    #     rudder_angle = self.pid_using_integrator(theta_bar, theta_bar_dot)[0]

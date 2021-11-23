@@ -36,7 +36,7 @@ STATUS: ON
     }
 
 },
-STATUS: OFF
+STATUS: ON
 + WAVES
 {
     WAVE
