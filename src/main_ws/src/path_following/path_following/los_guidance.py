@@ -52,6 +52,7 @@ class LosGuidance(Node):
         }
 
         self.path_error = []
+        self.width_error = []
 
         # When true, completed all waypoints
         self.finished = False
@@ -97,19 +98,8 @@ class LosGuidance(Node):
             '/shutdown',
             1)
 
-    def log_state(self, msg):
-        self.get_logger().info(
-            'listened filtered state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
-            % (
-                msg.position.x, 
-                msg.position.y, 
-                msg.position.theta, # yaw angle
-                msg.velocity.u, 
-                msg.velocity.v, 
-                msg.velocity.r,
-                msg.time 
-            )
-        )
+    def callback_shutdown(self, _):
+        sys.exit()
 
     def callback_init_setpoints(self, req, res):
         req.waypoints.position.x.insert(0, req.initial_state.position.x)
@@ -117,6 +107,8 @@ class LosGuidance(Node):
         req.waypoints.velocity.insert(0, req.initial_state.velocity.u)
         self.waypoints = req.waypoints # {position: {x: [...], y: [...]} velocity: [...]}
         
+        self.get_steady_state_yaw_angles(self.waypoints)
+
         self.num_waypoints = len(req.waypoints.position.x)
         self.get_logger().info('initial waypoint + listened %d waypoints' % (self.num_waypoints-1))
         for i in range(self.num_waypoints):
@@ -126,8 +118,14 @@ class LosGuidance(Node):
         res.surge, res.yaw = des_velocity_msg.desired_value, des_yaw_msg.desired_value
         return res
 
-    def callback_shutdown(self, _):
-        sys.exit()
+    def get_steady_state_yaw_angles(self, waypoints):
+        self.desired_steady_state_yaw_angles = []
+        for i in range(1, len(waypoints.velocity)):
+            desired_steady_state_yaw_angle = math.atan2(
+                waypoints.position.y[i]-waypoints.position.y[i-1],
+                waypoints.position.x[i]-waypoints.position.x[i-1]
+            )
+            self.desired_steady_state_yaw_angles.append(desired_steady_state_yaw_angle)
         
     def callback_filtered_state(self, msg):
         try: # need have received waypoints first
@@ -185,6 +183,21 @@ class LosGuidance(Node):
         self.get_logger().info('x_los: %f, y_los: %f' % (x_los, y_los))
 
         return (x_los, y_los)
+
+    def get_current_width_error(self, idx, theta):
+        if math.radians(90) < theta < math.radians(180) or math.radians(270) < theta < math.radians(360):
+            self.get_logger().info('theta = %f : in second or forth quadrants' % theta)
+            zeta = math.radians(90) - self.desired_steady_state_yaw_angles[idx-1]
+            beta = math.radians(90) - zeta
+            alfa = beta - (theta - math.radians(90))
+            self.get_logger().info('alfa: %f' % alfa)
+            return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+        else:
+            self.get_logger().info('theta = %f : in first or third quadrants' % theta)
+            chi = theta - self.desired_steady_state_yaw_angles[idx-1]
+            alfa = math.radians(90) - chi
+            self.get_logger().info('alfa: %f' % alfa)
+            return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
     
     def get_current_path_error(self, x, y, wx, wy, wx_next, wy_next):
         idx = self.current_waypoint
@@ -275,14 +288,6 @@ class LosGuidance(Node):
             self.des_yaw_msg.distance_waypoints = distance_waypoints
             self.des_velocity_msg.distance_waypoints = distance_waypoints
         else:
-            self.get_logger().info('Reached final waypoint Uhulll')
-            mean_path_error = np.mean(np.abs(self.path_error))
-            print('Mean path error: ', mean_path_error)
-            self.get_logger().info('Mean path error: %f' % mean_path_error)
-            max_path_error = np.max(np.abs(self.path_error))
-            print('Max path error: ', max_path_error)
-            self.get_logger().info('Max path error: %f' % max_path_error)
-
             # Will shutdown all nodes when reached final waypoint
             self.publisher_shutdown.publish(self.shutdown_msg)
 
@@ -309,6 +314,9 @@ class LosGuidance(Node):
         # norm of vector from craft location to path, making 90 degrees with path line
         current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
         self.path_error.append(current_path_error)
+
+        current_width_error = self.get_current_width_error(idx, xf.position.theta)
+        self.width_error.append(current_width_error)
 
         self.desired_values_history['values'][0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history['values'][1].append(self.des_yaw_msg.desired_value)
@@ -357,13 +365,14 @@ class LosGuidance(Node):
 
         # Program may be interrupted when self.path_error was already updated (appended value)
         # but t was not
-        len_t = len(t)
-        len_path_error = len(self.path_error)
         if len(self.path_error) > len(t):
             self.path_error = self.path_error[:-1]
 
+        if len(self.width_error) > len(t):
+            self.width_error = self.width_error[:-1]
+
         # clean before
-        files = glob.glob(os.path.join(self.plots_dir, 'error*.png'))
+        files = glob.glob(os.path.join(self.plots_dir, 'errors', 'error*.png'))
         for f in files:
             os.remove(f)
         
@@ -371,9 +380,50 @@ class LosGuidance(Node):
         ax.set_title("Path error")
         ax.plot(t, self.path_error)
         ax.set_xlabel("t [s]")
-        ax.set_ylabel("error [m]")
+        ax.set_ylabel("path error [m]")
         ax.set_ylim(min(self.path_error), max(self.path_error))
-        fig.savefig(os.path.join(self.plots_dir, "error.png"))
+        fig.savefig(os.path.join(self.plots_dir, "errors", "errorPath.png"))
+
+        fig, ax = plt.subplots(1)
+        ax.set_title("Width error")
+        ax.plot(t, self.width_error)
+        ax.set_xlabel("t [s]")
+        ax.set_ylabel("width error [m]")
+        ax.set_ylim(min(self.width_error), max(self.width_error))
+        fig.savefig(os.path.join(self.plots_dir, "errors", "errorWidth.png"))
+
+    def print_metrics(self):
+        self.get_logger().info('Reached final waypoint Uhulll')
+
+        mean_path_error = np.mean(np.abs(self.path_error))
+        print('Mean path error: ', mean_path_error)
+        self.get_logger().info('Mean path error: %f' % mean_path_error)
+
+        max_path_error = np.max(np.abs(self.path_error))
+        print('Max path error: ', max_path_error)
+        self.get_logger().info('Max path error: %f' % max_path_error)
+
+        mean_width_error = np.mean(np.abs(self.width_error))
+        print('Mean width error: ', mean_width_error)
+        self.get_logger().info('Mean width error: %f' % mean_width_error)
+        
+        max_width_error = np.max(self.width_error)
+        print('Max width error: ', max_width_error)
+        self.get_logger().info('Max width error: %f' % max_width_error)
+
+    def log_state(self, msg):
+        self.get_logger().info(
+            'listened filtered state: {position: {x: %f, y: %f, theta: %f}, velocity: {u: %f, v: %f, r: %f}, time: %f}' 
+            % (
+                msg.position.x, 
+                msg.position.y, 
+                msg.position.theta, # yaw angle
+                msg.velocity.u, 
+                msg.velocity.v, 
+                msg.velocity.r,
+                msg.time 
+            )
+        )
         
 def main(args=None):
     try:
@@ -393,6 +443,7 @@ def main(args=None):
     except:
         print(traceback.format_exc())
     finally:
+        los_guidance_node.print_metrics()
         los_guidance_node.generate_plots()
         los_guidance_node.destroy_node()
         rclpy.shutdown()
