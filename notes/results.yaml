@@ -17,7 +17,7 @@
 
 - case 1:  
   - meta: 
-    - date: 22/11
+    - date: 23/11
   - conditions:
     - p3d with waves (have to change main p3d and changes.txt to document change)
     - linear waypoints (already is default)
@@ -26,17 +26,17 @@
     - Radius of acceptance = 50 (have to change line in los_guidance)
   - results:
     - mean error: 
-      - run 1: ...
-      - run 2: ...
-      - run 3: ...
+      - run 1: 16.48968
+      - run 2: 15.65785
+      - run 3: 15.49868
     - max error:
-      - run 1: ...
-      - run 2: ...
-      - run 3: ...
+      - run 1: 53.85084
+      - run 2: 48.150124
+      - run 3: 49.8076646
 
 - case 2:  
   - meta: 
-    - date: 22/11
+    - date: 23/11
   - conditions:
     - p3d with waves (have to change main p3d and changes.txt to document change)
     - linear waypoints (already is default)
@@ -45,17 +45,17 @@
     - Radius of acceptance = 50 (have to change line in los_guidance)
   - results:
     - mean error: 
-      - run 1: ...
-      - run 2: ...
-      - run 3: ...
+      - run 1: 14.536074
+      - run 2: 14.6806799
+      - run 3: 14.4032264
     - max error:
-      - run 1: ...
-      - run 2: ...
-      - run 3: ...
+      - run 1: 47.9506893
+      - run 2: 51.13187686
+      - run 3: 47.2028195
 
 - case 3:  
   - meta: 
-    - date: 22/11
+    - date: 23/11
   - conditions:
     - p3d with waves (have to change main p3d and changes.txt to document change)
     - zigzag waypoints (have to chnaged POST request payload. The payload is in helpers directory)
@@ -64,13 +64,52 @@
     - Radius of acceptance = *SHIP_LENGHT (have to change line in los_guidance)
   - results:
     - mean error: 
-      - run 1: ...
-      - run 2: ...
-      - run 3: ...
+      - run 1: 18.0789511
+      - run 2: 18.1608133
+      - run 3: 22.5978836
     - max error:
-      - run 1: ...
-      - run 2: ...
-      - run 3: ...
+      - run 1: 46.19931037
+      - run 2: 46.003801
+      - run 3: 46.3571139
+
+
+- case 4:  
+  - meta: 
+    - date: 23/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 1 m/s and the rest is 0, but theta = 1.2
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean error: 
+      - run 1: 8.48020
+      - run 2: 10.1438407
+      - run 3: 5.388018
+    - max error:
+      - run 1: 20.3300644
+      - run 2: 30.7809723
+      - run 3: 18.1472326
+
+- case 5:  
+  - meta: 
+    - date: 23/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - zigzag waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 1 m/s and the rest is 0, but theta = 1.2
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = *SHIP_LENGHT (have to change line in los_guidance)
+  - results:
+    - mean error: 
+      - run 1: 10.234347
+      - run 2: 11.102388
+      - run 3: 9.23054431
+    - max error:
+      - run 1: 27.638315
+      - run 2: 30.9789768
+      - run 3: 33.485688
 
 ...other cases *that work* (That follows path. To follow desired velocities is
 very hard, and only works well in case 1, which was the case used to tune controllers)

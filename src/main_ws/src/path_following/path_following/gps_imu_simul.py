@@ -128,7 +128,7 @@ class GpsImuSimulator(Node):
 
         return self.xs_msg
 
-        # code below is to not implement gps_imu_simul
+        # # code below is to not implement gps_imu_simul
         # self.simulated_state_history[0].append(x.position.x)
         # self.simulated_state_history[1].append(x.position.y)
         # self.simulated_state_history[2].append(x.position.theta)
@@ -136,7 +136,7 @@ class GpsImuSimulator(Node):
         # self.simulated_state_history[4].append(x.velocity.v)
         # self.simulated_state_history[5].append(x.velocity.r)
 
-        # return x 
+        return x 
 
     def log_state(self, state, communicator):
         log_str = 'listened' if communicator == 'subscriber' else 'published simulated'
