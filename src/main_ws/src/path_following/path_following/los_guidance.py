@@ -191,13 +191,19 @@ class LosGuidance(Node):
             beta = math.radians(90) - zeta
             alfa = beta - (theta - math.radians(90))
             self.get_logger().info('alfa: %f' % alfa)
-            return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            if self.path_error[-1] > 0:
+                return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            else:
+                return self.path_error[-1] + -abs((self.SHIP_LENGHT/2)*np.cos(alfa))
         else:
             self.get_logger().info('theta = %f : in first or third quadrants' % theta)
             chi = theta - self.desired_steady_state_yaw_angles[idx-1]
             alfa = math.radians(90) - chi
             self.get_logger().info('alfa: %f' % alfa)
-            return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            if self.path_error[-1] > 0:
+                return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            else:
+                return self.path_error[-1] + -abs((self.SHIP_LENGHT/2)*np.cos(alfa))
     
     def get_current_path_error(self, x, y, wx, wy, wx_next, wy_next):
         idx = self.current_waypoint
@@ -407,7 +413,7 @@ class LosGuidance(Node):
         print('Mean width error: ', mean_width_error)
         self.get_logger().info('Mean width error: %f' % mean_width_error)
         
-        max_width_error = np.max(self.width_error)
+        max_width_error = np.max(np.abs(self.width_error))
         print('Max width error: ', max_width_error)
         self.get_logger().info('Max width error: %f' % max_width_error)
 

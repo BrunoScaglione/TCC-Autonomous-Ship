@@ -143,9 +143,9 @@ class SurgeController(Node):
         self.get_logger().info('distance_waypoints: %f' % self.distance_waypoints)
         # estimated time to get from the old waypoint to the next
         # solution of following equation
-        # distance(t) = integral of velocity(t) from 0 to est_time (xu_dold*est_time + (xu_d - xu_dold)*(est_time + (1/k)*exp(-est_time*k)))
-        # velocity(t) = xu_dold + (xu_d - xu_dold)*(1 - exp(-t*k))
-        # distance(t) = (xu_dold*est_time + (xu_d - xu_dold)*(est_time + (1/k)*exp(-est_time*k)) -(1/k)*(xu_d - xu_dold))
+        # distance(t) = integral of velocity(t) from 0 to est_time (xway_dold*est_time + (xu_d - xway_dold)*(est_time + (1/k)*exp(-est_time*k)))
+        # velocity(t) = xway_dold + (xu_d - xway_dold)*(1 - exp(-t*k))
+        # distance(t) = (xway_dold*est_time + (xu_d - xway_dold)*(est_time + (1/k)*exp(-est_time*k)) -(1/k)*(xu_d - xway_dold))
         kf = self.kf_constant_tuning_factor*(self.KF_CONSTANT)
         est_time = self.get_est_time(distance, kf, self.last_waypoint_surge_velocity, xu_d)
         self.get_logger().info('est_time: %f' % est_time)
