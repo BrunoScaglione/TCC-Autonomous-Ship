@@ -195,7 +195,7 @@ class SurgeController(Node):
         theta_change_basis = (self.last_waypoint_yaw_angle - steady_state_yaw_angle)
         v_ss = (
             np.cos(np.pi/2 - theta_change_basis)*self.last_waypoint_surge_velocity
-            + np.cos(theta_change_basis)
+            + np.cos(theta_change_basis)*self.last_waypoint_sway_velocity
         ) 
 
         # vss is used as velocity perpendicular to path(of the actual waypoint) at last waypoint 
