@@ -153,19 +153,31 @@ class LosGuidance(Node):
         idx = self.current_waypoint
         wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
         wx_next , wy_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
-        a = (wy_next - wy)/(wx_next - wx)
-        self.get_logger().info('a: %f' % a)
-        a_wnext= -a
-        b_wnext= wy_next - a_wnext*wx_next
 
-        passed_wnext = (y > a_wnext*x + b_wnext)
+        if (wx_next - wx) == 0:
+            passed_wnext = y - wy_next
+        elif (wy_next - wy) == 0:
+            passed_wnext = x - wx_next
+        else:
+            a = (wy_next - wy)/(wx_next - wx)
+            self.get_logger().info('a: %f' % a)
+            a_wnext= -a
+            b_wnext= wy_next - a_wnext*wx_next
+
+            passed_wnext = (y > a_wnext*x + b_wnext)
         self.get_logger().info('passed_wnext: %f' % passed_wnext)
         return passed_wnext 
 
     def get_xy_los(self, x, y, wx, wy, wx_next, wy_next):
         x_los, y_los = symbols('x_los, y_los')
         eq1 = Eq((x_los-x)**2 + (y_los-y)**2, self.R**2)
-        eq2 = Eq(((wy_next - wy)/(wx_next - wx)), (y_los - wy)/(x_los - wx))
+
+        if (wx_next - wx) == 0:
+            eq2 = Eq(x_los, wx)
+        elif (wy_next - wy) == 0:
+            eq2 = Eq(y_los, wy)
+        else:
+            eq2 = Eq(((wy_next - wy)/(wx_next - wx)), (y_los - wy)/(x_los - wx))
 
         sol = solve([eq1, eq2], [x_los, y_los])
         soln = [tuple(v.evalf() for v in s) for s in sol] # evaluated numerically
@@ -208,18 +220,14 @@ class LosGuidance(Node):
     def get_current_path_error(self, x, y, wx, wy, wx_next, wy_next):
         idx = self.current_waypoint
         if idx > 1:
+
             wx_before, wy_before = self.waypoints.position.x[idx-2], self.waypoints.position.y[idx-2]
             # cx + d is line connecting waypoints
             # ax +  b is orthogonal to cx + d, passing through a waypoint or through the craft
             self.get_logger().info('wx_before: %f' % wx_before)
             self.get_logger().info('wx_before: %f' % wx_before)
-
-            if (wy_before - wy) == 0 and (wx_before - wx) == 0:
-                xi = x
-                yi = y
-                positive_error = True
                 
-            elif (wy_before - wy) == 0:
+            if (wy_before - wy) == 0:
                 xi = x
                 yi = wy
                 positive_error = True if y > wy_before else False
@@ -250,12 +258,7 @@ class LosGuidance(Node):
 
                 positive_error = True if y > c*x + d else False
 
-        elif (wy - wy_next) == 0 and (wx - wx_next) == 0:
-            xi = x
-            yi = y
-            positive_error = True
-
-        elif (wy - wy_next) == 0:
+        if (wy - wy_next) == 0:
             xi = x
             yi = wy
             positive_error = True if y > wy else False
@@ -327,7 +330,7 @@ class LosGuidance(Node):
             # format to positive angles
             if desired_value < 0:
                 desired_value = 6.28318530718 + desired_value
-                
+
             self.des_yaw_msg.desired_value = desired_value
             self.des_velocity_msg.desired_value = wv_next
 
