@@ -213,32 +213,71 @@ class LosGuidance(Node):
             # ax +  b is orthogonal to cx + d, passing through a waypoint or through the craft
             self.get_logger().info('wx_before: %f' % wx_before)
             self.get_logger().info('wx_before: %f' % wx_before)
-            c = (wy_before - wy)/(wx_before - wx)
-            d = wy_before - c*wx_before
-            a = - c
-            b = wy - a*wx
 
-            if y < a*x + b:
-                # craft changed from waypoint a to waypoint b, but hasnt passed 
-                # waypoint a yet, so error will be relative to line that goes to waypoint a
-                # waypoint a is w, waypoint b is w_next, and waypoint before a is w_before
-                b = y - a*x
+            if (wy_before - wy) == 0 and (wx_before - wx) == 0:
+                xi = x
+                yi = y
+                positive_error = True
+                
+            elif (wy_before - wy) == 0:
+                xi = x
+                yi = wy
+                positive_error = True if y > wy_before else False
+
+            elif (wx_before - wx) == 0:
+                xi = wx
+                yi = y
+                positive_error = True if x < wx_before else False
+
             else:
-                c = (wy - wy_next)/(wx - wx_next)
-                d = wy - c*wx
+                c = (wy_before - wy)/(wx_before - wx)
+                d = wy_before - c*wx_before
                 a = - c
-                b = y - a*x
+                b = wy - a*wx
+                if y < a*x + b:
+                    # craft changed from waypoint a to waypoint b, but hasnt passed 
+                    # waypoint a yet, so error will be relative to line that goes to waypoint a
+                    # waypoint a is w, waypoint b is w_next, and waypoint before a is w_before
+                    b = y - a*x
+                else:
+                    c = (wy - wy_next)/(wx - wx_next)
+                    d = wy - c*wx
+                    a = - c
+                    b = y - a*x
+                
+                xi = (b - d)/(c - a)
+                yi = c*xi + d
+
+                positive_error = True if y > c*x + d else False
+
+        elif (wy - wy_next) == 0 and (wx - wx_next) == 0:
+            xi = x
+            yi = y
+            positive_error = True
+
+        elif (wy - wy_next) == 0:
+            xi = x
+            yi = wy
+            positive_error = True if y > wy else False
+
+        elif (wx - wx_next) == 0:
+            xi = wx
+            yi = y
+            positive_error = True if x < wx else False
+
         else:
             c = (wy - wy_next)/(wx - wx_next)
             d = wy - c*wx
             a = - c
             b = y - a*x
 
-        xi = (b - d)/(c - a)
-        yi = c*xi + d
+            xi = (b - d)/(c - a)
+            yi = c*xi + d
+
+            positive_error = True if y > c*x + d else False
 
         current_path_error = ((x - xi)**2 + (y - yi)**2)**0.5
-        if y < c*x + d:
+        if not positive_error:
             current_path_error = - current_path_error
         self.get_logger().info('current_path_error: %f' % current_path_error)
         return current_path_error
