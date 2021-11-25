@@ -128,7 +128,7 @@ class YawController(Node):
         theta_des_old = self.desired_yaw_angle_old
         # error
         dif1 = theta - theta_des
-        dif2 = theta - (6.28318530718 - theta_des)
+        dif2 = theta - (6.28318530718 + theta_des)
         if abs(dif1) < abs(dif2):
             self.get_logger().info('used dif1: %f' % dif1)
             theta_bar = dif1
