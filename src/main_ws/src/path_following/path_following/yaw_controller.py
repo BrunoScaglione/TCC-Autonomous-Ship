@@ -2,7 +2,6 @@ import sys
 import os
 import glob
 import traceback
-import math
 
 import numpy as np
 
@@ -32,7 +31,6 @@ class YawController(Node):
 
         self.last_rudder_angle = 0
 
-        self.K_tuning_factor = 1
         self.Kp = 1.6 # best: 1.6
         self.Kd = 65 # best: 65
         self.Ki = 0.00075  # best: 0.00075 # what i used when tuning surge controller:  0.000075 (antiwindup way), 0.00583 (old way)
@@ -73,40 +71,6 @@ class YawController(Node):
 
     def callback_shutdown(self, _):
         sys.exit()
-    
-    def tune_controller(self, waypoints, initial_state):
-        cases = []
-        self.desired_steady_state_yaw_angles = []
-        for i in range(1, len(waypoints.velocity)):
-            distance = (
-                (waypoints.position.x[i] - waypoints.position.x[i-1])**2 +
-                (waypoints.position.y[i] - waypoints.position.y[i-1])**2
-            )**0.5
-            desired_steady_state_yaw_angle = math.atan2(
-                waypoints.position.y[i]-waypoints.position.y[i-1],
-                waypoints.position.x[i]-waypoints.position.x[i-1]
-            )
-
-            self.desired_steady_state_yaw_angles.append(desired_steady_state_yaw_angle)
-            if i != 1:
-                self.get_logger().info(' i != 1:')
-                last_desired_steady_state_yaw_angle = math.atan2(
-                    waypoints.position.y[i-1]-waypoints.position.y[i-2],
-                    waypoints.position.x[i-1]-waypoints.position.x[i-2]
-                )
-            else:
-                self.get_logger().info('i == 1:')
-                last_desired_steady_state_yaw_angle = initial_state.position.theta
-            delta_yaw_angle = (
-                abs(desired_steady_state_yaw_angle - last_desired_steady_state_yaw_angle)
-            )
-            case = delta_yaw_angle/distance
-            cases.append(case)
-        worst_case = max(cases)
-        # 0.0011107205 = math.radians(90 - 45)/sqrt(500^2 + 500^2)
-        auto_tuning_factor = worst_case/0.0011107205
-        self.get_logger().info('yaw controller autotuning factor: %f' % auto_tuning_factor)
-        self.K_tuning_factor = self.K_tuning_factor*auto_tuning_factor
 
     def callback_init_control(self, req, res):
         self.waypoints = req.waypoints
@@ -116,7 +80,6 @@ class YawController(Node):
         self.waypoints.position.y.insert(0, req.initial_state.position.y)
         self.waypoints.velocity.insert(0, req.initial_state.velocity.u)
 
-        self.tune_controller(self.waypoints, req.initial_state)
         self.desired_yaw_angle = req.yaw
         self.desired_yaw_angle_old = req.initial_state.position.theta
         rudder_msg = self.yaw_control(req.initial_state.position.theta, req.initial_state.velocity.r)
@@ -152,9 +115,9 @@ class YawController(Node):
         if integrator:
             self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
             self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
-            rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot - self.Ki*self.theta_bar_int
+            rudder_angle = -self.Kp*theta_bar - self.Kd*theta_bar_dot - self.Ki*self.theta_bar_int
         else:
-            rudder_angle = -self.Kp*self.K_tuning_factor*theta_bar - self.Kd*theta_bar_dot
+            rudder_angle = -self.Kp*theta_bar - self.Kd*theta_bar_dot
         
         return rudder_angle
 
@@ -225,7 +188,7 @@ def main(args=None):
 if __name__ == '__main__':
     main()
 
-# USEFULL SNIPPETS:
+# GRAVEYARD:
 # -  for antiwindup strategy 2 (may be used in ther scenario)
     # [useful snippet in other situation] for antiwindup strategy 2 only:
     #     # cumulative of the error (integral action)
@@ -253,3 +216,45 @@ if __name__ == '__main__':
     # else:
     #     self.get_logger().info('### normal pid using integrator')
     #     rudder_angle = self.pid_using_integrator(theta_bar, theta_bar_dot)[0]
+
+# - autotune controller
+    # def tune_controller(self, waypoints, initial_state):
+    #     cases = []
+    #     self.desired_steady_state_yaw_angles = []
+    #     for i in range(1, len(waypoints.velocity)):
+    #         print(waypoints.position.x[i])
+    #         print(waypoints.position.y[i])
+    #         print(waypoints.position.x[i-1])
+    #         print(waypoints.position.y[i-1])
+    #         distance = (
+    #             (waypoints.position.x[i] - waypoints.position.x[i-1])**2 +
+    #             (waypoints.position.y[i] - waypoints.position.y[i-1])**2
+    #         )**0.5
+    #         desired_steady_state_yaw_angle = math.atan2(
+    #             waypoints.position.y[i]-waypoints.position.y[i-1],
+    #             waypoints.position.x[i]-waypoints.position.x[i-1]
+    #         )
+
+    #         self.desired_steady_state_yaw_angles.append(desired_steady_state_yaw_angle)
+    #         if i != 1:
+    #             self.get_logger().info(' i != 1:')
+    #             last_desired_steady_state_yaw_angle = math.atan2(
+    #                 waypoints.position.y[i-1]-waypoints.position.y[i-2],
+    #                 waypoints.position.x[i-1]-waypoints.position.x[i-2]
+    #             )
+    #         else:
+    #             self.get_logger().info('i == 1:')
+    #             last_desired_steady_state_yaw_angle = initial_state.position.theta
+    #         delta_yaw_angle = (
+    #             abs(desired_steady_state_yaw_angle - last_desired_steady_state_yaw_angle)
+    #         )
+    #         try:
+    #             case = delta_yaw_angle/distance
+    #         except ZeroDivisionError:
+    #             case = delta_yaw_angle
+    #         cases.append(case)
+    #     worst_case = max(cases)
+    #     # 0.0011107205 = math.radians(90 - 45)/sqrt(500^2 + 500^2)
+    #     auto_tuning_factor = worst_case/0.0011107205
+    #     self.get_logger().info('yaw controller autotuning factor: %f' % auto_tuning_factor)
+    #     self.K_tuning_factor = self.K_tuning_factor*auto_tuning_factor
