@@ -33,8 +33,9 @@ class SurgeController(Node):
 
         self.thrust_history = []
 
-        self.phi_slope_tuning_factor = 10**-10 # without waves: 10**-10 
-        self.phi_offset_tuning_factor = -0.13 # -0.13 without waves: -0.13 
+        # self.phi_slope_tuning_factor = 10**-10 # without waves: 10**-10 
+        #self.phi_offset_tuning_factor = -0.13 # -0.13 without waves: -0.13 
+        self.phi = 0.19
         
         self.kf_constant_tuning_factor = 12 # 8 without waves: 3.4 
 
@@ -155,10 +156,10 @@ class SurgeController(Node):
         self.get_logger().info('k: %f' % k)
         # 0.0106734 is the baseline k (kf=13, from 0 to 5m/s in 500s) from my surge control project
         # 0.32 is the baseline phi from my surge control project
-        phi = self.phi_slope_tuning_factor*k + (0.32 - self.phi_slope_tuning_factor*0.0106734) + self.phi_offset_tuning_factor
-        self.get_logger().info('phi: %f' % phi)
+        #phi = self.phi_slope_tuning_factor*k + (0.32 - self.phi_slope_tuning_factor*0.0106734) + self.phi_offset_tuning_factor
+        self.get_logger().info('phi: %f' % self.phi)
         # sat function
-        sats = max(-1, min(s/phi, 1))
+        sats = max(-1, min(s/self.phi, 1))
         # sats = np.sign(s) # for tuning only 
         self.get_logger().info('sats: %f' % sats)
         # input as function of x (control action)
@@ -182,18 +183,13 @@ class SurgeController(Node):
     
     def get_est_time(self, distance, kf, initial_velocity, final_velocity):
         data = (distance, kf, initial_velocity, final_velocity)
-        est_time_exp = fsolve(self.func, (2*final_velocity + initial_velocity)/3, args=data)[0]
-        est_time_lin = distance/((initial_velocity+final_velocity)/2)
-        est_time = (est_time_lin + est_time_exp)/2
         # ponderates between linear and exponential response
         # when phi is higher goes from linear to exponential
-        # but the claculation depends on knowing phi, which depend on k which depends on est_time itself
-        # so, begins with a guess for est_time and runs 5 iterations
-        for _ in range(5):
-            k = (kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/(est_time)))
-            phi_bootstrap = self.phi_slope_tuning_factor*k + (0.32 - self.phi_slope_tuning_factor*0.0106734) + self.phi_offset_tuning_factor
-            est_time = (((final_velocity-initial_velocity) - phi_bootstrap)*est_time_lin + phi_bootstrap*est_time_exp)/(final_velocity-initial_velocity)
+        est_time_exp = fsolve(self.func, (2*final_velocity + initial_velocity)/3, args=data)[0]
+        est_time_lin = distance/((initial_velocity+final_velocity)/2)
 
+        est_time = (((final_velocity-initial_velocity) - self.phi)*est_time_lin + self.phi*est_time_exp)/(final_velocity-initial_velocity)
+        
         steady_state_yaw_angle = self.desired_steady_state_yaw_angles[self.current_waypoint-1]
         u_ss = final_velocity
         theta_change_basis = (self.last_waypoint_yaw_angle - steady_state_yaw_angle)
@@ -267,3 +263,15 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+
+
+# GRAVEYARD
+
+# - Iterating to get est time (for when phi is not a constant)
+# est_time = (est_time_lin + est_time_exp)/2
+        # but the claculation depends on knowing phi, which depend on k which depends on est_time itself
+        # so, begins with a guess for est_time and runs 5 iterations
+        # for _ in range(5):
+        #     k = (kf*5.18*(10**-5) + (abs(initial_velocity-final_velocity)/(est_time)))
+        #     phi_bootstrap = self.phi_slope_tuning_factor*k + (0.32 - self.phi_slope_tuning_factor*0.0106734) + self.phi_offset_tuning_factor
+        #     est_time = (((final_velocity-initial_velocity) - phi_bootstrap)*est_time_lin + phi_bootstrap*est_time_exp)/(final_velocity-initial_velocity)
