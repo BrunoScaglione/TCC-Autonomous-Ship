@@ -323,7 +323,12 @@ class LosGuidance(Node):
             psi_d = chi_d + beta
 
             # theta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
-            self.des_yaw_msg.desired_value = 1.57079632679 - psi_d # psi to theta (radians)
+            desired_value = 1.57079632679 - psi_d # psi to theta (radians)
+            # format to positive angles
+            if desired_value < 0:
+                desired_value = 6.28318530718 + desired_value
+                
+            self.des_yaw_msg.desired_value = desired_value
             self.des_velocity_msg.desired_value = wv_next
 
             distance_waypoints = ((wx_next - wx)**2 + (wy_next - wy)**2)**0.5
