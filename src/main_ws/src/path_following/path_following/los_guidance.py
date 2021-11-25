@@ -155,9 +155,9 @@ class LosGuidance(Node):
         wx_next , wy_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
 
         if (wx_next - wx) == 0:
-            passed_wnext = y - wy_next
+            passed_wnext = y - wy_next > 0
         elif (wy_next - wy) == 0:
-            passed_wnext = x - wx_next
+            passed_wnext = x - wx_next > 0
         else:
             a = (wy_next - wy)/(wx_next - wx)
             self.get_logger().info('a: %f' % a)
@@ -446,8 +446,6 @@ class LosGuidance(Node):
         fig.savefig(os.path.join(self.plots_dir, "errors", "errorWidth.png"))
 
     def print_metrics(self):
-        self.get_logger().info('Reached final waypoint Uhulll')
-
         mean_path_error = np.mean(np.abs(self.path_error))
         print('Mean path error: ', mean_path_error)
         self.get_logger().info('Mean path error: %f' % mean_path_error)
