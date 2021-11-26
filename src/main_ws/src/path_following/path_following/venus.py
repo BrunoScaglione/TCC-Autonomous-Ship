@@ -63,11 +63,13 @@ class Venus(Node):
 
     def callback_shutdown(self, _):
         sys.exit()
+        
 
     def venus_init(self):
         # GET MAPQUEST API KEY
         self.viewer = venus.viewer.Venus(mapquest_key = "1bZQGGHqFLQBezmB29WKAHTJKBXM0wDl", logging=True, port=6150)
         self.initial_position = GeoPos(-23.06255, -44.2772) # angra dos reis
+        # self.initial_position = GeoPos(-23.990557, -46.331860) # santos
         self.viewer.set_viewport(self.initial_position, 15)
         vessel_config = Vessel(
             position = self.initial_position,

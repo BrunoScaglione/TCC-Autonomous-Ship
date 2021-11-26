@@ -153,19 +153,31 @@ class LosGuidance(Node):
         idx = self.current_waypoint
         wx, wy = self.waypoints.position.x[idx-1], self.waypoints.position.y[idx-1]
         wx_next , wy_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
-        a = (wy_next - wy)/(wx_next - wx)
-        self.get_logger().info('a: %f' % a)
-        a_wnext= -a
-        b_wnext= wy_next - a_wnext*wx_next
 
-        passed_wnext = (y > a_wnext*x + b_wnext)
+        if (wx_next - wx) == 0:
+            passed_wnext = y - wy_next > 0
+        elif (wy_next - wy) == 0:
+            passed_wnext = x - wx_next > 0
+        else:
+            a = (wy_next - wy)/(wx_next - wx)
+            self.get_logger().info('a: %f' % a)
+            a_wnext= -a
+            b_wnext= wy_next - a_wnext*wx_next
+
+            passed_wnext = (y > a_wnext*x + b_wnext)
         self.get_logger().info('passed_wnext: %f' % passed_wnext)
         return passed_wnext 
 
     def get_xy_los(self, x, y, wx, wy, wx_next, wy_next):
         x_los, y_los = symbols('x_los, y_los')
         eq1 = Eq((x_los-x)**2 + (y_los-y)**2, self.R**2)
-        eq2 = Eq(((wy_next - wy)/(wx_next - wx)), (y_los - wy)/(x_los - wx))
+
+        if (wx_next - wx) == 0:
+            eq2 = Eq(x_los, wx)
+        elif (wy_next - wy) == 0:
+            eq2 = Eq(y_los, wy)
+        else:
+            eq2 = Eq(((wy_next - wy)/(wx_next - wx)), (y_los - wy)/(x_los - wx))
 
         sol = solve([eq1, eq2], [x_los, y_los])
         soln = [tuple(v.evalf() for v in s) for s in sol] # evaluated numerically
@@ -191,48 +203,84 @@ class LosGuidance(Node):
             beta = math.radians(90) - zeta
             alfa = beta - (theta - math.radians(90))
             self.get_logger().info('alfa: %f' % alfa)
-            return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            if self.path_error[-1] > 0:
+                return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            else:
+                return self.path_error[-1] + -abs((self.SHIP_LENGHT/2)*np.cos(alfa))
         else:
             self.get_logger().info('theta = %f : in first or third quadrants' % theta)
             chi = theta - self.desired_steady_state_yaw_angles[idx-1]
             alfa = math.radians(90) - chi
             self.get_logger().info('alfa: %f' % alfa)
-            return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            if self.path_error[-1] > 0:
+                return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            else:
+                return self.path_error[-1] + -abs((self.SHIP_LENGHT/2)*np.cos(alfa))
     
     def get_current_path_error(self, x, y, wx, wy, wx_next, wy_next):
         idx = self.current_waypoint
         if idx > 1:
+
             wx_before, wy_before = self.waypoints.position.x[idx-2], self.waypoints.position.y[idx-2]
             # cx + d is line connecting waypoints
             # ax +  b is orthogonal to cx + d, passing through a waypoint or through the craft
             self.get_logger().info('wx_before: %f' % wx_before)
             self.get_logger().info('wx_before: %f' % wx_before)
-            c = (wy_before - wy)/(wx_before - wx)
-            d = wy_before - c*wx_before
-            a = - c
-            b = wy - a*wx
+                
+            if (wy_before - wy) == 0:
+                xi = x
+                yi = wy
+                positive_error = True if y > wy_before else False
 
-            if y < a*x + b:
-                # craft changed from waypoint a to waypoint b, but hasnt passed 
-                # waypoint a yet, so error will be relative to line that goes to waypoint a
-                # waypoint a is w, waypoint b is w_next, and waypoint before a is w_before
-                b = y - a*x
+            elif (wx_before - wx) == 0:
+                xi = wx
+                yi = y
+                positive_error = True if x < wx_before else False
+
             else:
-                c = (wy - wy_next)/(wx - wx_next)
-                d = wy - c*wx
+                c = (wy_before - wy)/(wx_before - wx)
+                d = wy_before - c*wx_before
                 a = - c
-                b = y - a*x
+                b = wy - a*wx
+                if y < a*x + b:
+                    # craft changed from waypoint a to waypoint b, but hasnt passed 
+                    # waypoint a yet, so error will be relative to line that goes to waypoint a
+                    # waypoint a is w, waypoint b is w_next, and waypoint before a is w_before
+                    b = y - a*x
+                else:
+                    c = (wy - wy_next)/(wx - wx_next)
+                    d = wy - c*wx
+                    a = - c
+                    b = y - a*x
+                
+                xi = (b - d)/(c - a)
+                yi = c*xi + d
+
+                positive_error = True if y > c*x + d else False
+
+        if (wy - wy_next) == 0:
+            xi = x
+            yi = wy
+            positive_error = True if y > wy else False
+
+        elif (wx - wx_next) == 0:
+            xi = wx
+            yi = y
+            positive_error = True if x < wx else False
+
         else:
             c = (wy - wy_next)/(wx - wx_next)
             d = wy - c*wx
             a = - c
             b = y - a*x
 
-        xi = (b - d)/(c - a)
-        yi = c*xi + d
+            xi = (b - d)/(c - a)
+            yi = c*xi + d
+
+            positive_error = True if y > c*x + d else False
 
         current_path_error = ((x - xi)**2 + (y - yi)**2)**0.5
-        if y < c*x + d:
+        if not positive_error:
             current_path_error = - current_path_error
         self.get_logger().info('current_path_error: %f' % current_path_error)
         return current_path_error
@@ -278,7 +326,12 @@ class LosGuidance(Node):
             psi_d = chi_d + beta
 
             # theta is how pydyna_simple measures yaw (starting from west, spanning [0,2pi])
-            self.des_yaw_msg.desired_value = 1.57079632679 - psi_d # psi to theta (radians)
+            desired_value = 1.57079632679 - psi_d # psi to theta (radians)
+            # format to positive angles
+            if desired_value < 0:
+                desired_value = 6.28318530718 + desired_value
+
+            self.des_yaw_msg.desired_value = desired_value
             self.des_velocity_msg.desired_value = wv_next
 
             distance_waypoints = ((wx_next - wx)**2 + (wy_next - wy)**2)**0.5
@@ -393,8 +446,6 @@ class LosGuidance(Node):
         fig.savefig(os.path.join(self.plots_dir, "errors", "errorWidth.png"))
 
     def print_metrics(self):
-        self.get_logger().info('Reached final waypoint Uhulll')
-
         mean_path_error = np.mean(np.abs(self.path_error))
         print('Mean path error: ', mean_path_error)
         self.get_logger().info('Mean path error: %f' % mean_path_error)
@@ -407,7 +458,7 @@ class LosGuidance(Node):
         print('Mean width error: ', mean_width_error)
         self.get_logger().info('Mean width error: %f' % mean_width_error)
         
-        max_width_error = np.max(self.width_error)
+        max_width_error = np.max(np.abs(self.width_error))
         print('Max width error: ', max_width_error)
         self.get_logger().info('Max width error: %f' % max_width_error)
 
