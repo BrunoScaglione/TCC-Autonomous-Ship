@@ -42,9 +42,12 @@ class LosGuidance(Node):
         self.R_ACCEPTANCE = self.SHIP_LENGHT*2  # use this for zigzag waypoints
         ############################################
 
+        # final radius of accceptance
+        self.R_ACCEPTANCE_FINAL = 50
+
         # Size of radius around last waypoint. 
         # When craft is outside this radius it should have stopped
-        self.R_STOP = 100.0
+        # self.R_STOP = 100.0
 
         self.desired_values_history = {
             'values': [[],[]],
@@ -55,6 +58,9 @@ class LosGuidance(Node):
         self.width_error = []
 
         # When true, completed all waypoints
+        self.no_more_waypoints = False
+
+        # When true, craft is within self.R_ACCEPTANCE_FINAL of the final waypoint
         self.finished = False
 
         # index of waypoint the ship has to reach next (first waypoint is starting position)
@@ -138,11 +144,11 @@ class LosGuidance(Node):
         except AttributeError:
             self.get_logger().info('Has not received waypoints yet, will ignore listened state')
         
-    def reached_next_waypoint(self, xf):
+    def reached_next_waypoint(self, xf, R_acceptance):
         x, y = xf.position.x, xf.position.y
         idx = self.current_waypoint
         wx_next , wy_next  = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
-        return 1 if (x-wx_next)**2 + (y-wy_next)**2 <= self.R_ACCEPTANCE**2 else 0
+        return 1 if (x-wx_next)**2 + (y-wy_next)**2 <= R_acceptance**2 else 0
     
     def missed_waypoint(self, xf):
         # when craft passes line that is orthogonal to los line and 
@@ -309,20 +315,15 @@ class LosGuidance(Node):
             return (xi, yi, positive_error, None)
 
     def los(self, xf):
-        ##### If you dont want to shutdown nodes, use code below
-        # and put tab in all the code below "if not self.finished:" until
-        # "else:
-        #     self.get_logger().info('Already reached final waypoint')"
-        # craft will stop within the radius R_STOP pointing east
-
-        # if not self.finished:
-        
-        if self.reached_next_waypoint(xf) or self.missed_waypoint(xf):
-            if self.current_waypoint == self.num_waypoints - 1:
-                self.finished = True
-            else:
-                self.current_waypoint += 1
-                self.get_logger().info('changed waypoint at time: %f' % xf.time)
+        if not self.no_more_waypoints:
+            if self.reached_next_waypoint(xf, self.R_ACCEPTANCE) or self.missed_waypoint(xf):
+                if self.current_waypoint == self.num_waypoints - 1:
+                    self.no_more_waypoints = True
+                else:
+                    self.current_waypoint += 1
+                    self.get_logger().info('changed waypoint at time: %f' % xf.time)
+        else:
+            self.finished = True if self.reached_next_waypoint(xf, self.R_ACCEPTANCE_FINAL) else False
         
         idx = self.current_waypoint
         x, y = xf.position.x, xf.position.y
@@ -365,26 +366,6 @@ class LosGuidance(Node):
         else:
             # Will shutdown all nodes when reached final waypoint
             self.publisher_shutdown.publish(self.shutdown_msg)
-
-            ##### If you dont want to shutdown nodes, use code below
-            # craft will stop within the radius R_STOP pointing east
-
-            # self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
-            # self.des_velocity_msg.desired_value = 0.0
-
-            # self.des_yaw_msg.distance_waypoints = self.R_STOP
-            # self.des_velocity_msg.distance_waypoints = self.R_STOP
-    
-        ##### If you dont want to shutdown nodes, use code below
-        # craft will stop within the radius R_STOP pointing east
-
-        # else:
-        #     self.get_logger().info('Already reached final waypoint')
-        #     self.des_yaw_msg.desired_value = 0.0 # finishes pointing west
-        #     self.des_velocity_msg.desired_value = 0.0
-
-        #     self.des_yaw_msg.distance_waypoints = self.R_STOP
-        #     self.des_velocity_msg.distance_waypoints = self.R_STOP
 
         # norm of vector from craft location to path, making 90 degrees with path line
         current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
