@@ -221,7 +221,13 @@ class SurgeController(Node):
         if abs_angle_dif > 3.14159265359:
             abs_angle_dif = abs(self.last_waypoint_yaw_angle - (6.28318530718 + craft_steady_state_yaw_angle))
 
-        est_time_corrected = self.est_time_correct_tuning_factor*(abs_angle_dif/2*np.pi + 1)*self.last_waypoint_surge_velocity*est_time
+        angle_dif = self.last_waypoint_yaw_angle - craft_steady_state_yaw_angle
+        if angle_dif > np.pi:
+            angle_dif = -(np.pi - (self.last_waypoint_yaw_angle%np.pi-craft_steady_state_yaw_angle%np.pi))
+        elif angle_dif < - np.pi:
+            angle_dif = np.pi + (self.last_waypoint_yaw_angle%np.pi-craft_steady_state_yaw_angle%np.pi)
+
+        est_time_corrected = self.est_time_correct_tuning_factor*(abs(angle_dif)/2*np.pi + 1)*self.last_waypoint_surge_velocity*est_time
 
         return est_time_corrected
 
