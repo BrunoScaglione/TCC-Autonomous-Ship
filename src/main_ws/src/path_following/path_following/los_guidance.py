@@ -223,9 +223,10 @@ class LosGuidance(Node):
             else:
                 return self.path_error[-1] + -abs((self.SHIP_LENGHT/2)*np.cos(alfa))
     
-    def get_current_path_error(self, x, y, wx, wy, wx_next, wy_next):
+    def append_current_errors(self, x, y, theta, wx, wy, wx_next, wy_next):
         idx = self.current_waypoint
-        if idx > 1:
+        use_current_waypoint = True
+        if idx > 1: 
             # cx + d is line connecting waypoints
             # ax +  b is orthogonal to cx + d, passing through a waypoint or through the craft
             wx_before, wy_before = self.waypoints.position.x[idx-2], self.waypoints.position.y[idx-2]
@@ -234,8 +235,8 @@ class LosGuidance(Node):
             if calc_intercept_result_with_check[3]:
                 (xi, yi, positive_error, _) = self.calc_intercept(x, y, wx, wy, wx_next, wy_next)
             else:
+                use_current_waypoint = False
                 (xi, yi, positive_error, _) = calc_intercept_result_with_check
-        
         else:
             (xi, yi, positive_error, _) = self.calc_intercept(x, y, wx, wy, wx_next, wy_next)
 
@@ -243,7 +244,15 @@ class LosGuidance(Node):
         if not positive_error:
             current_path_error = - current_path_error
         self.get_logger().info('current_path_error: %f' % current_path_error)
-        return current_path_error
+
+        self.path_error.append(current_path_error)
+
+        if use_current_waypoint:
+            current_width_error = self.get_current_width_error(idx, theta)
+        else:
+            current_width_error = self.get_current_width_error(idx-1, theta)
+
+        self.width_error.append(current_width_error)
 
     @staticmethod
     def calc_intercept(x, y, wx1, wy1, wx2, wy2, check=False):
@@ -326,7 +335,7 @@ class LosGuidance(Node):
             self.finished = True if self.reached_next_waypoint(xf, self.R_ACCEPTANCE_FINAL) else False
         
         idx = self.current_waypoint
-        x, y = xf.position.x, xf.position.y
+        x, y, theta = xf.position.x, xf.position.y, xf.position.theta
         u, v = xf.velocity.u, xf.velocity.v
         U = (u**2 + v**2)**0.5
         wx_next, wy_next, wv_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx], self.waypoints.velocity[idx]
@@ -368,11 +377,7 @@ class LosGuidance(Node):
             self.publisher_shutdown.publish(self.shutdown_msg)
 
         # norm of vector from craft location to path, making 90 degrees with path line
-        current_path_error = self.get_current_path_error(x, y, wx, wy, wx_next, wy_next)
-        self.path_error.append(current_path_error)
-
-        current_width_error = self.get_current_width_error(idx, xf.position.theta)
-        self.width_error.append(current_width_error)
+        self.append_current_errors(x, y, theta, wx, wy, wx_next, wy_next)
 
         self.desired_values_history['values'][0].append(self.des_velocity_msg.desired_value)
         self.desired_values_history['values'][1].append(self.des_yaw_msg.desired_value)

@@ -35,7 +35,7 @@ class SurgeController(Node):
 
         # self.phi_slope_tuning_factor = 10**-10 # without waves: 10**-10 
         #self.phi_offset_tuning_factor = -0.13 # -0.13 without waves: -0.13 
-        self.phi = 0.19
+        self.phi = 0.19 # last 0.19
         
         self.kf_constant_tuning_factor = 12 # 8 without waves: 3.4 
 
@@ -190,8 +190,15 @@ class SurgeController(Node):
         est_time_lin = distance/((initial_velocity+final_velocity)/2)
         self.get_logger().info('est_time_lin: %f' % est_time_lin)
 
-        est_time = (((final_velocity-initial_velocity) - self.phi)*est_time_lin + self.phi*est_time_exp)/(final_velocity-initial_velocity)
-        self.get_logger().info('est_time: %f' % est_time)
+        try:
+            est_time = (
+                (((final_velocity-initial_velocity) - self.phi)*est_time_lin + self.phi*est_time_exp) 
+                /(final_velocity-initial_velocity)
+            )
+        except OverflowError: # est_time = est_time_lin
+            est_time = est_time_lin
+
+        self.get_logger().info('est_time: %f' % est_time) 
 
         steady_state_yaw_angle = self.desired_steady_state_yaw_angles[self.current_waypoint-1]
         self.get_logger().info('steady_state_yaw_angle: %f' % steady_state_yaw_angle)
@@ -222,11 +229,12 @@ class SurgeController(Node):
             abs_angle_dif = abs(self.last_waypoint_yaw_angle - (6.28318530718 + craft_steady_state_yaw_angle))
 
         angle_dif = self.last_waypoint_yaw_angle - craft_steady_state_yaw_angle
+        self.get_logger().info('angle_dif: %f' % angle_dif)
         if angle_dif > np.pi:
             angle_dif = -(np.pi - (self.last_waypoint_yaw_angle%np.pi-craft_steady_state_yaw_angle%np.pi))
         elif angle_dif < - np.pi:
             angle_dif = np.pi + (self.last_waypoint_yaw_angle%np.pi-craft_steady_state_yaw_angle%np.pi)
-
+        
         est_time_corrected = self.est_time_correct_tuning_factor*(abs(angle_dif)/2*np.pi + 1)*self.last_waypoint_surge_velocity*est_time
 
         return est_time_corrected
