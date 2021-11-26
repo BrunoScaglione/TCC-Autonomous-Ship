@@ -149,7 +149,7 @@ class SurgeController(Node):
         # distance(t) = (xway_dold*est_time + (xu_d - xway_dold)*(est_time + (1/k)*exp(-est_time*k)) -(1/k)*(xu_d - xway_dold))
         kf = self.kf_constant_tuning_factor*(self.KF_CONSTANT)
         est_time = self.get_est_time(distance, kf, self.last_waypoint_surge_velocity, xu_d)
-        self.get_logger().info('est_time: %f' % est_time)
+        self.get_logger().info('est_time_corrected: %f' % est_time)
         F = kf*5.18*(10**-5)
         eta = abs(self.last_waypoint_surge_velocity-xu_d)/est_time
         k = F + eta
@@ -186,29 +186,42 @@ class SurgeController(Node):
         # ponderates between linear and exponential response
         # when phi is higher goes from linear to exponential
         est_time_exp = fsolve(self.func, (2*final_velocity + initial_velocity)/3, args=data)[0]
+        self.get_logger().info('est_time_exp: %f' % est_time_exp)
         est_time_lin = distance/((initial_velocity+final_velocity)/2)
+        self.get_logger().info('est_time_lin: %f' % est_time_lin)
 
         est_time = (((final_velocity-initial_velocity) - self.phi)*est_time_lin + self.phi*est_time_exp)/(final_velocity-initial_velocity)
-        
+        self.get_logger().info('est_time: %f' % est_time)
+
         steady_state_yaw_angle = self.desired_steady_state_yaw_angles[self.current_waypoint-1]
+        self.get_logger().info('steady_state_yaw_angle: %f' % steady_state_yaw_angle)
         u_ss = final_velocity
         theta_change_basis = (self.last_waypoint_yaw_angle - steady_state_yaw_angle)
         v_ss = (
             np.cos(np.pi/2 - theta_change_basis)*self.last_waypoint_surge_velocity
             + np.cos(theta_change_basis)*self.last_waypoint_sway_velocity
         ) 
+        self.get_logger().info('v_ss: %f' % v_ss)
 
         # vss is used as velocity perpendicular to path(of the actual waypoint) at last waypoint 
         # uss is used as final surge velocity
         beta = math.asin(v_ss/(v_ss**2 + u_ss**2)**0.5)
+        self.get_logger().info('beta: %f' % beta)
         craft_steady_state_yaw_angle = steady_state_yaw_angle - beta
-
+        self.get_logger().info('craft_steady_state_yaw_angle: %f' % craft_steady_state_yaw_angle)
         # used the results obtained from when there wasnt estimated time correction as baseline for
         # self.est_time_correct_tuning_factor
         # at th begginging the estimated timme was 347 and the actual time was 275 to reach the waypoint
         # with initial surge velocity = 1 and initial yaw angle = 90 for linear waypoints 
         # 347 =  self.est_time_correct_tuning_factor*1.125*1*347
-        est_time_corrected = self.est_time_correct_tuning_factor*((self.last_waypoint_yaw_angle - craft_steady_state_yaw_angle)/2*np.pi + 1)*self.last_waypoint_surge_velocity*est_time
+        self.get_logger().info('last_waypoint_yaw_angle: %f' % self.last_waypoint_yaw_angle)
+        self.get_logger().info('last_waypoint_surge_velocity: %f' % self.last_waypoint_surge_velocity)
+
+        abs_angle_dif = self.last_waypoint_yaw_angle - craft_steady_state_yaw_angle
+        if abs_angle_dif > 3.14159265359:
+            abs_angle_dif = abs(self.last_waypoint_yaw_angle - (6.28318530718 + craft_steady_state_yaw_angle))
+
+        est_time_corrected = self.est_time_correct_tuning_factor*(abs_angle_dif/2*np.pi + 1)*self.last_waypoint_surge_velocity*est_time
 
         return est_time_corrected
 

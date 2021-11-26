@@ -220,64 +220,18 @@ class LosGuidance(Node):
     def get_current_path_error(self, x, y, wx, wy, wx_next, wy_next):
         idx = self.current_waypoint
         if idx > 1:
-
-            wx_before, wy_before = self.waypoints.position.x[idx-2], self.waypoints.position.y[idx-2]
             # cx + d is line connecting waypoints
             # ax +  b is orthogonal to cx + d, passing through a waypoint or through the craft
-            self.get_logger().info('wx_before: %f' % wx_before)
-            self.get_logger().info('wx_before: %f' % wx_before)
-                
-            if (wy_before - wy) == 0:
-                xi = x
-                yi = wy
-                positive_error = True if y > wy_before else False
+            wx_before, wy_before = self.waypoints.position.x[idx-2], self.waypoints.position.y[idx-2]
 
-            elif (wx_before - wx) == 0:
-                xi = wx
-                yi = y
-                positive_error = True if x < wx_before else False
-
+            calc_intercept_result_with_check = self.calc_intercept(x, y, wx_before, wy_before, wx, wy, check=True)
+            if calc_intercept_result_with_check[3]:
+                (xi, yi, positive_error, _) = self.calc_intercept(x, y, wx, wy, wx_next, wy_next)
             else:
-                c = (wy_before - wy)/(wx_before - wx)
-                d = wy_before - c*wx_before
-                a = - c
-                b = wy - a*wx
-                if y < a*x + b:
-                    # craft changed from waypoint a to waypoint b, but hasnt passed 
-                    # waypoint a yet, so error will be relative to line that goes to waypoint a
-                    # waypoint a is w, waypoint b is w_next, and waypoint before a is w_before
-                    b = y - a*x
-                else:
-                    c = (wy - wy_next)/(wx - wx_next)
-                    d = wy - c*wx
-                    a = - c
-                    b = y - a*x
-                
-                xi = (b - d)/(c - a)
-                yi = c*xi + d
-
-                positive_error = True if y > c*x + d else False
-
-        if (wy - wy_next) == 0:
-            xi = x
-            yi = wy
-            positive_error = True if y > wy else False
-
-        elif (wx - wx_next) == 0:
-            xi = wx
-            yi = y
-            positive_error = True if x < wx else False
-
+                (xi, yi, positive_error, _) = calc_intercept_result_with_check
+        
         else:
-            c = (wy - wy_next)/(wx - wx_next)
-            d = wy - c*wx
-            a = - c
-            b = y - a*x
-
-            xi = (b - d)/(c - a)
-            yi = c*xi + d
-
-            positive_error = True if y > c*x + d else False
+            (xi, yi, positive_error, _) = self.calc_intercept(x, y, wx, wy, wx_next, wy_next)
 
         current_path_error = ((x - xi)**2 + (y - yi)**2)**0.5
         if not positive_error:
@@ -285,7 +239,75 @@ class LosGuidance(Node):
         self.get_logger().info('current_path_error: %f' % current_path_error)
         return current_path_error
 
+    @staticmethod
+    def calc_intercept(x, y, wx1, wy1, wx2, wy2, check=False):
+        if check:
+            xi = None
+            yi = None
+            positive_error = None
+            not_between_waypoints = False
+            if (wy1 - wy2) == 0:
+                if x < wx2:
+                    xi = x
+                    yi = wy2
+
+                    positive_error = True if y > wy1 else False
+                else:
+                    not_between_waypoints = True
+            elif (wx1 - wx2) == 0:
+                if y < wy2:
+                    xi = wx2
+                    yi = y
+
+                    positive_error = True if x < wx1 else False
+                else:
+                    not_between_waypoints = True
+            else:
+                c = (wy1 - wy2)/(wx1 - wx2)
+                d = wy1 - c*wx1   
+                a = - c              
+                b = y - a*x
+                e = wy2 - a*wx2
+                if y < a*x + e:
+                    # craft changed from waypoint a to waypoint b, but hasnt passed 
+                    # waypoint a yet, so error will be relative to line that goes to waypoint a
+                    # waypoint a is w, waypoint b is w_next, and waypoint before a is w_before
+                    xi = (b - d)/(c - a)
+                    yi = c*xi + d
+
+                    positive_error = True if y > yi else False
+                else:
+                    not_between_waypoints = True
+
+            return (xi, yi, positive_error, not_between_waypoints)
+
+        else:
+            if (wy1 - wy2) == 0:
+                xi = x
+                yi = wy2
+
+                positive_error = True if y > wy1 else False
     
+            elif (wx1 - wx2) == 0:
+                xi = wx2
+                yi = y
+
+                positive_error = True if x < wx1 else False
+            else:
+                c = (wy1 - wy2)/(wx1 - wx2)
+                d = wy1 - c*wx1   
+                a = - c              
+                b = y - a*x
+                # craft changed from waypoint a to waypoint b, but hasnt passed 
+                # waypoint a yet, so error will be relative to line that goes to waypoint a
+                # waypoint a is w, waypoint b is w_next, and waypoint before a is w_before
+                xi = (b - d)/(c - a)
+                yi = c*xi + d
+
+                positive_error = True if y > yi else False
+
+            return (xi, yi, positive_error, None)
+
     def los(self, xf):
         ##### If you dont want to shutdown nodes, use code below
         # and put tab in all the code below "if not self.finished:" until
