@@ -161,9 +161,9 @@ class LosGuidance(Node):
         wx_next , wy_next = self.waypoints.position.x[idx], self.waypoints.position.y[idx]
 
         if (wx_next - wx) == 0:
-            passed_wnext = y - wy_next > 0
+            passed_wnext = wy_next*(y - wy_next)
         elif (wy_next - wy) == 0:
-            passed_wnext = x - wx_next > 0
+            passed_wnext = wx_next*(x - wx_next)
         else:
             a = (wy_next - wy)/(wx_next - wx)
             self.get_logger().info('a: %f' % a)
