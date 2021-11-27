@@ -164,9 +164,6 @@ class LosGuidance(Node):
             self.get_logger().info('1')
             passed_wnext = True if wy_next*(y - wy_next) > 0 else False
         elif (wy_next - wy) == 0:
-            self.get_logger().info('2')
-            self.get_logger().info('x: %f' % x)
-            self.get_logger().info('wx_next: %f' % wx_next)
             passed_wnext = True if wx_next*(x - wx_next) > 0 else False
         else:
             a = (wy_next - wy)/(wx_next - wx)
