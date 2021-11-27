@@ -326,7 +326,9 @@
 # HEXAGON WAYPOINTS NOT WORKING 
 # As soon as boat reaches 1st waypoint it crashes: Los Guidance - can't convert complex to float
 # Even with correction of bugs, now run crashes as soon as it starts
-        
+# Cases with radius of acceptance 2*SHIP_LENGTH crashed as well as the ones with the fixed value of 50
+
+# Couldn't complete case
 - case 17:  
   - meta: 
     - date: 27/11
@@ -338,13 +340,13 @@
     - Radius of acceptance = 50 (have to change line in los_guidance)
   - results:
     - mean path error: 
-      - run 1: 
+      - run 1: 34.516
     - max path error:
-      - run 1: 
+      - run 1: 381.908
     - mean width error: 
-      - run 1: 
+      - run 1: 66.570
     - max width error:
-      - run 1: 
+      - run 1: 438.766
 
 - case 18:  
   - meta: 
@@ -357,13 +359,13 @@
     - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
   - results:
     - mean path error: 
-      - run 1: 
+      - run 1: 49.785
     - max path error:
-      - run 1: 
+      - run 1: 459.345
     - mean width error: 
-      - run 1: 
+      - run 1: 94.623
     - max width error:
-      - run 1: 
+      - run 1: 539.654
 
 - case 19:  
   - meta: 
@@ -376,13 +378,13 @@
     - Radius of acceptance = 50 (have to change line in los_guidance)
   - results:
     - mean path error: 
-      - run 1: 
+      - run 1: 50.211
     - max path error:
-      - run 1: 
+      - run 1: 384.179
     - mean width error: 
-      - run 1: 
+      - run 1: 82.538
     - max width error:
-      - run 1: 
+      - run 1: 457.358
 
 - case 20:  
   - meta: 
