@@ -181,12 +181,6 @@ class LosGuidance(Node):
         return passed_wnext 
 
     def get_xy_los(self, x, y, wx, wy, wx_next, wy_next):
-        self.get_logger().info('x: %f' % x)
-        self.get_logger().info('y: %f' % y)
-        self.get_logger().info('wx: %f' % wx)
-        self.get_logger().info('wy: %f' % wy)
-        self.get_logger().info('wx_next: %f' % wx_next)
-        self.get_logger().info('wy_next: %f' % wy_next)
         
         x_los, y_los = symbols('x_los, y_los')
         eq1 = Eq((x_los-x)**2 + (y_los-y)**2, self.R**2)
