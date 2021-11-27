@@ -236,18 +236,22 @@
   - conditions:
     - p3d with waves (have to change main p3d and changes.txt to document change)
     - canal waypoints (have to chnaged POST request payload. The payload is in helpers directory)
-    - initial u = 1 m/s, theta = 0.0 rad, rest is default
+    - initial u = 1 m/s, theta = 0.3 rad, rest is default
     - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
     - Radius of acceptance = 50 (have to change line in los_guidance)
+    - waypoints:
+      -"x":[2000.0,3500.0,4000.0,4350.0,4350.0],
+      -"y":[-200.0,-200.0,220.0,600.0,1000.0]
+      -"velocity":[3.0,3.0,3.0,3.0,3.0]
   - results:
     - mean path error: 
-      - run 1: 
+      - run 1: 234.472
     - max path error:
-      - run 1: 
+      - run 1: 980.152
     - mean width error: 
-      - run 1: 
+      - run 1: 285.556
     - max width error:
-      - run 1: 
+      - run 1: 1060.238
 
 - case 14:  
   - meta: 
@@ -255,18 +259,22 @@
   - conditions:
     - p3d with waves (have to change main p3d and changes.txt to document change)
     - canal waypoints (have to chnaged POST request payload. The payload is in helpers directory)
-    - initial u = 1 m/s, theta = 0.0 rad, rest is default
+    - initial u = 1 m/s, theta = 0.3 rad, rest is default
     - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
     - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+    - waypoints:
+      -"x":[2000.0,3500.0,4000.0,4350.0,4350.0],
+      -"y":[-200.0,-200.0,220.0,600.0,1000.0]
+      -"velocity":[3.0,3.0,3.0,3.0,3.0]
   - results:
     - mean path error: 
-      - run 1: 
+      - run 1: 76.543
     - max path error:
-      - run 1: 
+      - run 1: 383.046
     - mean width error: 
-      - run 1: 
+      - run 1: 118.563
     - max width error:
-      - run 1: 
+      - run 1: 460.543
 
 - case 15:  
   - meta: 
@@ -274,18 +282,22 @@
   - conditions:
     - p3d with waves (have to change main p3d and changes.txt to document change)
     - canal waypoints (have to chnaged POST request payload. The payload is in helpers directory)
-    - initial u = 2 m/s, theta = 0.0 rad, rest is default
+    - initial u = 2 m/s, theta = 0.3 rad, rest is default
     - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
     - Radius of acceptance = 50 (have to change line in los_guidance)
+    - waypoints:
+      -"x":[2000.0,3500.0,4000.0,4350.0,4350.0],
+      -"y":[-200.0,-200.0,220.0,600.0,1000.0]
+      -"velocity":[3.0,3.0,3.0,3.0,3.0]    
   - results:
     - mean path error: 
-      - run 1: 
+      - run 1: 261.175
     - max path error:
-      - run 1: 
+      - run 1: 782.826
     - mean width error: 
-      - run 1: 
+      - run 1: 303.386
     - max width error:
-      - run 1: 
+      - run 1: 810.266
 
 - case 16:  
   - meta: 
