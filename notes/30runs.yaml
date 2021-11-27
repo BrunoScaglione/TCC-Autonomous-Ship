@@ -226,6 +226,10 @@
     - max width error:
       - run 1: 103.224
 
+
+#If Los guidance radius of acceptance is 50 in the canal, ship always "crashes" on land
+#Case 16 is the only one that managed to not crash into land
+
 - case 13:  
   - meta: 
     - date: 27/11
@@ -289,22 +293,27 @@
   - conditions:
     - p3d with waves (have to change main p3d and changes.txt to document change)
     - canal waypoints (have to chnaged POST request payload. The payload is in helpers directory)
-    - initial u = 2 m/s, theta = 0.0 rad, rest is default
+    - initial u = 2 m/s, theta = 0.3 rad, rest is default
     - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
     - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+    - waypoints:
+      -"x":[2000.0,3500.0,4000.0,4350.0,4350.0],
+      -"y":[-200.0,-200.0,220.0,600.0,1000.0]
+      -"velocity":[3.0,3.0,3.0,3.0,3.0]
   - results:
     - mean path error: 
-      - run 1: 
+      - run 1: 104.071
     - max path error:
-      - run 1: 
+      - run 1: 577.534
     - mean width error: 
-      - run 1: 
+      - run 1: 145.831
     - max width error:
-      - run 1: 
+      - run 1: 647.973
 
 
 # HEXAGON WAYPOINTS NOT WORKING 
 # As soon as boat reaches 1st waypoint it crashes: Los Guidance - can't convert complex to float
+# Even with correction of bugs, now run crashes as soon as it starts
         
 - case 17:  
   - meta: 
