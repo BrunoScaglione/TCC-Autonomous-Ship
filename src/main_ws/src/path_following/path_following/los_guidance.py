@@ -167,14 +167,27 @@ class LosGuidance(Node):
         else:
             a = (wy_next - wy)/(wx_next - wx)
             self.get_logger().info('a: %f' % a)
-            a_wnext= -a
-            b_wnext= wy_next - a_wnext*wx_next
+            a_wnext = -a
+            b_wnext = wy_next - a_wnext*wx_next
 
-            passed_wnext = (y > a_wnext*x + b_wnext)
-        self.get_logger().info('passed_wnext: %f' % passed_wnext)
+            if a_wnext*(a_wnext*x + b_wnext - y) > 0:
+                passed_wnext = True
+            else:
+                passed_wnext = False
+
+        self.get_logger().info('passed_wnext: True') if passed_wnext else \
+            self.get_logger().info('passed_wnext: False') 
+            
         return passed_wnext 
 
     def get_xy_los(self, x, y, wx, wy, wx_next, wy_next):
+        self.get_logger().info('x: %f' % x)
+        self.get_logger().info('y: %f' % y)
+        self.get_logger().info('wx: %f' % wx)
+        self.get_logger().info('wy: %f' % wy)
+        self.get_logger().info('wx_next: %f' % wx_next)
+        self.get_logger().info('wy_next: %f' % wy_next)
+        
         x_los, y_los = symbols('x_los, y_los')
         eq1 = Eq((x_los-x)**2 + (y_los-y)**2, self.R**2)
 
@@ -333,7 +346,7 @@ class LosGuidance(Node):
                     self.get_logger().info('changed waypoint at time: %f' % xf.time)
         else:
             self.finished = True if self.reached_next_waypoint(xf, self.R_ACCEPTANCE_FINAL) else False
-        
+
         idx = self.current_waypoint
         x, y, theta = xf.position.x, xf.position.y, xf.position.theta
         u, v = xf.velocity.u, xf.velocity.v
