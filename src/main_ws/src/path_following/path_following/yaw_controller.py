@@ -128,9 +128,11 @@ class YawController(Node):
         theta_des_old = self.desired_yaw_angle_old
         # error
         theta_bar = theta - theta_des
-        if abs(theta_bar) > 3.14159265359:
-            theta_bar = theta - (6.28318530718 + theta_des)
-            
+        if theta_bar > np.pi:
+            theta_bar = -(np.pi - (theta%np.pi-theta_des%np.pi))
+        elif theta_bar < - np.pi:
+            theta_bar = np.pi + (theta%np.pi-theta_des%np.pi)
+
         theta_bar_dot = r - (theta_des - theta_des_old)/ \
             (self.t_current_desired_yaw_angle - self.t_last_desired_yaw_angle)
         self.get_logger().info('theta_bar_dot: %f' % theta_bar_dot)
