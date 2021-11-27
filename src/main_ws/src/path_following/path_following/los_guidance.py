@@ -170,10 +170,8 @@ class LosGuidance(Node):
             a_wnext = -a
             b_wnext = wy_next - a_wnext*wx_next
 
-            if a_wnext*(a_wnext*x + b_wnext - y) > 0:
-                passed_wnext = True
-            else:
-                passed_wnext = False
+            passed_wnext = True if wx_next*a_wnext*(a_wnext*x + b_wnext - y) > 0 \
+                else False
 
         self.get_logger().info('passed_wnext: True') if passed_wnext else \
             self.get_logger().info('passed_wnext: False') 
