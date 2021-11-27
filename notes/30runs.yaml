@@ -1,0 +1,383 @@
+- case 1:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 1 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul deactivated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 7.804
+    - max path error:
+      - run 1: 22.624
+    - mean width error: 
+      - run 1: 33.667
+    - max width error:
+      - run 1: 60.228
+
+- case 2:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 1 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul deactivated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 7.881
+    - max path error:
+      - run 1: 22.921
+    - mean width error: 
+      - run 1: 32.877
+    - max width error:
+      - run 1: 60.456
+
+- case 3:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 2 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul deactivated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 8.805
+    - max path error:
+      - run 1: 29.266
+    - mean width error: 
+      - run 1: 31.881
+    - max width error:
+      - run 1: 66.069
+
+- case 4:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 2 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul deactivated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 7.712
+    - max path error:
+      - run 1: 25.578
+    - mean width error: 
+      - run 1: 28.796
+    - max width error:
+      - run 1: 51.547
+
+- case 5:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 1 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 10.305
+    - max path error:
+      - run 1: 24.240
+    - mean width error: 
+      - run 1: 41.195
+    - max width error:
+      - run 1: 62.928
+
+- case 6:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 1 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 10.019
+    - max path error:
+      - run 1: 22.127
+    - mean width error: 
+      - run 1: 39.964
+    - max width error:
+      - run 1: 62.926
+
+- case 7:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 2 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 11.015
+    - max path error:
+      - run 1: 25.832
+    - mean width error: 
+      - run 1: 39.986
+    - max width error:
+      - run 1: 74.354
+
+- case 8:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - linear waypoints (already is default)
+    - initial u = 2 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 11.667
+    - max path error:
+      - run 1: 28.122
+    - mean width error: 
+      - run 1: 38.801
+    - max width error:
+      - run 1: 60.544
+
+- case 9:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - zigzag waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 1 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 28.804
+    - max path error:
+      - run 1: 91.049
+    - mean width error: 
+      - run 1: 64.860
+    - max width error:
+      - run 1: 145.836
+
+- case 10:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - zigzag waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 1 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 12.797
+    - max path error:
+      - run 1: 42.635
+    - mean width error: 
+      - run 1: 46.851
+    - max width error:
+      - run 1: 103.590
+
+- case 11:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - zigzag waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 2 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 26.454
+    - max path error:
+      - run 1: 96.614
+    - mean width error: 
+      - run 1: 57.831
+    - max width error:
+      - run 1: 119.767
+
+- case 12:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - zigzag waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 2 m/s, theta = 1.2 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 15.199
+    - max path error:
+      - run 1: 45.388
+    - mean width error: 
+      - run 1: 44.889
+    - max width error:
+      - run 1: 103.224
+
+- case 13:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - canal waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 1 m/s, theta = 0.0 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 
+    - max path error:
+      - run 1: 
+    - mean width error: 
+      - run 1: 
+    - max width error:
+      - run 1: 
+
+- case 14:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - canal waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 1 m/s, theta = 0.0 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 
+    - max path error:
+      - run 1: 
+    - mean width error: 
+      - run 1: 
+    - max width error:
+      - run 1: 
+
+- case 15:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - canal waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 2 m/s, theta = 0.0 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 
+    - max path error:
+      - run 1: 
+    - mean width error: 
+      - run 1: 
+    - max width error:
+      - run 1: 
+
+- case 16:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - canal waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 2 m/s, theta = 0.0 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 
+    - max path error:
+      - run 1: 
+    - mean width error: 
+      - run 1: 
+    - max width error:
+      - run 1: 
+
+
+# HEXAGON WAYPOINTS NOT WORKING 
+# As soon as boat reaches 1st waypoint it crashes: Los Guidance - can't convert complex to float
+        
+- case 17:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - hexagon waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 1 m/s, theta = 2.0 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 
+    - max path error:
+      - run 1: 
+    - mean width error: 
+      - run 1: 
+    - max width error:
+      - run 1: 
+
+- case 18:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - hexagon waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 1 m/s, theta = 2.0 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 
+    - max path error:
+      - run 1: 
+    - mean width error: 
+      - run 1: 
+    - max width error:
+      - run 1: 
+
+- case 19:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - hexagon waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 2 m/s, theta = 2.0 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = 50 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 
+    - max path error:
+      - run 1: 
+    - mean width error: 
+      - run 1: 
+    - max width error:
+      - run 1: 
+
+- case 20:  
+  - meta: 
+    - date: 27/11
+  - conditions:
+    - p3d with waves (have to change main p3d and changes.txt to document change)
+    - hexagon waypoints (have to chnaged POST request payload. The payload is in helpers directory)
+    - initial u = 2 m/s, theta = 2.0 rad, rest is default
+    - gps_imu_simul activated (have to change lines in gps_imu_simul and wave_filter)
+    - Radius of acceptance = SHIP_LENGTH*2 (have to change line in los_guidance)
+  - results:
+    - mean path error: 
+      - run 1: 
+    - max path error:
+      - run 1: 
+    - mean width error: 
+      - run 1: 
+    - max width error:
+      - run 1: 
