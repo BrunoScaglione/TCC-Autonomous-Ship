@@ -162,16 +162,16 @@ class LosGuidance(Node):
 
         if (wx_next - wx) == 0:
             self.get_logger().info('1')
-            passed_wnext = True if wy_next*(y - wy_next) > 0 else False
+            passed_wnext = True if (wy_next-wy)*(y - wy_next) > 0 else False
         elif (wy_next - wy) == 0:
-            passed_wnext = True if wx_next*(x - wx_next) > 0 else False
+            passed_wnext = True if (wx_next-wx)*(x - wx_next) > 0 else False
         else:
             a = (wy_next - wy)/(wx_next - wx)
             self.get_logger().info('a: %f' % a)
             a_wnext = -a
             b_wnext = wy_next - a_wnext*wx_next
 
-            passed_wnext = True if wx_next*a_wnext*(a_wnext*x + b_wnext - y) > 0 \
+            passed_wnext = True if (wx_next-wx)*a_wnext*(a_wnext*x + b_wnext - y) > 0 \
                 else False
 
         self.get_logger().info('passed_wnext: True') if passed_wnext else \
