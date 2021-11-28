@@ -196,7 +196,7 @@ class WaveFilter(Node):
                 "file": "filteredLinearVelocityU.png"
             },
             {
-                "title": "Filtered Linear Position V",
+                "title": "Filtered Linear Velocity V",
                 "ylabel": "v [m/s (port)]",
                 "file": "filteredLinearVelocityV.png"
             },
