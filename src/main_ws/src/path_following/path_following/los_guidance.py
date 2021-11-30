@@ -30,7 +30,7 @@ class LosGuidance(Node):
         # los parameters
         self.SHIP_LENGHT = 186.4
         # los radius
-        self.R = self.SHIP_LENGHT*2 
+        self.R = self.SHIP_LENGHT*2
 
         ###########################################
         # VERY IMPORTANT, CHANGING THIS VALUE ALLOWS TRADEOFF
@@ -39,7 +39,7 @@ class LosGuidance(Node):
         # it considers waypoint was reached
         # tuned for:
         # self.R_ACCEPTANCE = 50 # use this for linear waypoints
-        self.R_ACCEPTANCE = self.SHIP_LENGHT*2  # use this for zigzag waypoints
+        self.R_ACCEPTANCE = self.SHIP_LENGHT  # use this for zigzag waypoints
         ############################################
 
         # final radius of accceptance
