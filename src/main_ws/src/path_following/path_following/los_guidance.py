@@ -166,9 +166,9 @@ class LosGuidance(Node):
         elif (wy_next - wy) == 0:
             passed_wnext = True if (wx_next-wx)*(x - wx_next) > 0 else False
         else:
-            a = (wy_next - wy)/(wx_next - wx)
-            self.get_logger().info('a: %f' % a)
-            a_wnext = -a
+            c = (wy_next - wy)/(wx_next - wx)
+            self.get_logger().info('c: %f' % c)
+            a_wnext = -1/c
             b_wnext = wy_next - a_wnext*wx_next
 
             passed_wnext = True if (wx_next-wx)*a_wnext*(a_wnext*x + b_wnext - y) > 0 \
@@ -286,7 +286,7 @@ class LosGuidance(Node):
             else:
                 c = (wy1 - wy2)/(wx1 - wx2)
                 d = wy1 - c*wx1   
-                a = - c              
+                a = -1/c              
                 b = y - a*x
                 e = wy2 - a*wx2
                 
@@ -318,7 +318,7 @@ class LosGuidance(Node):
             else:
                 c = (wy1 - wy2)/(wx1 - wx2)
                 d = wy1 - c*wx1   
-                a = - c              
+                a = -1/c              
                 b = y - a*x
                 # craft changed from waypoint a to waypoint b, but hasnt passed 
                 # waypoint a yet, so error will be relative to line that goes to waypoint a
