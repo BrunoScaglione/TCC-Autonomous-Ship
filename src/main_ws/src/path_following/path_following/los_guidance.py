@@ -436,7 +436,7 @@ class LosGuidance(Node):
             ax.plot(t, self.desired_values_history['values'][i])
             ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(desired_values_props[i]["ylabel"])
-            ax.set_ylim(min(self.desired_values_history['values'][i]), max(self.desired_values_history['values'][i]))
+            # ax.set_ylim(min(self.desired_values_history['values'][i]), max(self.desired_values_history['values'][i]))
 
             fig.savefig(os.path.join(self.plots_dir, ss_dir, desired_values_props[i]["file"]))
 
@@ -459,7 +459,7 @@ class LosGuidance(Node):
         ax.plot(t, self.path_error)
         ax.set_xlabel("t [s]")
         ax.set_ylabel("path error [m]")
-        ax.set_ylim(min(self.path_error), max(self.path_error))
+        # ax.set_ylim(min(self.path_error), max(self.path_error))
         fig.savefig(os.path.join(self.plots_dir, "errors", "errorPath.png"))
 
         fig, ax = plt.subplots(1)
@@ -467,7 +467,7 @@ class LosGuidance(Node):
         ax.plot(t, self.width_error)
         ax.set_xlabel("t [s]")
         ax.set_ylabel("width error [m]")
-        ax.set_ylim(min(self.width_error), max(self.width_error))
+        # ax.set_ylim(min(self.width_error), max(self.width_error))
         fig.savefig(os.path.join(self.plots_dir, "errors", "errorWidth.png"))
 
         ######## report plots

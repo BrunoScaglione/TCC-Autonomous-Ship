@@ -213,7 +213,7 @@ class WaveFilter(Node):
             ax.plot(t, self.filtered_state_history[i])
             ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(filtered_state_props[i]["ylabel"])
-            ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
+            # ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
             fig.savefig(os.path.join(self.plots_dir, fs_dir, filtered_state_props[i]["file"]))
         
         bode_dir = "bodePlots"
@@ -252,7 +252,7 @@ class WaveFilter(Node):
             db = 20*np.log10(np.maximum(np.abs(h), 1e-5))
             axGain.semilogx(w, db)
             axGain.set_title('Gain')
-            axGain.set_ylim(min(db), max(db))
+            # axGain.set_ylim(min(db), max(db))
             axGain.axes.get_xaxis().set_visible(False)
             axGain.set_ylabel("Gain [dB]")                          
 
@@ -261,7 +261,7 @@ class WaveFilter(Node):
             negative_phase = [(-phase - 180) if phase > 0 else phase for phase in np.rad2deg(np.angle(h))]
             axPhase.semilogx(w, negative_phase)
             axPhase.set_title('Phase')
-            axPhase.set_ylim(min(negative_phase), 0)
+            # axPhase.set_ylim(min(negative_phase), 0)
             axPhase.set_xlabel("Frequency [Hz]")
             axPhase.set_ylabel("Phase [deg]")
 

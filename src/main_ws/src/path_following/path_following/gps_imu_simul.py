@@ -246,7 +246,7 @@ class GpsImuSimulator(Node):
                 ax.plot(t, history[j])
                 ax.set_xlabel("t [s]")
                 ax.set_ylabel(props[j]["ylabel"])
-                ax.set_ylim(min(history[j]), max(history[j]))
+                # ax.set_ylim(min(history[j]), max(history[j]))
 
                 fig.savefig(os.path.join(self.plots_dir, dir, props[j]["file"]))
         

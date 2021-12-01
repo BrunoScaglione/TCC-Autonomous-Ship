@@ -257,7 +257,7 @@ class SurgeController(Node):
         ax.plot(t, self.thrust_history)
         ax.set_xlabel("t [s]")
         ax.set_ylabel(r"$\tau_1\;[N]$")
-        ax.set_ylim(min(self.thrust_history), max(self.thrust_history))
+        # ax.set_ylim(min(self.thrust_history), max(self.thrust_history))
 
         graphics_file = "thrustForce.png"
         fig.savefig(os.path.join(self.plots_dir, graphics_file))
