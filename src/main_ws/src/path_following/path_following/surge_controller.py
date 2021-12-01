@@ -235,7 +235,10 @@ class SurgeController(Node):
         elif angle_dif < - np.pi:
             angle_dif = np.pi + (self.last_waypoint_yaw_angle%np.pi-craft_steady_state_yaw_angle%np.pi)
         
-        est_time_corrected = self.est_time_correct_tuning_factor*(abs(angle_dif)/2*np.pi + 1)*self.last_waypoint_surge_velocity*est_time
+        # est_time_corrected = est_time
+        # est_time_corrected = self.est_time_correct_tuning_factor*(abs(angle_dif)/2*np.pi + 1)*self.last_waypoint_surge_velocity*est_time
+        # est_time_corrected = self.est_time_correct_tuning_factor*(abs(angle_dif)/2*np.pi + 1)*est_time
+        est_time_corrected = self.est_time_correct_tuning_factor*(abs(angle_dif)/2*np.pi + 1)*est_time*(1/abs(np.cos(craft_steady_state_yaw_angle)))
 
         return est_time_corrected
 
@@ -254,7 +257,7 @@ class SurgeController(Node):
         ax.plot(t, self.thrust_history)
         ax.set_xlabel("t [s]")
         ax.set_ylabel(r"$\tau_1\;[N]$")
-        ax.set_ylim(min(self.thrust_history), max(self.thrust_history))
+        # ax.set_ylim(min(self.thrust_history), max(self.thrust_history))
 
         graphics_file = "thrustForce.png"
         fig.savefig(os.path.join(self.plots_dir, graphics_file))

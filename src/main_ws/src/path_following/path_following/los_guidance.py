@@ -30,7 +30,7 @@ class LosGuidance(Node):
         # los parameters
         self.SHIP_LENGHT = 186.4
         # los radius
-        self.R = self.SHIP_LENGHT*2 
+        self.R = self.SHIP_LENGHT*2
 
         ###########################################
         # VERY IMPORTANT, CHANGING THIS VALUE ALLOWS TRADEOFF
@@ -215,7 +215,12 @@ class LosGuidance(Node):
             beta = math.radians(90) - zeta
             alfa = beta - (theta - math.radians(90))
             self.get_logger().info('alfa: %f' % alfa)
-            if self.path_error[-1] > 0:
+            if self.path_error[-1] == 0:
+                if math.radians(90) < theta < math.radians(180):
+                    return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+                else:
+                    return self.path_error[-1] - abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            elif self.path_error[-1] > 0:
                 return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
             else:
                 return self.path_error[-1] + -abs((self.SHIP_LENGHT/2)*np.cos(alfa))
@@ -224,7 +229,12 @@ class LosGuidance(Node):
             chi = theta - self.desired_steady_state_yaw_angles[idx-1]
             alfa = math.radians(90) - chi
             self.get_logger().info('alfa: %f' % alfa)
-            if self.path_error[-1] > 0:
+            if self.path_error[-1] == 0:
+                if 0 <= theta <= math.radians(90):
+                    return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+                else:
+                    return self.path_error[-1] - abs((self.SHIP_LENGHT/2)*np.cos(alfa))
+            elif self.path_error[-1] > 0:
                 return self.path_error[-1] + abs((self.SHIP_LENGHT/2)*np.cos(alfa))
             else:
                 return self.path_error[-1] + -abs((self.SHIP_LENGHT/2)*np.cos(alfa))
@@ -426,7 +436,7 @@ class LosGuidance(Node):
             ax.plot(t, self.desired_values_history['values'][i])
             ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(desired_values_props[i]["ylabel"])
-            ax.set_ylim(min(self.desired_values_history['values'][i]), max(self.desired_values_history['values'][i]))
+            # ax.set_ylim(min(self.desired_values_history['values'][i]), max(self.desired_values_history['values'][i]))
 
             fig.savefig(os.path.join(self.plots_dir, ss_dir, desired_values_props[i]["file"]))
 
@@ -449,7 +459,7 @@ class LosGuidance(Node):
         ax.plot(t, self.path_error)
         ax.set_xlabel("t [s]")
         ax.set_ylabel("path error [m]")
-        ax.set_ylim(min(self.path_error), max(self.path_error))
+        # ax.set_ylim(min(self.path_error), max(self.path_error))
         fig.savefig(os.path.join(self.plots_dir, "errors", "errorPath.png"))
 
         fig, ax = plt.subplots(1)
@@ -457,8 +467,24 @@ class LosGuidance(Node):
         ax.plot(t, self.width_error)
         ax.set_xlabel("t [s]")
         ax.set_ylabel("width error [m]")
-        ax.set_ylim(min(self.width_error), max(self.width_error))
+        # ax.set_ylim(min(self.width_error), max(self.width_error))
         fig.savefig(os.path.join(self.plots_dir, "errors", "errorWidth.png"))
+
+        ######## report plots
+
+        # clean before
+        files = glob.glob(os.path.join(self.plots_dir, "reportPlots", "losGuidance", '*.png'))
+        for f in files:
+            os.remove(f)
+
+        fig, ax = plt.subplots(1)
+        ax.set_title("Errors")
+        ax.plot(t, self.path_error)
+        ax.plot(t, self.width_error)
+        ax.set_xlabel("t [s]")
+        ax.set_ylabel("error [m]")
+        ax.legend([r"$cross-track$ error", r"$width$ error"])
+        fig.savefig(os.path.join(self.plots_dir, "reportPlots", "losGuidance", "errors.png"))
 
     def print_metrics(self):
         mean_path_error = np.mean(np.abs(self.path_error))

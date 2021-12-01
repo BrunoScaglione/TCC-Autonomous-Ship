@@ -246,9 +246,34 @@ class GpsImuSimulator(Node):
                 ax.plot(t, history[j])
                 ax.set_xlabel("t [s]")
                 ax.set_ylabel(props[j]["ylabel"])
-                ax.set_ylim(min(history[j]), max(history[j]))
+                # ax.set_ylim(min(history[j]), max(history[j]))
 
                 fig.savefig(os.path.join(self.plots_dir, dir, props[j]["file"]))
+        
+        ############## report plots
+        files = glob.glob(os.path.join(self.plots_dir, "reportPlots", "gpsImuSimul", '*.png'))
+        for f in files:
+            os.remove(f)
+
+        # u simulated and u filtered together
+        fig, ax = plt.subplots(1)
+        ax.set_title("Linear Velocity U")
+        ax.plot(t, self.state_history[3])
+        ax.plot(t, self.simulated_state_history[3])
+        ax.set_xlabel(r"$t\;[s]$")
+        ax.set_ylabel("u [m/s]")
+        ax.legend([r"$u$ real", r"$u$ from sensor"])
+        fig.savefig(os.path.join(self.plots_dir, "reportPlots", "gpsImuSimul", "surgeReal&Simulated.png"))
+
+        # theta simulated and theta filtered together
+        fig, ax = plt.subplots(1)
+        ax.set_title(r"Angular Position $\theta$")
+        ax.plot(t, self.state_history[2])
+        ax.plot(t, self.simulated_state_history[2])
+        ax.set_xlabel("t [s]")
+        ax.set_ylabel(r"$\theta\;[rad]$")
+        ax.legend([r"$\theta$ real", r"$\theta$ from sensor"])
+        fig.savefig(os.path.join(self.plots_dir, "reportPlots", "gpsImuSimul", "yawReal&Simulated.png"))
 
 def main(args=None):
     try:

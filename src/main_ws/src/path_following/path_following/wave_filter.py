@@ -213,7 +213,7 @@ class WaveFilter(Node):
             ax.plot(t, self.filtered_state_history[i])
             ax.set_xlabel(r"$t\;[s]$")
             ax.set_ylabel(filtered_state_props[i]["ylabel"])
-            ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
+            # ax.set_ylim([min(self.filtered_state_history[i]), max(self.filtered_state_history[i])])
             fig.savefig(os.path.join(self.plots_dir, fs_dir, filtered_state_props[i]["file"]))
         
         bode_dir = "bodePlots"
@@ -252,7 +252,7 @@ class WaveFilter(Node):
             db = 20*np.log10(np.maximum(np.abs(h), 1e-5))
             axGain.semilogx(w, db)
             axGain.set_title('Gain')
-            axGain.set_ylim(min(db), max(db))
+            # axGain.set_ylim(min(db), max(db))
             axGain.axes.get_xaxis().set_visible(False)
             axGain.set_ylabel("Gain [dB]")                          
 
@@ -261,11 +261,37 @@ class WaveFilter(Node):
             negative_phase = [(-phase - 180) if phase > 0 else phase for phase in np.rad2deg(np.angle(h))]
             axPhase.semilogx(w, negative_phase)
             axPhase.set_title('Phase')
-            axPhase.set_ylim(min(negative_phase), 0)
+            # axPhase.set_ylim(min(negative_phase), 0)
             axPhase.set_xlabel("Frequency [Hz]")
             axPhase.set_ylabel("Phase [deg]")
 
             fig.savefig(os.path.join(self.plots_dir, bode_dir, filter['file']))
+
+        ############## report plots
+        files = glob.glob(os.path.join(self.plots_dir, "reportPlots", "waveFilter", '*.png'))
+        for f in files:
+            os.remove(f)
+
+        # u simulated and u filtered together
+        fig, ax = plt.subplots(1)
+        ax.set_title("Linear Velocity U")
+        ax.plot(t, self.simulated_state_history[3])
+        ax.plot(t, self.filtered_state_history[3])
+        ax.set_xlabel(r"$t\;[s]$")
+        ax.set_ylabel("u [m/s]")
+        ax.legend([r"$u$ from sensor", r"$u$ filtered (notch and low-pass)"])
+        fig.savefig(os.path.join(self.plots_dir, "reportPlots", "waveFilter", "surgeSimulated&Filtered.png"))
+
+        # theta simulated and theta filtered together
+        fig, ax = plt.subplots(1)
+        ax.set_title(r"Angular Position $\theta$")
+        ax.plot(t, self.simulated_state_history[2])
+        ax.plot(t, self.filtered_state_history[2])
+        ax.set_xlabel("t [s]")
+        ax.set_ylabel(r"$\theta\;[rad]$")
+        ax.legend([r"$\theta$ from sensor", r"$\theta$ filtered (notch and low-pass)"])
+        fig.savefig(os.path.join(self.plots_dir, "reportPlots", "waveFilter", "yawSimulated&Filtered.png"))
+
 
 def main(args=None):
     try:

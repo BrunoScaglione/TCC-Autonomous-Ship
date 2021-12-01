@@ -100,7 +100,7 @@ class ControlAllocation(Node):
         ax.plot(t, self.propeller_history)
         ax.set_xlabel("t [s]")
         ax.set_ylabel(r"$n_p\;[Hz]$")
-        ax.set_ylim(min(self.propeller_history),max(self.propeller_history))
+        # ax.set_ylim(min(self.propeller_history),max(self.propeller_history))
 
         graphics_file = "propellerRotation.png"
         fig.savefig(os.path.join(self.plots_dir, graphics_file))

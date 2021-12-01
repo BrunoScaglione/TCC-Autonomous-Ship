@@ -168,7 +168,7 @@ class YawController(Node):
         ax.plot(t, self.rudder_angle_history)
         ax.set_xlabel("t [s]")
         ax.set_ylabel(r"$\delta\;[rad\;(from south clockwise)]$")
-        ax.set_ylim(min(self.rudder_angle_history), max(self.rudder_angle_history))
+        # ax.set_ylim(min(self.rudder_angle_history), max(self.rudder_angle_history))
 
         fig.savefig(os.path.join(self.plots_dir, "rudderAngle.png"))
 
