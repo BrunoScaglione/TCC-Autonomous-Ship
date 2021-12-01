@@ -267,6 +267,32 @@ class WaveFilter(Node):
 
             fig.savefig(os.path.join(self.plots_dir, bode_dir, filter['file']))
 
+        ############## report plots
+        files = glob.glob(os.path.join(self.plots_dir, "reportPlots", "waveFilter", '*.png'))
+        for f in files:
+            os.remove(f)
+
+        # u simulated and u filtered together
+        fig, ax = plt.subplots(1)
+        ax.set_title("Linear Velocity U")
+        ax.plot(t, self.simulated_state_history[3])
+        ax.plot(t, self.filtered_state_history[3])
+        ax.set_xlabel(r"$t\;[s]$")
+        ax.set_ylabel("u [m/s]")
+        ax.legend([r"$u$ from sensor", r"$u$ filtered (notch and low-pass)"])
+        fig.savefig(os.path.join(self.plots_dir, "reportPlots", "waveFilter", "surgeSimulated&Filtered.png"))
+
+        # theta simulated and theta filtered together
+        fig, ax = plt.subplots(1)
+        ax.set_title(r"Angular Position $\theta$")
+        ax.plot(t, self.simulated_state_history[2])
+        ax.plot(t, self.filtered_state_history[2])
+        ax.set_xlabel("t [s]")
+        ax.set_ylabel(r"$\theta\;[rad]$")
+        ax.legend([r"$\theta$ from sensor", r"$\theta$ filtered (notch and low-pass)"])
+        fig.savefig(os.path.join(self.plots_dir, "reportPlots", "waveFilter", "yawSimulated&Filtered.png"))
+
+
 def main(args=None):
     try:
         rclpy.init(args=args)

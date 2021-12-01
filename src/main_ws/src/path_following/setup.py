@@ -24,6 +24,10 @@ setup(
         (os.path.join('share', package_name, 'plots', 'setpoints'), []),
         (os.path.join('share', package_name, 'plots', 'bodePlots'), []),
         (os.path.join('share', package_name, 'plots', 'errors'), []),
+        (os.path.join('share', package_name, 'plots', 'reportPlots'), []),
+        (os.path.join('share', package_name, 'plots', 'reportPlots', 'waveFilter'), []),
+        (os.path.join('share', package_name, 'plots', 'reportPlots', 'gpsImuSimul'), []),
+        (os.path.join('share', package_name, 'plots', 'reportPlots', 'losGuidance'), []),
         (os.path.join('share', package_name), glob('launch/*.launch.py'))
     ],
     install_requires=['setuptools'],
