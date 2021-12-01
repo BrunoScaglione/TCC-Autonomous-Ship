@@ -166,16 +166,16 @@ class LosGuidance(Node):
         elif (wy_next - wy) == 0:
             passed_wnext = True if (wx_next-wx)*(x - wx_next) > 0 else False
         else:
-            a = (wy_next - wy)/(wx_next - wx)
-            self.get_logger().info('a: %f' % a)
-            a_wnext = -a
+            c = (wy_next - wy)/(wx_next - wx)
+            self.get_logger().info('c: %f' % c)
+            a_wnext = -1/c
             b_wnext = wy_next - a_wnext*wx_next
 
             passed_wnext = True if (wx_next-wx)*a_wnext*(a_wnext*x + b_wnext - y) > 0 \
                 else False
 
         self.get_logger().info('passed_wnext: True') if passed_wnext else \
-            self.get_logger().info('passed_wnext: False') 
+            self.get_logger().info('passed_wnext: False')
             
         return passed_wnext 
 
@@ -268,7 +268,7 @@ class LosGuidance(Node):
             positive_error = None
             not_between_waypoints = False
             if (wy1 - wy2) == 0:
-                if x < wx2:
+                if (wx2-wx1)*(x-wx2) < 0:
                     xi = x
                     yi = wy2
 
@@ -276,7 +276,7 @@ class LosGuidance(Node):
                 else:
                     not_between_waypoints = True
             elif (wx1 - wx2) == 0:
-                if y < wy2:
+                if (wy2-wy1)*(y-wy2) < 0:
                     xi = wx2
                     yi = y
 
@@ -286,10 +286,11 @@ class LosGuidance(Node):
             else:
                 c = (wy1 - wy2)/(wx1 - wx2)
                 d = wy1 - c*wx1   
-                a = - c              
+                a = -1/c              
                 b = y - a*x
                 e = wy2 - a*wx2
-                if y < a*x + e:
+                
+                if (wx2 - wx1)*a*(a*x + e - y) < 0:
                     # craft changed from waypoint a to waypoint b, but hasnt passed 
                     # waypoint a yet, so error will be relative to line that goes to waypoint a
                     # waypoint a is w, waypoint b is w_next, and waypoint before a is w_before
@@ -317,7 +318,7 @@ class LosGuidance(Node):
             else:
                 c = (wy1 - wy2)/(wx1 - wx2)
                 d = wy1 - c*wx1   
-                a = - c              
+                a = -1/c              
                 b = y - a*x
                 # craft changed from waypoint a to waypoint b, but hasnt passed 
                 # waypoint a yet, so error will be relative to line that goes to waypoint a
