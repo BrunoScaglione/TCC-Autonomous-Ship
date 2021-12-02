@@ -27,50 +27,31 @@ class WaveFilter(Node):
         self.filtered_state_history = [[],[],[],[],[],[]]
         self.simulated_state_history = [[],[],[],[],[],[]]
 
-        #considering wn = [0.4, 0.63, 1]
-        #self.num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
-        #self.den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
-
-        #considering wn = [0.52124 - 0.23, 0.52124, 0.52124 + 0.37]
-        self.num = np.array([1, 2.385, 2.868, 1.892, 0.758, 0.1659, 0.0183])
-        self.den = np.array([1, 3.407, 4.655, 3.255, 1.228, 0.237, 0.0183])
-
-        # obs: low pass at 10Hz (like Fossen) is not even possible because the state is
-        # sampled at 10Hz (can only work with <5Hz)
-        # Fossen's 3 2order cascades: [0.4rad/s, 0.63rad/s, 1rad/s])
-        # [0.4rad/s, 0.63rad/s, 1rad/s]) == [0.063Hz, 0.100Hz, 0.159Hz])
-        # p23 wave period is 12 seconds -> freq is 0.08333333333 Hz
-
-        ########### <pedro> ################
-        # soh vai mudar o lado direito dessa linha aqui!!(comenta a linha em vez de apagar)
-        # o output seu vai ser do tipo (z,p,k). 
-        # Usar a funcao zpk2sos(z,p,k) que converte pra sos (tipo que esta feito abaixo)
-
         self.z, self.p, self.k = signal.tf2zpk(self.num, self.den)
 
         self.z2, self.p2, self.k2 = signal.bilinear_zpk(self.z, self.p, self.k, 10)
 
+        #considering wn = [0.4, 0.63, 1]
+        #self.num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
+        #self.den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
+
         # wave is at 0.083 Hz or 0.52124 rad/s which is inside the band, but in the edge 
         # exact fossens frequencies
-        # self.sos_notch_butter = signal.butter(6, [0.063, 0.159], 'bandstop', fs=10, output='sos')
-        # centralized on our wave frequency (fossen's but shifted)
 
-        ##################### <pedro/> ##############
-
-        #sos from bilinear filter signal
-        self.sos_notch_fossen = signal.zpk2sos(self.z2, self.p2, self.k2)
-        self.zi_notch_fossen = signal.sosfilt_zi(self.sos_notch_fossen)
-
-        self.sos_notch_butter = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
-        self.zi_notch_butter = signal.sosfilt_zi(self.sos_notch_butter)
+        #considering wn = [0.52124 - 0.23, 0.52124, 0.52124 + 0.37]
+        # self.num = np.array([1, 2.385, 2.868, 1.892, 0.758, 0.1659, 0.0183])
+        # self.den = np.array([1, 3.407, 4.655, 3.255, 1.228, 0.237, 0.0183])
 
         # Fossen notch                                              
-        num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
-        den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
+        num = np.array([1, 2.385, 2.868, 1.892, 0.758, 0.1659, 0.0183])
+        den = np.array([1, 3.407, 4.655, 3.255, 1.228, 0.237, 0.0183])
         z_s, p_s, k_s = signal.tf2zpk(num, den)
         z_z, p_z, k_z = signal.bilinear_zpk(z_s, p_s, k_s, 10)
         self.sos_notch_fossen = signal.zpk2sos(z_z, p_z, k_z)
         self.zi_notch_fossen = signal.sosfilt_zi(self.sos_notch_fossen)
+
+        self.sos_notch_butter = signal.butter(6, [0.046352285679, 0.14184525164], 'bandstop', fs=10, output='sos') 
+        self.zi_notch_butter = signal.sosfilt_zi(self.sos_notch_butter)
 
         # systems pole = 1/time constant is proxy for systems bandwith
         # systems pole is 0.0001592 Hz (based on my papaer, 63% of step response)
@@ -222,7 +203,7 @@ class WaveFilter(Node):
             {
                 'dtf': self.sos_notch_fossen,
                 'title': 'Wave filter - Frequency response',
-                'file': 'notchFilterBodePlot.png'
+                'file': 'notchFilterFossenBodePlot.png'
             },
             {
                 'dtf': self.sos_lowpass_butter,
@@ -231,7 +212,7 @@ class WaveFilter(Node):
             },
             {
                 'dtf': self.sos_notch_butter,
-                'title': 'Sensor noise filter - Frequency response',
+                'title': 'Wave filter - Frequency response',
                 'file': 'NotchFilterButterBodePlot.png'
             }
         ]
