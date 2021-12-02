@@ -113,12 +113,12 @@ class YawController(Node):
 
     def pid(self, theta_bar, theta_bar_dot, integrator=True):
         if integrator:
-            self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
             self.get_logger().info('self.theta_bar_int: %f' % self.theta_bar_int)
             rudder_angle = -self.Kp*theta_bar - self.Kd*theta_bar_dot - self.Ki*self.theta_bar_int
         else:
             rudder_angle = -self.Kp*theta_bar - self.Kd*theta_bar_dot
-        
+            
+        self.theta_bar_int = self.theta_bar_int + theta_bar*self.TIME_STEP
         return rudder_angle
 
     def yaw_control(self, theta, r):

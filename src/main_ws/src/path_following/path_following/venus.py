@@ -74,7 +74,7 @@ class Venus(Node):
         vessel_config = Vessel(
             position = self.initial_position,
             angle = 0,
-            size = Size(32, 186.4),
+            size = Size(32.2, 186.4),
             # could receive initial rudder angle from init_simul msg
             # but not urgent now, can be done later
             rudders=[Rudder(angle=0, length=0.1, visual_options={"color": "orange"})],
