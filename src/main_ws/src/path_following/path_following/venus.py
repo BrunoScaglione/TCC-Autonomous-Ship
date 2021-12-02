@@ -68,8 +68,8 @@ class Venus(Node):
     def venus_init(self):
         # GET MAPQUEST API KEY
         self.viewer = venus.viewer.Venus(mapquest_key = "1bZQGGHqFLQBezmB29WKAHTJKBXM0wDl", logging=True, port=6150)
-        # self.initial_position = GeoPos(-23.06255, -44.2772) # angra dos reis
-        self.initial_position = GeoPos(-23.992557, -46.318) # santos 
+        self.initial_position = GeoPos(-23.06255, -44.2772) # angra dos reis
+        # self.initial_position = GeoPos(-23.992557, -46.318) # santos 
         self.viewer.set_viewport(self.initial_position, 15)
         vessel_config = Vessel(
             position = self.initial_position,

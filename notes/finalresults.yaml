@@ -11,7 +11,7 @@
     - Velocity Waypoints - [3.0, 3.5, 4.0, 4.5, 5.0]
   - results:
     - mean path error: 
-      - run 1: 6.387
+      - run 1: 6.4
       - run 2: 6.442
       - run 3: 6.333
     - max path error:
