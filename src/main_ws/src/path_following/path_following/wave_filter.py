@@ -65,8 +65,8 @@ class WaveFilter(Node):
         self.zi_notch_butter = signal.sosfilt_zi(self.sos_notch_butter)
 
         # Fossen notch                                              
-        num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
-        den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
+        num = np.array([1, 2.385, 2.868, 1.892, 0.758, 0.1659, 0.0183])
+        den = np.array([1, 3.407, 4.655, 3.255, 1.228, 0.237, 0.0183])
         z_s, p_s, k_s = signal.tf2zpk(num, den)
         z_z, p_z, k_z = signal.bilinear_zpk(z_s, p_s, k_s, 10)
         self.sos_notch_fossen = signal.zpk2sos(z_z, p_z, k_z)
@@ -119,9 +119,9 @@ class WaveFilter(Node):
 
         # Wave filters
         # Butterworth notch filter
-        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_butter, sig, zi=sig[0]*self.zi_notch_butter)[0], self.simulated_state_history)
+        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_butter, sig, zi=sig[0]*self.zi_notch_butter)[0], self.simulated_state_history)
         # Fossen noth filter
-        # state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], self.simulated_state_history)
+        state_history_filtered = map(lambda sig: signal.sosfilt(self.sos_notch_fossen, sig, zi=sig[0]*self.zi_notch_fossen)[0], self.simulated_state_history)
         
         # Noise filter (low pass): remove high freq noise from white noise added by gps_imu_simul
         # comment line below when gps_imu_simul is not activated

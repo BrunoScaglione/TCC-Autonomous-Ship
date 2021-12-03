@@ -39,7 +39,7 @@ class LosGuidance(Node):
         # it considers waypoint was reached
         # tuned for:
         # self.R_ACCEPTANCE = 50 # use this for linear waypoints
-        self.R_ACCEPTANCE = self.SHIP_LENGHT*2  # use this for zigzag waypoints
+        self.R_ACCEPTANCE = self.SHIP_LENGHT*2  # use this forcolcon buil zigzag waypoints
         ############################################
 
         # final radius of accceptance
