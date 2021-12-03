@@ -27,10 +27,6 @@ class WaveFilter(Node):
         self.filtered_state_history = [[],[],[],[],[],[]]
         self.simulated_state_history = [[],[],[],[],[],[]]
 
-        self.z, self.p, self.k = signal.tf2zpk(self.num, self.den)
-
-        self.z2, self.p2, self.k2 = signal.bilinear_zpk(self.z, self.p, self.k, 10)
-
         #considering wn = [0.4, 0.63, 1]
         #self.num = np.array([1, 2.842, 4.07, 3.277, 1.623, 0.4523, 0.0635])
         #self.den = np.array([1, 4.06, 6.685, 5.709, 2.667, 0.6461, 0.0635])
