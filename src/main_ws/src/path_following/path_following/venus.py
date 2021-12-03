@@ -286,7 +286,7 @@ def main(args=None):
     except KeyboardInterrupt:
         print('Stopped with user interrupt')
     except SystemExit:
-        print('Stopped with user shutdown request')
+        pass
     except:
         print(traceback.format_exc())
     finally:
