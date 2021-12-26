@@ -24,15 +24,15 @@ Overview here
 * Windows 10
 * Python 3.6.8
 * Python public libraries specified in project_requirements.txt
-* pydyna (*pydyna is private to TPN*)
-* venus (*venus is private to TPN*)
+* pydyna (pydyna is a private Python library made by TPN)
+* venus (venus is a private Python library made by TPN)
 * ROS2 galactic
 * Chocolatey
 * vcredist2013
 * vcredist140
 * OpenSSL
 * Visual Studio 2019
-* DDS implementations
+* DDS implementation*
 * OpenCV
 * CMake
 * Qt5
