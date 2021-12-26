@@ -26,7 +26,7 @@ Overview here
 ## Structure (folders and files)
 
 The root directory:
-  - output &#8594; explanation.
+  - some_folder &#8594; explanation.
       - some_folder &#8594; exaplanation;
           - some_file &#8594; explanation;
           - some_file &#8594; explanation.
