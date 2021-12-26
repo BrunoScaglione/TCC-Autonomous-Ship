@@ -6,18 +6,18 @@
     Undergraduate Thesis for the obtention of the Mechatronics Engineering degree from the University of São Paulo (USP).
 </p>
 
-<p align="center">
-    Generall overview here
+<p >
+    This project develops the <i>pydyna_simple</i> package that encapsulates <i>pydyna's</i> maneuvering simulator in a <i>ROS2</i> node and enables taking advantage of it in the <i>ROS2</i> environment. There, it can be combined with multiple other packages natively and in modular fashion. In this structure, the project can also scale very well to a complex robotic system when more modules are added. The package proposition is done in the context of a proof-of-concept case study, where the aim is to provide enough demonstration of the capabilities that come along with the <i>ROS2</i> environment. It is a path-following scenario, similar to the ones in <i>fast-time</i> simulations done by TPN. The study case is encapsulated in the <i>path_following</i> package. Therefore, this repo holds two packages. An overview of these two packages is given below. 
 </p>
 
-<p align="center">
+<p>
     <strong>
         <i>pydyna_simple</i> package: 
     </strong>  
     The <i>pydyna_simple</i> package has the objective of integrating <i>pydyna</i> to <i>ROS2</i>. This package contains the <i>pydyna_simple</i> <i>node</i>, which runs the simulation. The package also includes a <i>launch</i> file that should be used to launch the <i>node</i>, and consequently, the simulation. A <i>config</i> folder contains the necessary archives to support <i>pydyna's</i> functioning and installation (the main files are the <i>.p3d</i> files of the vessels, and the <i>.whl</i> file of the <i>pydyna</i> library).
 </p>
 
-<p align="center">
+<p>
     <strong>
         <i>path_following</i> 
         package:
