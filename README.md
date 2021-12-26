@@ -23,7 +23,7 @@ Overview here
 
 * Windows 10
 * Python 3.6.8
-* Python public libraries specified in project_requirements.txt
+* Python public libraries specified in *project_requirements.txt*
 * pydyna (pydyna is a private Python library made by TPN)
 * venus (venus is a private Python library made by TPN)
 * ROS2 galactic
