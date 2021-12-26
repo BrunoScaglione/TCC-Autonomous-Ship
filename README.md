@@ -32,14 +32,14 @@ Overview here
 * vcredist140
 * OpenSSL
 * Visual Studio 2019
-* DDS implementation*<sup>1</sup> 
+* DDS implementation\*<sup>1</sup> 
 * OpenCV
 * CMake
 * Qt5
 * Graphviz
 * xmllint
 
-## Folder Structure
+## Folder structure
 
 The root directory:
   - some_folder &#8594; explanation.
@@ -50,7 +50,7 @@ The root directory:
           - some_file &#8594; explanation;
           - some_file &#8594; explanation.
 
-## Getting Started
+## Getting started
 
 * explanation of the command here:
 
@@ -64,7 +64,7 @@ The root directory:
    some_command
 ```
 
-## High Level Scripts
+## High level scripts
 
 ## Project Details
 
@@ -74,7 +74,11 @@ Our monograph, paper and slides are inside the *reports* folder.
 [Paper here](https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/reports/Paper.pdf).
 [Slides here](https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/reports/Slides.pdf).
 
-## Important Notes
+## Important notes
+
+\*<sup>1</sup> — explanation here <br/> 
+\*<sup>2</sup> — explanation here
+
 
 ## Authors
 
