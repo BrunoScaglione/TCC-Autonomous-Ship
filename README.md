@@ -14,11 +14,23 @@ Integrating a high fidelity ship maneuvering simulator with <i>ROS</i> : a path-
 
 ...
 
+## Folder Structure
+
+...
+
 ## Getting Started
 
 ...
 
-## Project details, equations, results and discussions
+## High Level Scripts
+
+...
+
+## Project Details
+
+...
+
+## Important Notes
 
 ...
 
