@@ -32,7 +32,7 @@ Overview here
 * vcredist140
 * OpenSSL
 * Visual Studio 2019
-* DDS implementation*
+* DDS implementation*<sup>1</sup> 
 * OpenCV
 * CMake
 * Qt5
@@ -40,8 +40,6 @@ Overview here
 * xmllint
 
 ## Folder Structure
-
-## Structure (folders and files)
 
 The root directory:
   - some_folder &#8594; explanation.
@@ -54,7 +52,13 @@ The root directory:
 
 ## Getting Started
 
-* to run the simulation, save csv and png files, and plot results:
+* explanation of the command here:
+
+```bash
+   some_command
+```
+
+* explanation of the command here:
 
 ```bash
    some_command
@@ -64,14 +68,14 @@ The root directory:
 
 ## Project Details
 
-Our monograph, paper and slides are inside the "reports" folder.
+Our monograph, paper and slides are inside the *reports* folder.
 
-[Monograph here](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
-[Paper here](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
-[Slides here](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
+[Monograph here](https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/reports/Monograph.pdf).
+[Paper here](https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/reports/Paper.pdf).
+[Slides here](https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/reports/Slides.pdf).
 
 ## Important Notes
 
 ## Authors
 
-Bruno Scaglione and Pedro Marzagão are the developers of the project. Here is Bruno's [linkedin profile](https://www.linkedin.com/in/bruno-scaglione-4412a0165/). Here is Pedro's [linkedin profile](https://www.linkedin.com/in/bruno-scaglione-4412a0165/).
+Bruno Scaglione and Pedro Marzagão are the developers of the project. Here is Bruno's [linkedin profile](https://www.linkedin.com/in/bruno-scaglione-4412a0165). Here is Pedro's [linkedin profile](https://www.linkedin.com/in/pedro-marzagao).
