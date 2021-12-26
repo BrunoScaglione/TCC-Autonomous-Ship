@@ -1,5 +1,5 @@
 <h1 align="center">
-Integrating a high fidelity ship maneuvering simulator with <i>ROS2</i> : a path-following case study
+    Integrating a high fidelity ship maneuvering simulator with <i>ROS2</i> : a path-following case study
 </h1>
 
 <p align="center">
@@ -7,10 +7,39 @@ Integrating a high fidelity ship maneuvering simulator with <i>ROS2</i> : a path
 </p>
 
 <p align="center">
-Overview here
+    Generall overview here
 </p>
 
+<p align="center">
+    <strong>
+        <i>pydyna_simple</i> package:
+    </strong>  
+        pydyna_simple package overview here.
+</p>
+
+<p align="center">
+    <strong>
+        <i>path_following</i> 
+        package:
+    </strong> 
+    path_following package overview here. 
+</p>
+
+
+<div align="center">
+    GIF here
+    <img 
+         src="https://google.com" 
+         width="200" 
+         height="200"
+    >
+</div>
+
 ## Features
+
+### *pydyna_simple* package
+
+### *path_following* package
 
 [//]: # (Add the features of your project here:)
 
@@ -53,6 +82,10 @@ The root directory:
 
 ## Getting started
 
+### *pydyna_simple* package
+
+### *path_following* package
+
 * explanation of the command here:
 
 ```bash
@@ -67,6 +100,10 @@ The root directory:
 
 ## High level scripts
 
+### *pydyna_simple* package
+
+### *path_following* package
+
 ## Project Details
 
 Our monograph, paper and slides are inside the *reports* folder.
@@ -79,7 +116,6 @@ Our monograph, paper and slides are inside the *reports* folder.
 
 \*<sup>1</sup> — explanation here <br/> 
 \*<sup>2</sup> — explanation here
-
 
 ## Authors
 
