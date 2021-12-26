@@ -44,9 +44,9 @@ The root directory:
 
 Our monograph, paper and slides are inside the "reports" folder.
 
-[Monograph:](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
-[Paper:](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
-[SLides:](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
+[Monograph here](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
+[Paper here](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
+[Slides here](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
 
 ## Important Notes
 
