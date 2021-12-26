@@ -51,7 +51,13 @@ The root directory:
 
 ## Project Details
 
+<<<<<<< HEAD
 ...
+=======
+[Monograph here](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
+[Paper here](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
+[Slides here](https://github.com/BrunoScaglione/Backdoor-Attack-Simulation/blob/main/Relatorio_Redes___Entrega_2.pdf).
+>>>>>>> 9fc1396c816f5aa9c698f4e946e6040f4f70ef0e
 
 ## Important Notes
 
