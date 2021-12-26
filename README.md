@@ -30,8 +30,8 @@
     GIF here
     <img 
          src="https://google.com" 
-         width="200" 
-         height="200"
+         width="500" 
+         height="500"
     >
 </div>
 
