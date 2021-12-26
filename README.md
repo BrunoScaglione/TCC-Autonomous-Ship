@@ -22,12 +22,14 @@
         <i>path_following</i> 
         package:
     </strong> 
-    path_following package overview here. 
+    The <i>path_following</i> package implements a ship that follows a path defined by <i>waypoints</i>. Each  <i>waypoint</i> is a tuple <i>(x, y, u)</i> where <i>x</i> and <i>y</i> define the location in the 2D plane and <i>u</i> is the desired velocity when passing through the aforementioned location. It is a complement to <i>pydyna_simple</i> package as it integrates a GNC (Guidance-Navigation-Control) architecture to <i>pydyna's</i> dynamical system. This package not only complements <i>pydyna</i> as a way of implementing it into the architecture of a path following vessel, but also includes a GUI to visualize the        vessel. Given the starting state and the desired <i>waypoints</i>, the vessel will then follow a path given by straight lines connecting the <i>waypoints</i> positions, following also the surge velocity given by the <i>waypoints</i> velocities. <br>
 </p>
 
+<p align="center">
+    Explanation of GIF here.
+</p>
 
 <div align="center">
-    GIF here
     <img 
          src="https://google.com" 
          width="500" 
@@ -49,7 +51,17 @@
 
 ### *path_following* package
 
-[//]: # (Add the features of your project here:)
+<p align="center">
+    Explanation of architecture image here.
+</p>
+
+<div align="center">
+    <img 
+         src="https://google.com" 
+         width="500" 
+         height="500"
+    >
+</div>
 
 <!-- - **/initialCondition** — POST request that sends the initial state of the vessel;
 - **/waypoints** — POST request that sends the desired waypoints of the vessel;
@@ -94,13 +106,13 @@
 
 ### *path_following* package
 
-* explanation of the command here:
+* Explanation of the command here:
 
 ```bash
    some_command
 ```
 
-* explanation of the command here:
+* Explanation of the command here:
 
 ```bash
    some_command
@@ -122,7 +134,7 @@ Our monograph, paper and slides are inside the *reports* folder.
 
 ## Important notes
 
-\*<sup>1</sup> — explanation of DDS problem here <br/> 
+\*<sup>1</sup> — explanation of DDS problem here <br> 
 \*<sup>2</sup> — explanation here
 
 ## Additional material on *ROS2*
