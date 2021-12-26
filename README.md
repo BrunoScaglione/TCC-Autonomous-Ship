@@ -14,10 +14,11 @@ Overview here
 
 [//]: # (Add the features of your project here:)
 
-- **some_feature** — explanation;
-- **some_feature** — explanation;
-- **some_feature** — explanation;
-- **some_feature** — explanation.
+- **/initialCondition** — POST request that sends the initial state of the vessel;
+- **/waypoints** — POST request that sends the desired waypoints of the vessel;
+- **/start** — GET request that starts the simulation;
+- **/stop** — GET request that kills *pydyna* node;
+- **/shutdown** — GET request that kills all the nodes, except for the backend.
 
 ## Requirements
 
