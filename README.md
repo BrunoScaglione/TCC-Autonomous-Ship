@@ -125,7 +125,7 @@ In order to run the simulation with desired parameters, the user must send two *
 The user can also end the simulation in two ways: killing only *pydyna* node or killing all nodes except for *backend* node. The first one is achieved with a **GET** request to **/end**, illustrated in Figure **X**; while the second option is achieved with a **GET** request to **/shutdown**, illustrated in Figure **X**.
 
 <p align="center">
-    <b>POST<b> request to <b>/initial_condition<b>
+    <b>POST</b> request to <b>/initial_condition</b>
 </p>
 
 <div align="center">
@@ -135,7 +135,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 </div>
 
 <p align="center">
-    <b>POST<b> request to <b>/waypoints<b>
+    <b>POST</b> request to <b>/waypoints</b>
 </p>        
        
 <div align="center">
@@ -145,7 +145,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 </div>
         
 <p align="center">
-    <b>GET<b> request to <b>/start<b>
+    <b>GET</b> request to <b>/start</b>
 </p>          
 
 <div align="center">
@@ -155,7 +155,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 </div>
 
 <p align="center">
-    <b>GET<b> request to <b>/end<b>
+    <b>GET</b> request to <b>/end</b>
 </p>    
         
 <div align="center">
@@ -165,7 +165,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 </div>
 
 <p align="center">
-    <b>GET<b> request to <b>/shutdown<b>
+    <b>GET</b> request to <b>/shutdown</b>
 </p>            
         
 <div align="center">
