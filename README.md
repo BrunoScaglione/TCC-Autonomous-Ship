@@ -49,7 +49,7 @@
 
 With this package, the user is able to start the simulation with a *request* using a service containing the initial state of the vessel, propeller rotation and yaw angle. After the simulation is initialized, the user can give two inputs to *pydyna*: propeller rotation and the rudder angle. The *pydyna* node subscribes to these two inputs as *topics*, runs one step of the simulation only when it has received both of these inputs, and publishes the next state of the vessel to the *state topic*. Ending the simulation is also an option and can be done with one of two topics: *end* or *shutdown*. The last relates to the *path_following* package that will presented afterwards.
 
-To start a simulation, a request has to be sent using the service **InitValues.srv**, shown in _**Source Code 1**_. This service is a custom *srv* file. This file contains a request and response in *yaml* format. Request and response are separated by a dashed line. The request contains four properties: **initial_state**, **waypoints**, **surge** and **yaw**. The **initial_state** property contains the initial state of the vessel. The **waypoints** property is not used in tis case. The **surge** and **yaw** properties are the inital values for propeller rotation and rudder angle, respectively. The values to the right are the default values for the properties.
+To start a simulation, a request has to be sent using the service **InitValues.srv**, shown in _**Source Code 1**_. This service is a custom *srv* file. This file contains a request and response in *yaml* format. Request and response are separated by a dashed line. The request contains four properties: **initial_state**, **waypoints**, **surge** and **yaw**. The **initial_state** property contains the initial state of the vessel. The **waypoints** property is not used in this case. The **surge** and **yaw** properties are the inital values for propeller rotation and rudder angle, respectively. The values to the right are the default values for the properties.
 
 The three, mentioned earlier, *topics* are: **propeller_rotation**, **rudder_angle** and **state**; and are defined by their *msg* files. Propeller rotation and rudder angle use the standard library *Float32 msg file*. The state, seen in _**Source Code 2**_, uses a custom *yaml-styled msg* file that contains **time**, **position** and **velocity** properties, which are *msg* files by themselves. Position is a set of three *Float32* properties: **x**, **y** and **theta**, seen in _**Source Code 3**_. Velocity, in the same way, is defined by having **u**, **v** and **r**, seen in _**Source Code 4**_. The values to the right are the default values for the properties.
 
@@ -58,7 +58,7 @@ package is called *path_following_interfaces*. After building the aforementioned
 data structures can be imported in nodes as *Python* objects.
 
 
-#### Source Code 1 - **InitValues.serv**
+#### Source Code 1 - **InitValues.srv**
 ```python
 #request
 State initial_state
@@ -108,7 +108,7 @@ float32 r 0.0
     >
 </div>
 
-With the nodes active, it’s possible to visualize the vessel in <http://localhost:6150>. Using the packages’ **HTTP API**, then send requests for the start of the simulation, the initial state of the vessel, and the desired *waypoints* to <http:localhost:5000>.
+With the nodes active, it’s possible to visualize the vessel in <http://localhost:6150>. Using the packages’ **HTTP API**, then send requests to start the simulation, the initial state of the vessel, and the desired *waypoints* to <http:localhost:5000>.
 
 In order to run the simulation with desired parameters, the user must send two **POST** and one **GET** request. Send the initial state to **/initial_condition**, illustrated in Figure **X**, and desired waypoints to **/waypoints**, illustrated in Figure **X**. In **/waypoints**, the “from_gui” property, for the time being, is always zero. This is because the *waypoints* are given solely through the HTTP Client, however, in future work the value 1 will say to the backend that it should ignore the *waypoints* in the *payload*, and instead get them from the GUI’s application server. Then, the user sends a **GET** request to **/start**, illustrated in Figure **X**.
 
