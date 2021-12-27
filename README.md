@@ -26,14 +26,12 @@
 </p>
 
 <p align="center">
-    Explanation of GIF here.
+    Example of the ship following a zigzag path (gif with speed increase).
 </p>
 
 <div align="center">
     <img 
-         src="https://google.com" 
-         width="500" 
-         height="500"
+         src="https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/readme_resources/zigzag.gif" 
     >
 </div>
 
@@ -52,14 +50,12 @@
 ### *path_following* package
 
 <p align="center">
-    Explanation of architecture image here.
+    GNC architecture of the <i>path_following</i> package.
 </p>
 
 <div align="center">
     <img 
-         src="https://google.com" 
-         width="500" 
-         height="500"
+         src="https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/readme_resources/architecture.png" 
     >
 </div>
 
