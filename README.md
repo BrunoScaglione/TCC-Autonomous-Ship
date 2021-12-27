@@ -114,7 +114,7 @@
    some_command
 ```
 
-## High level scripts
+## Useful scripts
 
 ### *pydyna_simple* package
 
