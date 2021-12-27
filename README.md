@@ -114,6 +114,55 @@ In order to run the simulation with desired parameters, the user must send two *
 
 The user can also end the simulation in two ways: killing only *pydyna* node or killing all nodes except for *backend* node. The first one is achieved with a **GET** request to **/end**, illustrated in Figure **X**; while the second option is achieved with a **GET** request to **/shutdown**, illustrated in Figure **X**.
 
+<p align="center">
+    <b>POST<b> request of <b>/initial_condition<b>
+</p>
+
+<div align="center">
+    <img 
+         src="https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/readme_resources/insomniaInitial.PNG" 
+    >
+</div>
+
+<p align="center">
+    <b>POST<b> request of <b>/waypoints<b>
+</p>        
+       
+<div align="center">
+    <img 
+         src="https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/readme_resources/insomniaWaypoints.PNG" 
+    >
+</div>
+        
+<p align="center">
+    <b>GET<b> request of <b>/start<b>
+</p>          
+
+<div align="center">
+    <img 
+         src="https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/readme_resources/startget.png" 
+    >
+</div>
+
+<p align="center">
+    <b>GET<b> request of <b>/end<b>
+</p>    
+        
+<div align="center">
+    <img 
+         src="https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/readme_resources/end_route.PNG" 
+    >
+</div>
+
+<p align="center">
+    <b>GET<b> request of <b>/shutdown<b>
+</p>            
+        
+<div align="center">
+    <img 
+         src="https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/readme_resources/shutdown_route.PNG" 
+    >
+</div>
 
 <!-- - **/initialCondition** — POST request that sends the initial state of the vessel;
 - **/waypoints** — POST request that sends the desired waypoints of the vessel;
