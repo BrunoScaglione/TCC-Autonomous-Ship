@@ -115,7 +115,7 @@ In order to run the simulation with desired parameters, the user must send two *
 The user can also end the simulation in two ways: killing only *pydyna* node or killing all nodes except for *backend* node. The first one is achieved with a **GET** request to **/end**, illustrated in Figure **X**; while the second option is achieved with a **GET** request to **/shutdown**, illustrated in Figure **X**.
 
 <p align="center">
-    <b>POST<b> request of <b>/initial_condition<b>
+    <b>POST<b> request to <b>/initial_condition<b>
 </p>
 
 <div align="center">
@@ -125,7 +125,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 </div>
 
 <p align="center">
-    <b>POST<b> request of <b>/waypoints<b>
+    <b>POST<b> request to <b>/waypoints<b>
 </p>        
        
 <div align="center">
@@ -135,7 +135,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 </div>
         
 <p align="center">
-    <b>GET<b> request of <b>/start<b>
+    <b>GET<b> request to <b>/start<b>
 </p>          
 
 <div align="center">
@@ -145,7 +145,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 </div>
 
 <p align="center">
-    <b>GET<b> request of <b>/end<b>
+    <b>GET<b> request to <b>/end<b>
 </p>    
         
 <div align="center">
@@ -155,7 +155,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 </div>
 
 <p align="center">
-    <b>GET<b> request of <b>/shutdown<b>
+    <b>GET<b> request to <b>/shutdown<b>
 </p>            
         
 <div align="center">
@@ -221,9 +221,64 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 
 ## Useful scripts
 
-### *pydyna_simple* package
+We made some scripts to facilitate the process of starting setting up the environment, building and running the packages. In order to use these scripts, it is necessary to follow these two steps:
 
+ 1. In helpers/configpublic.bat: fill all *placeholder* values with the actual paths;
+ 2. Change the name configpublic to config.
+ 
+ #### Source Code 5 - **configpublic.bat**
+ ```batch
+@REM ROS2 installation directory, where setup.bat is located
+set underlay_path="placeholder"
+@REM ROS2 worskpace source directory
+set ws_src_path="placeholder"
+@REM ROS2 workspace install directory, where local_setup.bat is located
+set overlay_path="placeholder"
+@REM ROS2 workspace directory
+set main_ws_path="placeholder"
+
+@REM pydyna_simple share directory: db folder
+set pydyna_pkg_db_path="placeholder"
+@REM pydyna_simple share directory: db>rosbags folder
+set pydyna_pkg_rosbags_path="placeholder"
+
+@REM path_following share directory: logs folder
+set path_pkg_logs_path="placeholder"
+@REM path_following share directory: db folder
+set pydyna_pkg_db_path="placeholder"
+
+@REM directory where http json payloads are being kept (only when using curl)
+set payloads_path="placeholder" 
+```
+
+### *pydyna_simple* package
+ 
+#### To build all the packages, run the following inside X64 Native Tools Comand Prompt for VS:
+```batch
+   call vsbuildall.bat
+```
+#### To source the worskpace (set environment variables relative to your workspace), always run the following when starting a new terminal (process):
+```batch
+   call overlay.bat
+```
+#### To run the *pydyna_simple* package, run the following in any terminal:
+```batch
+   call pydyna.bat
+```
 ### *path_following* package
+        
+#### To build all the packages, run the following inside X64 Native Tools Comand Prompt for VS:
+```batch
+   call vsbuildall.bat
+```
+#### To source the worskpace (set environment variables relative to your workspace), always run the following when starting a new terminal (process):
+```batch
+   call overlay.bat
+```
+#### To run the *path_following* package, run the following in any terminal:
+```batch
+   call path.bat
+```
 
 ## Project details
 
