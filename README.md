@@ -235,13 +235,13 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 
 ### *path_following* package
 
-* Explanation of the command here:
+#### Explanation of the command here:
 
 ```bash
    some_command
 ```
 
-* Explanation of the command here:
+#### Explanation of the command here:
 
 ```bash
    some_command
