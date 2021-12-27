@@ -193,14 +193,42 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 ## Folder structure
 
 **/** &#8594; root directory:
-  - **/some_folder1** &#8594; explanation:
-      - **/some_folder1/some_folder2** &#8594; exaplanation:
-          - some_file1 &#8594; explanation;
-          - some_file2 &#8594; explanation.
-      - **/some_folder1/some_folder3** &#8594; explanation:
-          - some_file3 &#8594; explanation;
-          - some_file4 &#8594; explanation.
-
+ - **/helpers** &#8594; explanation:
+      - **/helpers/payloads** &#8594; exaplanation:
+          - comments.md &#8594; explanation;
+          - initialCondition.json &#8594; explanation;
+          - waypointsHexagon.json &#8594; explanation;
+          - waypointsLinear.json &#8594; explanation;
+          - waypointsSantos.json &#8594; explanation;
+          - waypointsZigZag.json &#8594; explanation;
+      - client.bat &#8594; explanation;
+      - configpublic.bat &#8594; explanation;
+      - overlay.bat &#8594; explanation;
+      - path.bat &#8594; explanation;
+      - pydyna.bat &#8594; explanation;
+      - vsbuildall.bat &#8594; explanation;
+  - **/notes** &#8594; explanation:
+        - **/notes/pydyna_docs** &#8594; exaplanation;
+        - **/notes/ros2_notes** &#8594; exaplanation;
+  - **/readme_resources** &#8594; explanation;
+  - **/reports** &#8594; explanation:
+         - monograph.pdf &#8594; explanation;
+         - paper.pdf &#8594; explanation;
+         - slides.pdf &#8594; explanation;
+  - **/src** &#8594; explanation:
+         - **/src/experiments** &#8594; explanation:
+             - **/src/experiments/notch-filter** &#8594; explanation;
+             - **/src/experiments/surge-control** &#8594; explanation;
+             - **/src/experiments/yaw-cotrol** &#8594; explanation;
+         - **/src/main_ws** &#8594; explanation:
+             - **/src/main_ws/install** &#8594; explanation;
+                - **/src/main_ws/install/lib** &#8594; explanation;
+                - **/src/main_ws/install/share** &#8594; explanation;
+             - **/src/main_ws/src** &#8594; explanation;
+                - **/src/main_ws/src/path_following** &#8594; explanation;
+                - **/src/main_ws/src/path_following_interfaces** &#8594; explanation;
+                - **/src/main_ws/src/pydyna_simple** &#8594; explanation;
+        
 ## Getting started
 
 ### *pydyna_simple* package
