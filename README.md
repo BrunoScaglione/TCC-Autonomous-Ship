@@ -108,6 +108,13 @@ float32 r 0.0
     >
 </div>
 
+With the nodes active, it’s possible to visualize the vessel in <http://localhost:6150>. Using the packages’ **HTTP API**, then send requests for the start of the simulation, the initial state of the vessel, and the desired *waypoints* to <http:localhost:5000>.
+
+In order to run the simulation with desired parameters, the user must send two **POST** and one **GET** request. Send the initial state to **/initial_condition**, illustrated in Figure **X**, and desired waypoints to **/waypoints**, illustrated in Figure **X**. In **/waypoints**, the “from_gui” property, for the time being, is always zero. This is because the *waypoints* are given solely through the HTTP Client, however, in future work the value 1 will say to the backend that it should ignore the *waypoints* in the *payload*, and instead get them from the GUI’s application server. Then, the user sends a **GET** request to **/start**, illustrated in Figure **X**.
+
+The user can also end the simulation in two ways: killing only *pydyna* node or killing all nodes except for *backend* node. The first one is achieved with a **GET** request to **/end**, illustrated in Figure **X**; while the second option is achieved with a **GET** request to **/shutdown**, illustrated in Figure **X**.
+
+
 <!-- - **/initialCondition** — POST request that sends the initial state of the vessel;
 - **/waypoints** — POST request that sends the desired waypoints of the vessel;
 - **/start** — GET request that starts the simulation;
