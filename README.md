@@ -346,7 +346,7 @@ Our monograph, paper and slides are inside the *reports* folder.
 
 ## Important notes
 
-\*<sup>1</sup> — DDS stands for Data Distribution Service. ROS2 uses a DDS implementation to do it's communication. In theory, ROS2 already comes with a default DDS and there would be no necessity of further investigation. In practice however, we encountered problems and had to use a third-party DDS. We used *RTI Connext DDS*. To use it, we asked for a student's licence and followed the instructions provided.<br> 
+\*<sup>1</sup> DDS stands for Data Distribution Service. ROS2 uses a DDS implementation to do it's communication. In theory, ROS2 already comes with a default DDS and there would be no necessity of further investigation. In practice however, we encountered problems and had to use a third-party DDS. We used *RTI Connext DDS*. To use it, we asked for a student's licence and followed the instructions provided.<br> 
 
 ## Additional material on *ROS2*
 
