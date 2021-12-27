@@ -120,7 +120,7 @@
 
 ### *path_following* package
 
-## Project Details
+## Project details
 
 Our monograph, paper and slides are inside the *reports* folder.
 
