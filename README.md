@@ -37,7 +37,7 @@
 
 ## ROS2 terminology
 
-- ***node:*** independent processes that are able to send and receive data from each other;
+- ***Node:*** independent processes that are able to send and receive data from each other;
 - ***topic:*** one of the means in which nodes can send (by publishing to a *topic*) and receive (subscribing to a *topic*) data;
 - ***service:*** another mean of communication between *nodes* with a request and response pattern. Can be asynchronous or synchronous. In our application only asynchronous services are used;
 - ***msg and srv files:*** *msg* files define the data structure for *topics* and *srv* files for services. There are standard libraries with basic data types and structures available for use, but custom implementations are also needed in the application;
