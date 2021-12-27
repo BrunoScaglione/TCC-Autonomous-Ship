@@ -47,6 +47,16 @@
 
 ### *pydyna_simple* package
 
+With this package, the user is able to start the simulation with a *request* using a service containing the initial state of the vessel, propeller rotation and yaw angle. After the simulation is initialized, the user can give two inputs to *pydyna*: propeller rotation and the rudder angle. The *pydyna* node subscribes to these two inputs as *topics*, runs one step of the simulation only when it has received both of these inputs, and publishes the next state of the vessel to the *state topic*. Ending the simulation is also an option and can be done with one of two topics: *end* or *shutdown*. The last relates to the *path_following* package that will presented afterwards.
+
+To start a simulation, a request has to be sent using the service **InitValues.srv**. This service is a custom *srv* file. This file contains a request and response in *yaml* format. Request and response are separated by a dashed line. The request contains four properties: **initial_state**, **waypoints**, **surge** and **yaw**. The **initial_state** property contains the initial state of the vessel. The **waypoints** property is not used in tis case. The **surge** and **yaw** properties are the inital values for propeller rotation and rudder angle, respectively. The values to the right are the default values for the properties.
+
+The three, mentioned earlier, *topics* are: **propeller_rotation**, **rudder_angle** and **state**; and are defined by their *msg* files. Propeller rotation and rudder angle use the standard library *Float32 msg file*. The state uses a custom *yaml-styled msg* file that contains **time**, **position** and **velocity** properties, which are *msg* files by themselves. Position is a set of three *Float32* properties: **x**, **y** and **theta**. Velocity, in the same way, is defined by having **u**, **v** and **r**. The values to the right are the default values for the properties.
+
+All custom *msg* and *srv* files are defined and in a separate package for flexibility. This
+package is called *path_following_interfaces*. After building the aforementioned package, these
+data structures can be imported in nodes as *Python* objects.
+
 ### *path_following* package
 
 <p align="center">
