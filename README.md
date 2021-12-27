@@ -192,7 +192,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 
 ## Folder structure
 
-**/** &#8594; root directory:
+- **/** &#8594; root directory:
     - **/helpers** &#8594; explanation:
         - **/helpers/payloads** &#8594; exaplanation:
             - comments.md &#8594; explanation;
