@@ -221,7 +221,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 
 ## Useful scripts
 
-We made some scripts to facilitate the process of starting setting up the environment, building and running the packages. In order to use these scripts, it is necessary to follow these two steps:
+We made some scripts to facilitate the process of setting up the environment, building and running the packages. In order to use these scripts, it is necessary to follow these two steps:
 
  1. In helpers/configpublic.bat: fill all *placeholder* values with the actual paths;
  2. Change the name configpublic to config.
