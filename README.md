@@ -47,6 +47,16 @@
 
 ### *pydyna_simple* package
 
+<p align="center">
+      <i>rqt</i> graph of the <i>pydyna_simple</i> package. Topics are rectangles and nodes are elipses.
+</p>
+
+<div align="center">
+    <img 
+         src="https://github.com/BrunoScaglione/TCC-Autonomous-Ship/blob/main/readme_resources/pydyna_simple__graph.png" 
+    >
+</div>
+
 With this package, the user is able to start the simulation with a *request* using a service containing the initial state of the vessel, propeller rotation and yaw angle. After the simulation is initialized, the user can give two inputs to *pydyna*: propeller rotation and the rudder angle. The *pydyna* node subscribes to these two inputs as *topics*, runs one step of the simulation only when it has received both of these inputs, and publishes the next state of the vessel to the *state topic*. Ending the simulation is also an option and can be done with one of two topics: *end* or *shutdown*. The last relates to the *path_following* package that will presented afterwards.
 
 To start a simulation, a request has to be sent using the service **InitValues.srv**, shown in _**Source Code 1**_. This service is a custom *srv* file. This file contains a request and response in *yaml* format. Request and response are separated by a dashed line. The request contains four properties: **initial_state**, **waypoints**, **surge** and **yaw**. The **initial_state** property contains the initial state of the vessel. The **waypoints** property is not used in this case. The **surge** and **yaw** properties are the inital values for propeller rotation and rudder angle, respectively. The values to the right are the default values for the properties.
@@ -336,7 +346,7 @@ Our monograph, paper and slides are inside the *reports* folder.
 
 ## Important notes
 
-\*<sup>1</sup> — Explanation of the DDS problem here <br> 
+\*<sup>1</sup> — DDS stands for Data Distribution Service. ROS2 uses a DDS implementation to do it's communication. In theory, ROS2 already comes with a default DDS and there would be no necessity of further investigation. In practice however, we encountered problems and had to use a third-party DDS. We used *RTI Connext DDS*. To use it, we asked for a student's licence and followed the instructions provided.<br> 
 
 ## Additional material on *ROS2*
 
