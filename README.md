@@ -49,13 +49,52 @@
 
 With this package, the user is able to start the simulation with a *request* using a service containing the initial state of the vessel, propeller rotation and yaw angle. After the simulation is initialized, the user can give two inputs to *pydyna*: propeller rotation and the rudder angle. The *pydyna* node subscribes to these two inputs as *topics*, runs one step of the simulation only when it has received both of these inputs, and publishes the next state of the vessel to the *state topic*. Ending the simulation is also an option and can be done with one of two topics: *end* or *shutdown*. The last relates to the *path_following* package that will presented afterwards.
 
-To start a simulation, a request has to be sent using the service **InitValues.srv**. This service is a custom *srv* file. This file contains a request and response in *yaml* format. Request and response are separated by a dashed line. The request contains four properties: **initial_state**, **waypoints**, **surge** and **yaw**. The **initial_state** property contains the initial state of the vessel. The **waypoints** property is not used in tis case. The **surge** and **yaw** properties are the inital values for propeller rotation and rudder angle, respectively. The values to the right are the default values for the properties.
+To start a simulation, a request has to be sent using the service **InitValues.srv**, shown in _**Source Code 1**_. This service is a custom *srv* file. This file contains a request and response in *yaml* format. Request and response are separated by a dashed line. The request contains four properties: **initial_state**, **waypoints**, **surge** and **yaw**. The **initial_state** property contains the initial state of the vessel. The **waypoints** property is not used in tis case. The **surge** and **yaw** properties are the inital values for propeller rotation and rudder angle, respectively. The values to the right are the default values for the properties.
 
-The three, mentioned earlier, *topics* are: **propeller_rotation**, **rudder_angle** and **state**; and are defined by their *msg* files. Propeller rotation and rudder angle use the standard library *Float32 msg file*. The state uses a custom *yaml-styled msg* file that contains **time**, **position** and **velocity** properties, which are *msg* files by themselves. Position is a set of three *Float32* properties: **x**, **y** and **theta**. Velocity, in the same way, is defined by having **u**, **v** and **r**. The values to the right are the default values for the properties.
+The three, mentioned earlier, *topics* are: **propeller_rotation**, **rudder_angle** and **state**; and are defined by their *msg* files. Propeller rotation and rudder angle use the standard library *Float32 msg file*. The state, seen in _**Source Code 2**_, uses a custom *yaml-styled msg* file that contains **time**, **position** and **velocity** properties, which are *msg* files by themselves. Position is a set of three *Float32* properties: **x**, **y** and **theta**, seen in _**Source Code 3**_. Velocity, in the same way, is defined by having **u**, **v** and **r**, seen in _**Source Code 4**_. The values to the right are the default values for the properties.
 
 All custom *msg* and *srv* files are defined and in a separate package for flexibility. This
 package is called *path_following_interfaces*. After building the aforementioned package, these
 data structures can be imported in nodes as *Python* objects.
+
+
+#### Source Code 1 - **InitValues.serv**
+```python
+#request
+State initial_state
+Waypoints waypoints
+float32 surge 0.0
+float32 yaw 0.0
+---
+#response 
+float32 surge 0.0
+float32 yaw 0.0
+```
+
+#### Source Code 2 - **State.msg**
+```python
+# 3DOF state of the craft
+Position position 
+Velocity velocity
+float32 time 0.0
+```
+
+#### Source Code 3 - **Position.msg**
+```python
+# positions (earth-fixed reference frame)
+float32 x 0.0
+float32 y 0.0
+# 1.57079632679 radians = 90 degrees
+float32 theta 1.57079632679 
+```
+
+#### Source Code 4 - **Velocity.msg**
+```python
+# velocities (craft-fixed reference frame)
+float32 u 1.0
+float32 v 0.0
+float32 r 0.0
+```
 
 ### *path_following* package
 
