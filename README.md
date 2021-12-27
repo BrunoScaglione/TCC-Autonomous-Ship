@@ -319,7 +319,7 @@ Our monograph, paper and slides are inside the *reports* folder.
 
 ## Important notes
 
-\*<sup>1</sup> — explanation of DDS problem here <br> 
+\*<sup>1</sup> — Explanation of the DDS problem here <br> 
 
 ## Additional material on *ROS2*
 
