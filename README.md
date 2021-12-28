@@ -259,7 +259,7 @@ recommendation is to run it in **src/main_ws/install/share/pydyna_simple/db**, w
 is intended to store rosbags.
 
 ```bash
-~/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/db> ros2 launch pydyna_simple
+~/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/db> ros2 launch pydyna_simple pydyna_simple.launch.py
 ```
 
 4. In order to verify *topics*, the user may run:
