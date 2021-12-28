@@ -319,6 +319,22 @@ For the setup of the _ROS2_ and _pydyna_ environments, it’s necessary for the 
 ~/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/db >ros2 launch path_following path_following.launch.py
 ```
 
+4. In order to verify active nodes and topics, the user may run:
+
+```bash
+~/> ros2 topic list -t
+```
+
+```bash
+~/> rqt_graph
+```
+
+5. Just like for the _pydyna_simple node_, the user can publish and subscribe to different topics, or call services; to verify if they are working accordingly.
+
+6. With all the nodes working, the user can visualize the vessel through _Venus_ on <http://localhost:6150>
+
+7. Once the server is up and running, the user can send **HTTP** requests, giving the _initial conditions_ and _waypoints_, using _Insomnia_ client. Once this is done, the user can send a request to start the simulation, also using _Insomnia_ client.
+
         
 ## Logs, plots and data
         
