@@ -248,7 +248,7 @@ Visual Studio 2019* terminal as admin:
 ~/tcc-autonomous-ship/src/main_ws/src> colcon build --merge -install
 ```
 
-2. On the newly created install directory, run:
+2. On the newly created install directory, source the workspace:
 
 ```bash
 ~/tcc-autonomous-ship/src/main_ws/install> call setup.bat
@@ -274,7 +274,7 @@ is intended to store rosbags.
 ~/> rqt_graph
 ```
 
-6. With the _pydyna_simple node_ active, the user can, from the command line, start the simulation with the **init_simul** _service_, send _topics_ for **rudder_angle** and **propeller_rotation** and listen to **state**; each one of them in a separate terminal.
+6. With the _pydyna_simple node_ active, the user can, from the command line, start the simulation with the **init_simul** _service_, send _topics_ for **rudder_angle** and **propeller_rotation** and listen to **state**; each one of them in a separate terminal. In the example below, "{}" means taht the default values for InitValues will be used.
 
     a. start simulation by making a  _request_ to **init_simul**:
     ```bash
@@ -298,7 +298,7 @@ is intended to store rosbags.
     ~/> ros2 topic echo /state
     ```
 
-### *path_following* package  
+### <a name="features>path_following">*path_following* package  
 
 To install *ROS2* and pydyna, follow
 the steps in the [*ROS2* Galactic docs](https://docs.ros.org/en/galactic/index.html) and [TPN page](https://doccode.tpn.usp.br/projetos/tpnship) (need VPN access) respectively. Then, the user must clone this repository. The first two steps are identical to the ones in the previous section.
@@ -309,7 +309,7 @@ the steps in the [*ROS2* Galactic docs](https://docs.ros.org/en/galactic/index.h
 ~/tcc-autonomous-ship/src/main_ws/src> colcon build --merge- install
 ```
 
-2. On the newly created install directory, run:
+2. On the newly created install directory, source the workspace:
 
 ```bash 
 ~/tcc-autonomous-ship/src/main_ws/install> call setup.bat
@@ -335,7 +335,7 @@ the steps in the [*ROS2* Galactic docs](https://docs.ros.org/en/galactic/index.h
 
 6. With all the nodes working, the user can visualize the vessel through _Venus_ on <http://localhost:6150>
 
-7. Once the server is up and running, the user can send **HTTP** requests, giving the _initial conditions_ and _waypoints_, for example, using _Insomnia_ client. Once this is done, the user can send a request to start the simulation, in the same way.
+7. Once the server is up and running, the user can send **HTTP** requests, giving the _initial conditions_ and _waypoints_, for example, using _Insomnia_ client. Once this is done, the user can send a request to start the simulation, in the same way. This is explained and illustrated in [this section](#features>path_following)
         
 ## Logs, plots and data
         
