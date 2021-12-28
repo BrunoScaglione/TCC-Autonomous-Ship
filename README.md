@@ -268,7 +268,7 @@ is intended to store rosbags.
 ~/> ros2 topic list -t
 ```
 
-5. To a graph of *topics* and *nodes*, the user may run:
+5. To get a graph of *topics* and *nodes*, the user may run:
 
 ```bash
 ~/> rqt_graph
@@ -327,7 +327,7 @@ the steps in the [*ROS2 Galactic* docs](https://docs.ros.org/en/galactic/index.h
 ~/> ros2 topic list -t
 ```
 
-5. To a graph of *topics* and *nodes*, the user may run:
+5. To get a graph of *topics* and *nodes*, the user may run:
 
 ```bash
 ~/> rqt_graph
