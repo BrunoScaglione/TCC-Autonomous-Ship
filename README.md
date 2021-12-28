@@ -106,7 +106,7 @@ float32 v 0.0
 float32 r 0.0
 ```
 
-### *path_following* package
+### <a name="features>path_following">*path_following* package
 
 <p align="center">
     GNC architecture of the <i>path_following</i> package.
@@ -268,7 +268,7 @@ is intended to store rosbags.
 ~/> ros2 topic list -t
 ```
 
-5. To a graph of |*topics* and *nodes*, the user may run:
+5. To a graph of *topics* and *nodes*, the user may run:
 
 ```bash
 ~/> rqt_graph
@@ -298,7 +298,7 @@ is intended to store rosbags.
     ~/> ros2 topic echo /state
     ```
 
-### <a name="features>path_following">*path_following* package  
+### *path_following* package  
 
 To install *ROS2* and pydyna, follow
 the steps in the [*ROS2* Galactic docs](https://docs.ros.org/en/galactic/index.html) and [TPN page](https://doccode.tpn.usp.br/projetos/tpnship) (need VPN access) respectively. Then, the user must clone this repository. The first two steps are identical to the ones in the previous section.
