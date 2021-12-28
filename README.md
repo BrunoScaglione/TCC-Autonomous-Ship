@@ -242,16 +242,16 @@ For the setup of the ROS2 and pydyna environments, it’s necessary for the user
 the steps regarded in the ROS2 Galactic and TPN5 pages respectively. Then, the user must clone
 this repository.
 
-1. To build packages, run the following command in main_ws/src with the x64 Prompt for
+1. To build packages, run the following command in **main_ws/src** with the x64 Prompt for
 Visual Studio 2019 terminal as admin:
 
-```console
+```bash
 ~/tcc-autonomous-ship/src/main_ws/src >colcon build --merge -install
 ```
 
 2. On the newly created install directory, run:
 
-```console
+```bash
 ~/tcc-autonomous-ship/src/main_ws/install >call setup.bat
 ```
 
@@ -259,47 +259,66 @@ Visual Studio 2019 terminal as admin:
 recommendation is to run it in main_ws/install/share/pydyna_simple/db which
 is intended to store rosbags.
 
-```console
+```bash
 ~/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/db >ros2 launch pydyna_simple
 ```
 
 4. In order to verify active nodes and topics, the user may run:
 
-```console
+```bash
 ~/> ros2 topic list -t
 ```
 
-```console
+```bash
 ~/> rqt_graph
 ```
 
 5. With the _pydyna_simple node_ active, the user can, from the command line, start the simulation with the **init_simul** _service_, send _topics_ for **rudder_angle** and **proppeller_rotation** and listen to **state**; each one of them in a separate terminal.
 
     a. start simulation by making _request_ to **start_end_simul**:
-    ```console 
+    ```bash
     ~/> ros2 service call /init_simul path_following_interfaces/srv/InitValues "{}"
     ```
     
-    b. publish to rudder_angle:
-    ```console 
+    b. publish to **rudder_angle**:
+    ```bash 
     ~/> ros2 topic pub --once /rudder_angle std_msgs/msg/Float32 "{data: 0}"
+    ```
+    
+    c. publish to **proppeller_rotation**:
+
+    ```bash
+    ~/> ros2 topic pub --once /propeller_rotation std_msgs/msg/Float32 "{data: 1}"
+    ```
+    
+    d. subscribe to **state**:
+    
+    ```bash 
+    ~/> ros2 topic echo /state
     ```
 
 ### *path_following* package  
 
+For the setup of the _ROS2_ and _pydyna_ environments, it’s necessary for the user to follow the steps regarded in the _ROS2 Galactic_ and _TPN_ pages respectively. Then, the user must clone this repository. The first two steps are identical to the ones in the previous section.
 
+1. To build packages, run the following command in **main_ws/src** with the x64 Prompt for Visual Studio 2019 terminal as admin:
 
-#### Explanation of the command here:
-
-```bash
-   some_command
+```bash 
+~/tcc-autonomous-ship/src/main_ws/src >colcon build --merge- install
 ```
 
-#### Explanation of the command here:
+2. On the newly created install directory, run:
 
-```bash
-   some_command
+```bash 
+~/tcc-autonomous-ship/src/main_ws/install >call setup.bat
 ```
+
+3. Next, run the launch file. This will create _rosbags_ in the same directory. Therefore, the recommendation is to run it in **main_ws/install/share/pydyna_simple/db** which is intended to store _rosbags_.
+
+```bash 
+~/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/db >ros2 launch path_following path_following.launch.py
+```
+
         
 ## Logs, plots and data
         
