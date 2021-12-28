@@ -239,7 +239,7 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 ### *pydyna_simple* package
 
 To install *ROS2* and pydyna, follow
-the steps in the [*ROS2* Galactic docs](https://docs.ros.org/en/galactic/index.html) and [TPN page](https://doccode.tpn.usp.br/projetos/tpnship) (need VPN access) respectively. Then, clone this repository.
+the steps in the [*ROS2 Galactic* docs](https://docs.ros.org/en/galactic/index.html) and [TPN page](https://doccode.tpn.usp.br/projetos/tpnship) (need VPN access) respectively. Then, clone this repository.
 
 1. To build packages, run the following command in **src/main_ws/src** with the *x64 Prompt for
 Visual Studio 2019* terminal as admin:
@@ -301,7 +301,7 @@ is intended to store rosbags.
 ### *path_following* package  
 
 To install *ROS2* and pydyna, follow
-the steps in the [*ROS2* Galactic docs](https://docs.ros.org/en/galactic/index.html) and [TPN page](https://doccode.tpn.usp.br/projetos/tpnship) (need VPN access) respectively. Then, the user must clone this repository. The first two steps are identical to the ones in the previous section.
+the steps in the [*ROS2 Galactic* docs](https://docs.ros.org/en/galactic/index.html) and [TPN page](https://doccode.tpn.usp.br/projetos/tpnship) (need VPN access) respectively. Then, the user must clone this repository. The first two steps are identical to the ones in the previous section.
 
 1. To build packages, run the following command in **src/main_ws/src** with the x64 Prompt for Visual Studio 2019 terminal as admin:
 
@@ -321,21 +321,23 @@ the steps in the [*ROS2* Galactic docs](https://docs.ros.org/en/galactic/index.h
 ~/tcc-autonomous-ship/src/main_ws/install/share/path_following/db> ros2 launch path_following path_following.launch.py
 ```
 
-4. In order to verify active nodes and topics, the user may run:
+4. In order to verify *topics*, the user may run:
 
 ```bash
 ~/> ros2 topic list -t
 ```
 
+5. To a graph of *topics* and *nodes*, the user may run:
+
 ```bash
 ~/> rqt_graph
 ```
 
-5. Just like for the _pydyna_simple node_, the user can publish and subscribe to different topics, or call services; to verify if they are working accordingly.
+6. Just like for the _pydyna_simple node_, the user can publish and subscribe to different topics, or call services; to verify if they are working accordingly.
 
-6. With all the nodes working, the user can visualize the vessel through _Venus_ on <http://localhost:6150>
+7. With all the nodes working, the user can visualize the vessel through _Venus_ on <http://localhost:6150>
 
-7. Once the server is up and running, the user can send **HTTP** requests, giving the _initial conditions_ and _waypoints_, for example, using _Insomnia_ client. Once this is done, the user can send a request to start the simulation, in the same way. This is explained and illustrated in [this section](#features>path_following)
+8. Once the server is up and running, the user can send **HTTP** requests, giving the _initial conditions_ and _waypoints_, for example, using _Insomnia_ client. Once this is done, the user can send a request to start the simulation, in the same way. This is explained and illustrated in [this section](#features>path_following)
         
 ## Logs, plots and data
         
