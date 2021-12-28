@@ -238,54 +238,55 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 
 ### *pydyna_simple* package
 
-For the setup of the ROS2 and pydyna environments, it’s necessary for the user to follow
-the steps regarded in the ROS2 Galactic and TPN5 pages respectively. Then, the user must clone
-this repository.
+To install *ROS2* and pydyna, follow
+the steps in the [*ROS2* Galactic docs](https://docs.ros.org/en/galactic/index.html) and [TPN page](https://doccode.tpn.usp.br/projetos/tpnship) (need VPN access) respectively. Then, clone this repository.
 
-1. To build packages, run the following command in **main_ws/src** with the x64 Prompt for
-Visual Studio 2019 terminal as admin:
+1. To build packages, run the following command in **src/main_ws/src** with the *x64 Prompt for
+Visual Studio 2019* terminal as admin:
 
 ```bash
-~/tcc-autonomous-ship/src/main_ws/src >colcon build --merge -install
+~/tcc-autonomous-ship/src/main_ws/src> colcon build --merge -install
 ```
 
 2. On the newly created install directory, run:
 
 ```bash
-~/tcc-autonomous-ship/src/main_ws/install >call setup.bat
+~/tcc-autonomous-ship/src/main_ws/install> call setup.bat
 ```
 
 3. Next, run the launch file. This will create rosbags in the same directory. Therefore, the
-recommendation is to run it in main_ws/install/share/pydyna_simple/db which
+recommendation is to run it in **src/main_ws/install/share/pydyna_simple/db**, which
 is intended to store rosbags.
 
 ```bash
-~/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/db >ros2 launch pydyna_simple
+~/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/db> ros2 launch pydyna_simple
 ```
 
-4. In order to verify active nodes and topics, the user may run:
+4. In order to verify *topics*, the user may run:
 
 ```bash
 ~/> ros2 topic list -t
 ```
 
+5. To a graph of |*topics* and *nodes*, the user may run:
+
 ```bash
 ~/> rqt_graph
 ```
 
-5. With the _pydyna_simple node_ active, the user can, from the command line, start the simulation with the **init_simul** _service_, send _topics_ for **rudder_angle** and **proppeller_rotation** and listen to **state**; each one of them in a separate terminal.
+6. With the _pydyna_simple node_ active, the user can, from the command line, start the simulation with the **init_simul** _service_, send _topics_ for **rudder_angle** and **propeller_rotation** and listen to **state**; each one of them in a separate terminal.
 
-    a. start simulation by making _request_ to **start_end_simul**:
+    a. start simulation by making a  _request_ to **init_simul**:
     ```bash
     ~/> ros2 service call /init_simul path_following_interfaces/srv/InitValues "{}"
     ```
     
-    b. publish to **rudder_angle**:
+    b. publish 0 (example) to **rudder_angle**:
     ```bash 
     ~/> ros2 topic pub --once /rudder_angle std_msgs/msg/Float32 "{data: 0}"
     ```
     
-    c. publish to **proppeller_rotation**:
+    c. publish 1 (example) to **propeller_rotation**:
 
     ```bash
     ~/> ros2 topic pub --once /propeller_rotation std_msgs/msg/Float32 "{data: 1}"
@@ -299,24 +300,25 @@ is intended to store rosbags.
 
 ### *path_following* package  
 
-For the setup of the _ROS2_ and _pydyna_ environments, it’s necessary for the user to follow the steps regarded in the _ROS2 Galactic_ and _TPN_ pages respectively. Then, the user must clone this repository. The first two steps are identical to the ones in the previous section.
+To install *ROS2* and pydyna, follow
+the steps in the [*ROS2* Galactic docs](https://docs.ros.org/en/galactic/index.html) and [TPN page](https://doccode.tpn.usp.br/projetos/tpnship) (need VPN access) respectively. Then, the user must clone this repository. The first two steps are identical to the ones in the previous section.
 
-1. To build packages, run the following command in **main_ws/src** with the x64 Prompt for Visual Studio 2019 terminal as admin:
+1. To build packages, run the following command in **src/main_ws/src** with the x64 Prompt for Visual Studio 2019 terminal as admin:
 
 ```bash 
-~/tcc-autonomous-ship/src/main_ws/src >colcon build --merge- install
+~/tcc-autonomous-ship/src/main_ws/src> colcon build --merge- install
 ```
 
 2. On the newly created install directory, run:
 
 ```bash 
-~/tcc-autonomous-ship/src/main_ws/install >call setup.bat
+~/tcc-autonomous-ship/src/main_ws/install> call setup.bat
 ```
 
-3. Next, run the launch file. This will create _rosbags_ in the same directory. Therefore, the recommendation is to run it in **main_ws/install/share/pydyna_simple/db** which is intended to store _rosbags_.
+3. Next, run the launch file. This will create _rosbags_ in the same directory. Therefore, the recommendation is to run it in **src/main_ws/install/share/path_following/db** which is intended to store _rosbags_.
 
 ```bash 
-~/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/db >ros2 launch path_following path_following.launch.py
+~/tcc-autonomous-ship/src/main_ws/install/share/path_following/db> ros2 launch path_following path_following.launch.py
 ```
 
 4. In order to verify active nodes and topics, the user may run:
@@ -333,8 +335,7 @@ For the setup of the _ROS2_ and _pydyna_ environments, it’s necessary for the 
 
 6. With all the nodes working, the user can visualize the vessel through _Venus_ on <http://localhost:6150>
 
-7. Once the server is up and running, the user can send **HTTP** requests, giving the _initial conditions_ and _waypoints_, using _Insomnia_ client. Once this is done, the user can send a request to start the simulation, also using _Insomnia_ client.
-
+7. Once the server is up and running, the user can send **HTTP** requests, giving the _initial conditions_ and _waypoints_, for example, using _Insomnia_ client. Once this is done, the user can send a request to start the simulation, in the same way.
         
 ## Logs, plots and data
         
