@@ -238,7 +238,56 @@ The user can also end the simulation in two ways: killing only *pydyna* node or 
 
 ### *pydyna_simple* package
 
+For the setup of the ROS2 and pydyna environments, it’s necessary for the user to follow
+the steps regarded in the ROS2 Galactic and TPN5 pages respectively. Then, the user must clone
+this repository.
+
+1. To build packages, run the following command in main_ws/src with the x64 Prompt for
+Visual Studio 2019 terminal as admin:
+
+```console
+~/tcc-autonomous-ship/src/main_ws/src >colcon build --merge -install
+```
+
+2. On the newly created install directory, run:
+
+```console
+~/tcc-autonomous-ship/src/main_ws/install >call setup.bat
+```
+
+3. Next, run the launch file. This will create rosbags in the same directory. Therefore, the
+recommendation is to run it in main_ws/install/share/pydyna_simple/db which
+is intended to store rosbags.
+
+```console
+~/tcc-autonomous-ship/src/main_ws/install/share/pydyna_simple/db >ros2 launch pydyna_simple
+```
+
+4. In order to verify active nodes and topics, the user may run:
+
+```console
+~/> ros2 topic list -t
+```
+
+```console
+~/> rqt_graph
+```
+
+5. With the _pydyna_simple node_ active, the user can, from the command line, start the simulation with the **init_simul** _service_, send _topics_ for **rudder_angle** and **proppeller_rotation** and listen to **state**; each one of them in a separate terminal.
+
+    a. start simulation by making _request_ to **start_end_simul**:
+    ```console 
+    ~/> ros2 service call /init_simul path_following_interfaces/srv/InitValues "{}"
+    ```
+    
+    b. publish to rudder_angle:
+    ```console 
+    ~/> ros2 topic pub --once /rudder_angle std_msgs/msg/Float32 "{data: 0}"
+    ```
+
 ### *path_following* package  
+
+
 
 #### Explanation of the command here:
 
