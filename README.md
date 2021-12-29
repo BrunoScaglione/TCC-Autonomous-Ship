@@ -392,29 +392,29 @@ set payloads_path="placeholder"
  
 #### To build all the packages, run the following inside X64 Native Tools Comand Prompt for VS:
 ```batch
-   call vsbuildall.bat
+   ~/tcc-autonomous-ship/helpers/> call vsbuildall.bat
 ```
 #### To source the worskpace (set environment variables relative to your workspace), always run the following when starting a new terminal (process):
 ```batch
-   call overlay.bat
+   ~/tcc-autonomous-ship/helpers/> call overlay.bat
 ```
 #### To run the *pydyna_simple* package, run the following in any terminal:
 ```batch
-   call pydyna.bat
+   ~/tcc-autonomous-ship/helpers/> call pydyna.bat
 ```
 ### *path_following* package
         
 #### To build all the packages, run the following inside X64 Native Tools Comand Prompt for VS:
 ```batch
-   call vsbuildall.bat
+   ~/tcc-autonomous-ship/helpers/> call vsbuildall.bat
 ```
 #### To source the worskpace (set environment variables relative to your workspace), always run the following when starting a new terminal (process):
 ```batch
-   call overlay.bat
+   ~/tcc-autonomous-ship/helpers/> call overlay.bat
 ```
 #### To run the *path_following* package, run the following in any terminal:
 ```batch
-   call path.bat
+   ~/tcc-autonomous-ship/helpers/> call path.bat
 ```
 
 ## Project details
