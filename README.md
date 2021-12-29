@@ -265,37 +265,37 @@ is intended to store rosbags.
 4. In order to verify *topics*, the user may run:
 
 ```bash
-~/> ros2 topic list -t
+~> ros2 topic list -t
 ```
 
 5. To get a graph of *topics* and *nodes*, the user may run:
 
 ```bash
-~/> rqt_graph
+~> rqt_graph
 ```
 
 6. With the _pydyna_simple node_ active, the user can, from the command line, start the simulation with the **init_simul** _service_, send _topics_ for **rudder_angle** and **propeller_rotation** and listen to **state**; each one of them in a separate terminal. In the example below, "{}" means taht the default values for InitValues will be used.
 
     a. start simulation by making a  _request_ to **init_simul**:
     ```bash
-    ~/> ros2 service call /init_simul path_following_interfaces/srv/InitValues "{}"
+    ~> ros2 service call /init_simul path_following_interfaces/srv/InitValues "{}"
     ```
     
     b. publish 0 (example) to **rudder_angle**:
     ```bash 
-    ~/> ros2 topic pub --once /rudder_angle std_msgs/msg/Float32 "{data: 0}"
+    ~> ros2 topic pub --once /rudder_angle std_msgs/msg/Float32 "{data: 0}"
     ```
     
     c. publish 1 (example) to **propeller_rotation**:
 
     ```bash
-    ~/> ros2 topic pub --once /propeller_rotation std_msgs/msg/Float32 "{data: 1}"
+    ~> ros2 topic pub --once /propeller_rotation std_msgs/msg/Float32 "{data: 1}"
     ```
     
     d. subscribe to **state**:
     
     ```bash 
-    ~/> ros2 topic echo /state
+    ~> ros2 topic echo /state
     ```
 
 ### *path_following* package  
@@ -324,13 +324,13 @@ the steps in the [*ROS2 Galactic* docs](https://docs.ros.org/en/galactic/index.h
 4. In order to verify *topics*, the user may run:
 
 ```bash
-~/> ros2 topic list -t
+~> ros2 topic list -t
 ```
 
 5. To get a graph of *topics* and *nodes*, the user may run:
 
 ```bash
-~/> rqt_graph
+~> rqt_graph
 ```
 
 6. Just like for the _pydyna_simple node_, the user can publish and subscribe to different topics, or call services; to verify if they are working accordingly.
@@ -392,29 +392,29 @@ set payloads_path="placeholder"
  
 #### To build all the packages, run the following inside X64 Native Tools Comand Prompt for VS:
 ```batch
-   ~/tcc-autonomous-ship/helpers/> call vsbuildall.bat
+   ~/tcc-autonomous-ship/helpers> call vsbuildall.bat
 ```
 #### To source the worskpace (set environment variables relative to your workspace), always run the following when starting a new terminal (process):
 ```batch
-   ~/tcc-autonomous-ship/helpers/> call overlay.bat
+   ~/tcc-autonomous-ship/helpers> call overlay.bat
 ```
 #### To run the *pydyna_simple* package, run the following in any terminal:
 ```batch
-   ~/tcc-autonomous-ship/helpers/> call pydyna.bat
+   ~/tcc-autonomous-ship/helpers> call pydyna.bat
 ```
 ### *path_following* package
         
 #### To build all the packages, run the following inside X64 Native Tools Comand Prompt for VS:
 ```batch
-   ~/tcc-autonomous-ship/helpers/> call vsbuildall.bat
+   ~/tcc-autonomous-ship/helpers> call vsbuildall.bat
 ```
 #### To source the worskpace (set environment variables relative to your workspace), always run the following when starting a new terminal (process):
 ```batch
-   ~/tcc-autonomous-ship/helpers/> call overlay.bat
+   ~/tcc-autonomous-ship/helpers> call overlay.bat
 ```
 #### To run the *path_following* package, run the following in any terminal:
 ```batch
-   ~/tcc-autonomous-ship/helpers/> call path.bat
+   ~/tcc-autonomous-ship/helpers> call path.bat
 ```
 
 ## Project details
